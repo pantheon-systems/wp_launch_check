@@ -20,11 +20,11 @@ class LaunchCheck extends WP_CLI_Command {
 	**/
 	private function search_php_files($dir, $regex) {
 		$fs = $this->load_fs();
-    $finder = new Finder();
+		$finder = new Finder();
 
-    // find all files ending in PHP
-    $files = $finder->files()->in($dir)->name("*.php");
-    $alerts = array();	
+		// find all files ending in PHP
+		$files = $finder->files()->in($dir)->name("*.php");
+		$alerts = array();	
 		
 		foreach ( $files as $file ) {
 			if ( $file->getRelativePathname() !== 'wp-content/plugins/twigify-master/twigify-master.php' ) { continue; }
@@ -40,20 +40,20 @@ class LaunchCheck extends WP_CLI_Command {
 
 	}
 
-  /**
-  * checks the files for session_start()
-  *
+	/**
+	* checks the files for session_start()
+	*
 	* ## OPTIONS
 	*
 	* [--format=<format>]
 	* : output as json
-  *
-  * ## EXAMPLES
-  *
-  * 	wp launchcheck sessions
-  *
-  */
-  public function sessions( $args, $assoc_args ) {
+	*
+	* ## EXAMPLES
+	*
+	*		wp launchcheck sessions
+	*
+	*/
+	public function sessions( $args, $assoc_args ) {
 
 		// initialize the json output
 		$this->output[__METHOD__] = array( 
@@ -61,25 +61,25 @@ class LaunchCheck extends WP_CLI_Command {
 			'description' => "Sessions will only work in the Native PHP Sessions plugin is enabled",
 			'score' => 2,
 			'result' => '',
-			'label'	=> 'PHP Sessions',
+			'label' => 'PHP Sessions',
 		);
 
 		$alerts = $this->search_php_files( WP_CLI::get_config('path'), ".*(session_start|SESSION).*" );
 		if (!empty($alerts)) {
-			$details = sprintf( "Found %s files that references sessions \n    -> %s", 
+			$details = sprintf( "Found %s files that references sessions \n		 -> %s", 
 							count($alerts), 
 							join("\n", array_filter( $alerts, function( $a ) { return str_replace(ABSPATH, '', $a); }) ) 
 			);
 			$this->output[__METHOD__]['score'] = -1;
 			$this->output[__METHOD__]['result'] .= $details;
-		}	else {
+		} else {
 			$details = 'No files found referencing sessions.';
 			$this->output[__METHOD__]['result'] .= $details;
 		}
 	
-    // print a success message
+		// print a success message
 		$this->handle_output( __METHOD__, $assoc_args );	
-  }
+	}
 
 	private function handle_output( $method, $assoc_args) {
 		$output = $this->output[ $method ];
@@ -116,7 +116,7 @@ class LaunchCheck extends WP_CLI_Command {
 		}
 
 		$this->fs = new filesystem();
-		return $this->fs;	
+		return $this->fs; 
 	}
 
 }
