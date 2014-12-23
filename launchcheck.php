@@ -27,7 +27,6 @@ class LaunchCheck extends WP_CLI_Command {
     $alerts = array();  
     
     foreach ( $files as $file ) {
-      if ( $file->getRelativePathname() !== 'wp-content/plugins/twigify-master/twigify-master.php' ) { continue; }
       if ( WP_CLI::get_config('debug') ) {
         WP_CLI::line( sprintf("-> %s",$file->getRelativePathname()) ); 
       }
