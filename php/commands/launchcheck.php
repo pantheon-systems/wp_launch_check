@@ -37,7 +37,7 @@ class LaunchCheck extends WP_CLI_Command {
     $has_plugin = class_exists('Pantheon_Sessions');
     
     if ( !$has_plugin ) {
-      $alerts = Pantheon::search_php_files( $search_path, ".*(session_start|SESSION).*" );
+      $alerts = \Pantheon\Utils::search_php_files( $search_path, ".*(session_start|SESSION).*" );
     }
     
     if (!empty($alerts)) {
