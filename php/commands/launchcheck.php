@@ -2,43 +2,11 @@
 /**
 * Implements example command.
 */
-use \Symfony\Component\Filesystem\Filesystem;
-use \Symfony\Component\Finder\Finder;
-use \Pantheon\Utils;
 
 class LaunchCheck extends WP_CLI_Command {
   public $fs;
   public $skipfiles = array();
   public $output = array();
-
-  /**
-  * Searches php files for the provided regex
-  * 
-  * @param $dir string directory to start from
-  * @param $regex string undelimited pattern to match
-  *
-  * @return array an array of matched files or empty if none found
-  **/
-  private function search_php_files($dir, $regex) {
-    $fs = $this->load_fs();
-    $finder = new Finder();
-
-    // find all files ending in PHP
-    $files = $finder->files()->in($dir)->name("*.php");
-    $alerts = array();  
-    
-    foreach ( $files as $file ) {
-      if ( WP_CLI::get_config('debug') ) {
-        WP_CLI::line( sprintf("-> %s",$file->getRelativePathname()) ); 
-      }
-  
-      if ( preg_match('#'.$regex.'#s',$file->getContents()) ) {
-        $alerts[] = $file->getRelativePathname();
-      }
-    }
-    return $alerts;
-
-  }
 
   /**
   * checks the files for session_start()
@@ -69,7 +37,7 @@ class LaunchCheck extends WP_CLI_Command {
     $has_plugin = class_exists('Pantheon_Sessions');
     
     if ( !$has_plugin ) {
-      $alerts = $this->search_php_files( $search_path, ".*(session_start|SESSION).*" );
+      $alerts = Pantheon::search_php_files( $search_path, ".*(session_start|SESSION).*" );
     }
     
     if (!empty($alerts)) {
@@ -119,15 +87,6 @@ class LaunchCheck extends WP_CLI_Command {
     }
     return $output;
     exit;
-  }
-
-  private function load_fs() {
-    if ( $this->fs ) {
-      return $this->fs;
-    }
-
-    $this->fs = new filesystem();
-    return $this->fs; 
   }
 
 }
