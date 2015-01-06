@@ -1,0 +1,6 @@
+{
+    "require": {
+        "symfony/finder": "~2.3",
+        "symfony/filesystem": "~2.3"
+    }
+}

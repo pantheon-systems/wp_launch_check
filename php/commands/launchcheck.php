@@ -2,6 +2,7 @@
 /**
 * Implements example command.
 */
+require_once __DIR__.'/../pantheon/utils.php';
 
 class LaunchCheck extends WP_CLI_Command {
   public $fs;
