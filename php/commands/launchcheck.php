@@ -4,6 +4,7 @@
 */
 use \Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
+use \Pantheon\Utils;
 
 class LaunchCheck extends WP_CLI_Command {
   public $fs;
