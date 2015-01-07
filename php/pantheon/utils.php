@@ -6,11 +6,11 @@ use \Symfony\Component\Finder\Finder;
 use \Pantheon\Utils as Pantheon;
 
 class Utils {
-	static $fs;	
+	static $fs;
 
   /**
   * Searches php files for the provided regex
-  * 
+  *
   * @param $dir string directory to start from
   * @param $regex string undelimited pattern to match
   *
@@ -22,13 +22,13 @@ class Utils {
 
     // find all files ending in PHP
     $files = $finder->files()->in($dir)->name("*.php");
-    $alerts = array();  
-    
+    $alerts = array();
+
     foreach ( $files as $file ) {
       if ( \WP_CLI::get_config('debug') ) {
-				\WP_CLI::line( sprintf("-> %s",$file->getRelativePathname()) ); 
+				\WP_CLI::line( sprintf("-> %s",$file->getRelativePathname()) );
       }
-  
+
       if ( preg_match('#'.$regex.'#s',$file->getContents()) ) {
         $alerts[] = $file->getRelativePathname();
       }
@@ -36,14 +36,14 @@ class Utils {
     return $alerts;
 
   }
-  
+
 	public static function load_fs() {
     if ( self::$fs ) {
       return self::$fs;
     }
 
     self::$fs = new filesystem();
-    return self::$fs; 
+    return self::$fs;
   }
 
 

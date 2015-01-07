@@ -22,7 +22,7 @@ class LaunchCheck extends WP_CLI_Command {
   *   wp secure --skip=wp-content/themes
   */
   public function secure($args, $assoc_args) {
-    $regex = array('\s(eval|base64_decode)\(.*');
+    $regex = array('.*(eval|base64_decode).*');
     $search_path = WP_CLI::get_config('path');
     $alerts = \Pantheon\Utils::search_php_files( $search_path, $regex);
     print_r($alerts);
