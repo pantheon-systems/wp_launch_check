@@ -2,43 +2,12 @@
 /**
 * Implements example command.
 */
-use \Symfony\Component\Filesystem\Filesystem;
-use \Symfony\Component\Finder\Finder;
+require_once __DIR__.'/../pantheon/utils.php';
 
 class LaunchCheck extends WP_CLI_Command {
   public $fs;
   public $skipfiles = array();
   public $output = array();
-
-  /**
-  * Searches php files for the provided regex
-  * 
-  * @param $dir string directory to start from
-  * @param $regex string undelimited pattern to match
-  *
-  * @return array an array of matched files or empty if none found
-  **/
-  private function search_php_files($dir, $regex) {
-    $fs = $this->load_fs();
-    $finder = new Finder();
-
-    // find all files ending in PHP
-    $files = $finder->files()->in($dir)->name("*.php");
-    $alerts = array();  
-    
-    foreach ( $files as $file ) {
-      if ( $file->getRelativePathname() !== 'wp-content/plugins/twigify-master/twigify-master.php' ) { continue; }
-      if ( WP_CLI::get_config('debug') ) {
-        WP_CLI::line( sprintf("-> %s",$file->getRelativePathname()) ); 
-      }
-  
-      if ( preg_match('#'.$regex.'#s',$file->getContents()) ) {
-        $alerts[] = $file->getPath().'/'.$file->getFilename();
-      }
-    }
-    return $alerts;
-
-  }
 
   /**
   * checks the files for session_start()
@@ -54,6 +23,7 @@ class LaunchCheck extends WP_CLI_Command {
   *
   */
   public function sessions( $args, $assoc_args ) {
+    $alerts = array();
 
     // initialize the json output
     $this->output[__METHOD__] = array( 
@@ -63,17 +33,27 @@ class LaunchCheck extends WP_CLI_Command {
       'result' => '',
       'label' => 'PHP Sessions',
     );
-
-    $alerts = $this->search_php_files( WP_CLI::get_config('path'), ".*(session_start|SESSION).*" );
+      
+    $search_path = rtrim(WP_CLI::get_config('path'),'/').'/wp-content/';
+    $has_plugin = class_exists('Pantheon_Sessions');
+    
+    if ( !$has_plugin ) {
+      $alerts = \Pantheon\Utils::search_php_files( $search_path, ".*(session_start|SESSION).*" );
+    }
+    
     if (!empty($alerts)) {
-      $details = sprintf( "Found %s files that references sessions \n    -> %s", 
+      $details = sprintf( "Found %s files that references sessions \n\t-> %s", 
               count($alerts), 
-              join("\n", array_filter( $alerts, function( $a ) { return str_replace(ABSPATH, '', $a); }) ) 
+              join("\n\t-> ", $alerts )
       );
       $this->output[__METHOD__]['score'] = -1;
       $this->output[__METHOD__]['result'] .= $details;
     } else {
-      $details = 'No files found referencing sessions.';
+      if ( $has_plugin ) {
+        $details = 'You are running wp-native-php-sessions plugin. No scan needed';
+      } else {
+        $details = 'No files found referencing sessions.';
+      }
       $this->output[__METHOD__]['result'] .= $details;
     }
   
@@ -82,7 +62,7 @@ class LaunchCheck extends WP_CLI_Command {
   }
 
   private function handle_output( $method, $assoc_args) {
-    $output = $this->output[ $method ];
+    $output = $this->output;
     if ( $method == 'all' ) {
       $output = $this->output;
     }
@@ -108,15 +88,6 @@ class LaunchCheck extends WP_CLI_Command {
     }
     return $output;
     exit;
-  }
-
-  private function load_fs() {
-    if ( $this->fs ) {
-      return $this->fs;
-    }
-
-    $this->fs = new filesystem();
-    return $this->fs; 
   }
 
 }
