@@ -10,6 +10,26 @@ class LaunchCheck extends WP_CLI_Command {
   public $output = array();
 
   /**
+  * checks files for insecure code and checks the wpvulndb.com/api for known vulnerabilities
+  *
+  * ## OPTIONS
+  *
+  * [--skip=<regex>]
+  * : a regular expression matching directories to skip
+  *
+  * ## EXAMPLES
+  *
+  *   wp secure --skip=wp-content/themes
+  */
+  public function secure($args, $assoc_args) {
+    $regex = array('\s(eval|base64_decode)\(.*');
+    $search_path = WP_CLI::get_config('path');
+    $alerts = \Pantheon\Utils::search_php_files( $search_path, $regex);
+    print_r($alerts);
+
+  }
+
+  /**
   * checks the files for session_start()
   *
   * ## OPTIONS
@@ -26,24 +46,24 @@ class LaunchCheck extends WP_CLI_Command {
     $alerts = array();
 
     // initialize the json output
-    $this->output[__METHOD__] = array( 
+    $this->output[__METHOD__] = array(
       'action' => 'You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/',
       'description' => "Sessions will only work in the Native PHP Sessions plugin is enabled",
       'score' => 2,
       'result' => '',
       'label' => 'PHP Sessions',
     );
-      
+
     $search_path = rtrim(WP_CLI::get_config('path'),'/').'/wp-content/';
     $has_plugin = class_exists('Pantheon_Sessions');
-    
+
     if ( !$has_plugin ) {
       $alerts = \Pantheon\Utils::search_php_files( $search_path, ".*(session_start|SESSION).*" );
     }
-    
+
     if (!empty($alerts)) {
-      $details = sprintf( "Found %s files that references sessions \n\t-> %s", 
-              count($alerts), 
+      $details = sprintf( "Found %s files that references sessions \n\t-> %s",
+              count($alerts),
               join("\n\t-> ", $alerts )
       );
       $this->output[__METHOD__]['score'] = -1;
@@ -56,9 +76,9 @@ class LaunchCheck extends WP_CLI_Command {
       }
       $this->output[__METHOD__]['result'] .= $details;
     }
-  
+
     // print a success message
-    $this->handle_output( __METHOD__, $assoc_args );  
+    $this->handle_output( __METHOD__, $assoc_args );
   }
 
   private function handle_output( $method, $assoc_args) {
@@ -77,12 +97,12 @@ class LaunchCheck extends WP_CLI_Command {
         } else {
           $color = "%R";
         }
-        echo \cli\Colors::colorize( sprintf(PHP_EOL."%s: (%s) \n Result:%s %s\n Recommendation: %s".PHP_EOL, 
+        echo \cli\Colors::colorize( sprintf(PHP_EOL."%s: (%s) \n Result:%s %s\n Recommendation: %s".PHP_EOL,
               strtoupper($data['label']),
-              $data['description'], 
-              $color, 
-              $data['result'].'%n', // ugly 
-              $data['action']) 
+              $data['description'],
+              $color,
+              $data['result'].'%n', // ugly
+              $data['action'])
             );
       }
     }
@@ -93,4 +113,3 @@ class LaunchCheck extends WP_CLI_Command {
 }
 
 WP_CLI::add_command( 'launchcheck', 'LaunchCheck' );
-
