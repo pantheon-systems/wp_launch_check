@@ -1,16 +1,18 @@
 language: php
-
 php:
-    - 5.3
-    - 5.4
-
+- 5.3
+- 5.4
 env:
-    - WP_VERSION=latest WP_MULTISITE=0
-    - WP_VERSION=latest WP_MULTISITE=1
-    - WP_VERSION=3.8 WP_MULTISITE=0
-    - WP_VERSION=3.8 WP_MULTISITE=1
-
+  matrix:
+  - WP_VERSION=latest WP_MULTISITE=0
+  - WP_VERSION=latest WP_MULTISITE=1
+  - WP_VERSION=3.8 WP_MULTISITE=0
+  - WP_VERSION=3.8 WP_MULTISITE=1
+  global:
+  - secure: g2hKXgygRmNeP9BuO2+s7vHj7Yl2HdBoeRn8CLc2sHlKWuqRFNoCAN5l0AiW26CgF73Hp8rnQlXFaUp5ycN9k5gvMOy0a/wOrVQYiNBPC5yrYZvdDbPWJNqc2bsL+bx03G7je5mO/hvv/wcPM2xEv/HOcenm3pb3zQVKtYkYOR0=
+  - secure: FGL+m3NfDAQ17UzWxhAnsriAKqUIRKLOIgvBYGsGtEJ4t1yJSG8k6exJExKSUJHaYD74NHXLq1WD0XHlG0OwCOr21+MdpF4kOrxghFZBK7LQSXAU2lHFURa3nOrhmKPANWyIwgY47PDmmkXtFBhPgyC0XNDXqvxs84B+GZ+4nV4=
 before_script:
-    - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION 
-
+- bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 script: phpunit
+after_deploy:
+- bash bin/build.sh
