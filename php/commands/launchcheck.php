@@ -2,8 +2,6 @@
 /**
 * Implements example command.
 */
-require_once __DIR__.'/../pantheon/utils.php';
-
 class LaunchCheck extends WP_CLI_Command {
   public $fs;
   public $skipfiles = array();
@@ -26,55 +24,15 @@ class LaunchCheck extends WP_CLI_Command {
   *
   */
   public function secure($args, $assoc_args) {
-    $regex = '.*(eval|base64_decode)\(.*';
-    $search_path = WP_CLI::get_config('path').'/wp-content/';
-    $alerts = \Pantheon\Utils::search_php_files( $search_path, $regex);
+    $insecure = new \Pantheon\Checks\Insecure();
+    $message = $insecure->init()->run();
+    \Pantheon\Messenger::queue($message);
 
-    // initialize the json output
-    $message = array(
-      'action' => 'We did not find any files running risky functions.',
-      'description' => "PHP files running eval or base64_decode on user input can be insecure.",
-      'score' => 2,
-      'result' => '',
-      'label' => 'Risky PHP Functions',
-    );
+    $exploited = new \Pantheon\Checks\Exploited();
+    $message = $exploited->init()->run();
+    \Pantheon\Messenger::queue($message);
 
-    if (!empty($alerts)) {
-      $details = sprintf( "Found %s files that reference risky function. You do not need to deactivate these files, but please scrutinize them in the event of a security issue \n\t-> %s",
-        count($alerts),
-        join("\n\t-> ", $alerts)
-      );
-      $message['score'] = 0;
-      $message['result'] .= $details;
-    }
-
-    $this->add_message($message);
-
-    $regex = '.*eval\(.*base64_decode\(.*';
-    $search_path = WP_CLI::get_config('path').'/wp-content/';
-    $alerts = \Pantheon\Utils::search_php_files( $search_path, $regex);
-
-    // initialize the json output
-    $message = array(
-      'action' => 'No exploits found.',
-      'description' => "Looking for exploited files.",
-      'score' => 2,
-      'result' => '',
-      'label' => 'Probable exploits',
-    );
-
-    if (!empty($alerts)) {
-      $details = sprintf( "Found %s files that contain likely exploits \n\t-> %s",
-        count($alerts),
-        join("\n\t-> ", $alerts)
-      );
-      $message['score'] = -1;
-      $message['result'] .= $details;
-    }
-
-    $this->add_message($message);
     $this->handle_output($assoc_args);
-
   }
 
   /**
@@ -130,32 +88,7 @@ class LaunchCheck extends WP_CLI_Command {
   }
 
   private function handle_output($json=false) {
-    $output = $this->output;
-    if ( $json ) {
-      WP_CLI::print_value( $output , $assoc_args );
-    } else {
-      foreach( $output as $func => $data ) {
-
-        if ( $data['score'] == 2 ) {
-          $color = "%G";
-        } elseif ( $data['score'] == 0 ) {
-          $color = "%C";
-        } else {
-          $color = "%R";
-        }
-
-        // @todo might be a better way to do this
-        echo \cli\Colors::colorize( sprintf(PHP_EOL."%s: (%s) \n Result:%s %s\n Recommendation: %s".PHP_EOL,
-              strtoupper($data['label']),
-              $data['description'],
-              $color,
-              $data['result'].'%n', // ugly
-              $data['action'])
-        );
-
-      }
-    }
-    return $output;
+    \Pantheon\Messenger::emit();
     exit;
   }
 
@@ -167,5 +100,18 @@ class LaunchCheck extends WP_CLI_Command {
   }
 
 }
+
+// register our autoloader
+spl_autoload_register(function($class) {
+  if (class_exists($class)) return $class;
+  $class = strtolower($class);
+  if (strstr($class,"pantheon")) {
+    $class = str_replace('\\','/',$class);
+    $path = WP_CLI_ROOT."/php/".$class.'.php';
+    if (file_exists($path)) {
+      require_once($path);
+    }
+  }
+});
 
 WP_CLI::add_command( 'launchcheck', 'LaunchCheck' );
