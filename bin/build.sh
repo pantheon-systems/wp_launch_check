@@ -5,7 +5,7 @@ cd /tmp/wp-cli
 
 sudo composer update
 
-rsync --exclude=.git -avzu $WORKINGDIR/ /tmp/wp-cli/ 
+rsync --exclude=.git -avzu $WORKINGDIR/php/ /tmp/wp-cli/php/
 
 sudo php -dphar.readonly=0 utils/make-phar.php wp-cli.phar --quiet
 

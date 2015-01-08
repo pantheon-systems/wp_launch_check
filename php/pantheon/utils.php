@@ -29,7 +29,7 @@ class Utils {
 				\WP_CLI::line( sprintf("-> %s",$file->getRelativePathname()) );
       }
 
-      if ( preg_match('#'.$regex.'#s',$file->getContents()) ) {
+			if ( preg_match('#'.$regex.'#s',$file->getContents()) !== 0 ) {
         $alerts[] = $file->getRelativePathname();
       }
     }

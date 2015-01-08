@@ -17,15 +17,63 @@ class LaunchCheck extends WP_CLI_Command {
   * [--skip=<regex>]
   * : a regular expression matching directories to skip
   *
+  * [--format=<format>]
+  * : output as json
+  *
   * ## EXAMPLES
   *
   *   wp secure --skip=wp-content/themes
+  *
   */
   public function secure($args, $assoc_args) {
-    $regex = array('.*(eval|base64_decode).*');
-    $search_path = WP_CLI::get_config('path');
+    $regex = '.*(eval|base64_decode)\(.*';
+    $search_path = WP_CLI::get_config('path').'/wp-content/';
     $alerts = \Pantheon\Utils::search_php_files( $search_path, $regex);
-    print_r($alerts);
+
+    // initialize the json output
+    $message = array(
+      'action' => 'We did not find any files running risky functions.',
+      'description' => "PHP files running eval or base64_decode on user input can be insecure.",
+      'score' => 2,
+      'result' => '',
+      'label' => 'Risky PHP Functions',
+    );
+
+    if (!empty($alerts)) {
+      $details = sprintf( "Found %s files that reference risky function. You do not need to deactivate these files, but please scrutinize them in the event of a security issue \n\t-> %s",
+        count($alerts),
+        join("\n\t-> ", $alerts)
+      );
+      $message['score'] = 0;
+      $message['result'] .= $details;
+    }
+
+    $this->add_message($message);
+
+    $regex = '.*eval\(.*base64_decode\(.*';
+    $search_path = WP_CLI::get_config('path').'/wp-content/';
+    $alerts = \Pantheon\Utils::search_php_files( $search_path, $regex);
+
+    // initialize the json output
+    $message = array(
+      'action' => 'No exploits found.',
+      'description' => "Looking for exploited files.",
+      'score' => 2,
+      'result' => '',
+      'label' => 'Probable exploits',
+    );
+
+    if (!empty($alerts)) {
+      $details = sprintf( "Found %s files that contain likely exploits \n\t-> %s",
+        count($alerts),
+        join("\n\t-> ", $alerts)
+      );
+      $message['score'] = -1;
+      $message['result'] .= $details;
+    }
+
+    $this->add_message($message);
+    $this->handle_output($assoc_args);
 
   }
 
@@ -46,7 +94,7 @@ class LaunchCheck extends WP_CLI_Command {
     $alerts = array();
 
     // initialize the json output
-    $this->output[__METHOD__] = array(
+    $message = array(
       'action' => 'You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/',
       'description' => "Sessions will only work in the Native PHP Sessions plugin is enabled",
       'score' => 2,
@@ -62,7 +110,7 @@ class LaunchCheck extends WP_CLI_Command {
     }
 
     if (!empty($alerts)) {
-      $details = sprintf( "Found %s files that references sessions \n\t-> %s",
+      $details = sprintf( "Found %s files that reference sessions \n\t-> %s",
               count($alerts),
               join("\n\t-> ", $alerts )
       );
@@ -81,15 +129,13 @@ class LaunchCheck extends WP_CLI_Command {
     $this->handle_output( __METHOD__, $assoc_args );
   }
 
-  private function handle_output( $method, $assoc_args) {
+  private function handle_output($json=false) {
     $output = $this->output;
-    if ( $method == 'all' ) {
-      $output = $this->output;
-    }
-    if ( isset($assoc_args['format']) AND $assoc_args['format'] === 'json' ) {
+    if ( $json ) {
       WP_CLI::print_value( $output , $assoc_args );
     } else {
       foreach( $output as $func => $data ) {
+
         if ( $data['score'] == 2 ) {
           $color = "%G";
         } elseif ( $data['score'] == 0 ) {
@@ -97,17 +143,27 @@ class LaunchCheck extends WP_CLI_Command {
         } else {
           $color = "%R";
         }
+
+        // @todo might be a better way to do this
         echo \cli\Colors::colorize( sprintf(PHP_EOL."%s: (%s) \n Result:%s %s\n Recommendation: %s".PHP_EOL,
               strtoupper($data['label']),
               $data['description'],
               $color,
               $data['result'].'%n', // ugly
               $data['action'])
-            );
+        );
+
       }
     }
     return $output;
     exit;
+  }
+
+  /**
+   * adds a message to the output array
+   */
+  private function add_message($message) {
+    $this->ouput = array_push($this->output, $message);
   }
 
 }

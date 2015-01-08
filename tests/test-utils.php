@@ -1,17 +1,31 @@
 <?php
 class UtilsTest extends PHPUnit_Framework_TestCase {
+	private $searchdir;
+
+	public function __construct() {
+		$this->searchdir = dirname(__FILE__).'/data/';
+	}
+
 	function testFileSearch() {
-		$search = dirname(__FILE__).'/data/';
-		$files = \Pantheon\Utils::search_php_files($search,'test');
+		$files = \Pantheon\Utils::search_php_files($this->searchdir,'test');
 		$this->assertNotEmpty( $files );
 		$file = $files[0];
 		$this->assertEquals( 'search.php', $file );
-		$files = \Pantheon\Utils::search_php_files($search,'zebras');
+		$files = \Pantheon\Utils::search_php_files($this->searchdir,'zebras');
 		$this->assertEmpty( $files );
 	}
 
-	function testRegex() {
+	function testRegexs() {
+		$regex = '.*(eval|base64_decode)\(.*';
+		$files = \Pantheon\Utils::search_php_files($this->searchdir, $regex);
+		$this->assertNotEmpty($files);
+		$this->assertEquals(3, count($files));
 
+		$regex = '.*eval\(.*base64_decode\(.*';
+		$files = \Pantheon\Utils::search_php_files($this->searchdir, $regex);
+		$this->assertNotEmpty($files);
+		$this->assertContains('exploited.php',$files);
+		$this->assertEquals(1, count($files));
 	}
-}
 
+}
