@@ -20,10 +20,10 @@ class Messenger {
       $messenger = self::instance();
       // @todo this changes the check object to an array, better would be to
       // create a message object that could behave as an array when necessary
-      $messenger->addMessage(\get_object_vars($message));
+      $messenger->addMessage($message);
   }
 
-  private function addMessage($message) {
+  public function addMessage($message) {
     return array_push($this->messages, $message);
   }
 
@@ -42,9 +42,9 @@ class Messenger {
       case 'default':
         foreach ($messenger->messages as $message) {
           // colorize
-          if ( $message->score == 2 ) {
+          if ( $message['score'] == 2 ) {
             $color = "%G";
-          } elseif ( $message->score == 0 ) {
+          } elseif ( $message['score'] == 0 ) {
             $color = "%C";
           } else {
             $color = "%R";

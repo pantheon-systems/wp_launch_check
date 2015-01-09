@@ -3,6 +3,7 @@ namespace Pantheon\Checks;
 
 use Pantheon\Utils;
 use Pantheon\Checkimplementation;
+use Pantheon\Messenger;
 
 class Insecure extends Checkimplementation {
 
@@ -15,21 +16,25 @@ class Insecure extends Checkimplementation {
     return $this;
   }
 
-  public function run() {
+  public function run($file) {
     $regex = '.*(eval|base64_decode)\(.*';
-    $search_path = \WP_CLI::get_config('path').'/wp-content/';
-    $alerts = \Pantheon\Utils::search_php_files($search_path, $regex);
+    if ( preg_match('#'.$regex.'#s',$file->getContents()) !== 0 ) {
+      $this->alerts[] = $file->getRelativePathname();
+    }
+    return $this;
+  }
 
-    if (!empty($alerts)) {
+  public function message(Messenger $messenger) {
+    if (!empty($this->alerts)) {
       $details = sprintf( "Found %s files that reference risky function. \n\t-> %s",
-      count($alerts),
-      join("\n\t-> ", $alerts)
+        count($this->alerts),
+        join("\n\t-> ", $this->alerts)
       );
       $this->score = 0;
       $this->result .= $details;
       $this->recommendation = "You do not need to deactivate these files, but please scrutinize them in the event of a security issue.";
     }
-
+    $messenger->addMessage(get_object_vars($this));
     return $this;
   }
 }
