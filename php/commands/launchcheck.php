@@ -24,14 +24,10 @@ class LaunchCheck extends WP_CLI_Command {
   *
   */
   public function secure($args, $assoc_args) {
-    $insecure = new \Pantheon\Checks\Insecure();
-    $message = $insecure->init()->run();
-    \Pantheon\Messenger::queue($message);
-
-    $exploited = new \Pantheon\Checks\Exploited();
-    $message = $exploited->init()->run();
-    \Pantheon\Messenger::queue($message);
-
+    $searcher = new \Pantheon\Filesearcher(\WP_CLI::get_config("path"));
+    $searcher->register( new \Pantheon\Checks\Insecure() );
+    $searcher->register( new \Pantheon\Checks\Exploited() );
+    $searcher->execute();
     $this->handle_output($assoc_args);
   }
 

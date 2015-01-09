@@ -15,6 +15,7 @@ class Filesearcher {
   public function __construct($dir) {
     $this->finder = new Finder();
     $this->dir = $dir;
+    echo $dir;die();
     self::$instance = $this;
     return $this;
   }
