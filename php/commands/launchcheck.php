@@ -28,7 +28,33 @@ class LaunchCheck extends WP_CLI_Command {
     $searcher->register( new \Pantheon\Checks\Insecure() );
     $searcher->register( new \Pantheon\Checks\Exploited() );
     $searcher->execute();
-    $this->handle_output($assoc_args);
+    $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    \Pantheon\Messenger::emit($format);
+  }
+
+  /**
+  * checks plugins for vulnerbities using the wpscan vulnerability DB
+  * - https://wpvulndb.com/api
+  *
+  * ## OPTIONS
+  *
+  * [--all]
+  * : check both active and inactive plugins ( default is active only )
+  *
+  * [--format=<format>]
+  * : output as json
+  *
+  * ## EXAMPLES
+  *
+  *   wp launchcheck plugins --all
+  *
+  */
+  public function plugins($args, $assoc_args) {
+    $checker = new \Pantheon\Checker();
+    $checker->register( new \Pantheon\Checks\Plugins( isset($assoc_args['all'])) );
+    $checker->execute();
+    $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    \Pantheon\Messenger::emit($format);
   }
 
   /**
@@ -52,7 +78,7 @@ class LaunchCheck extends WP_CLI_Command {
   }
 
   private function handle_output($json=false) {
-    \Pantheon\Messenger::emit();
+
     exit;
   }
 
