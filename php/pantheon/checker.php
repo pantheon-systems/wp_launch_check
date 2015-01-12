@@ -37,7 +37,7 @@ class Checker {
     }
   }
 
-  protected function callbacks() {
+  public function callbacks() {
     return $this->callbacks;
   }
 }
