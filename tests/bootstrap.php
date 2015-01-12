@@ -14,7 +14,7 @@ class WP_CLI {
 
 }
 
-define(WP_CLI_ROOT,dirname(__FILE__).'/..');
+define("WP_CLI_ROOT", dirname(__FILE__).'/..');
 
 // register our autoloader
 spl_autoload_register(function($class) {
