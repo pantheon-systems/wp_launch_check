@@ -1,3 +1,3 @@
 #!/bin/bash
-sudo composer update
+composer update
 phpunit
