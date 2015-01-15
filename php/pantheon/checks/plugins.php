@@ -32,16 +32,29 @@ class Plugins extends Checkimplementation {
     if (!function_exists('get_plugins')) {
       require_once \WP_CLI::get_config('path') . '/wp-admin/includes/plugin.php';
     }
-    $plugins = get_plugin_updates();
+    $all_plugins = get_plugins();
+    $update = get_plugin_updates();
     $report = array();
-    foreach( $plugins as $plugin_path => $data ) {
-      $vulnerable = $this->is_vulnerable($data->update->slug, $data->Version);
-      $report[$data->update->slug] = array(
-        'slug' => $data->update->slug,
-        'installed' => (string) $data->Version,
-        'available' => (string) $data->update->new_version,
-        'needs_update' => (bool) version_compare($data->Version, $data->update->version, ">="),
-        'vulnerable'  => false == $vulnerable ? "none" : $vulnerable,
+    foreach( $all_plugins as $plugin_path => $data ) {
+      $slug = $plugin_path;
+      if (stripos($plugin_path,'/')) {
+        $slug = substr($plugin_path, 0, stripos($plugin_path,'/'));
+      }
+      $vulnerable = $this->is_vulnerable($slug, $data['Version']);
+
+      $needs_update = 0;
+      $available = '-';
+      if (isset($update[$plugin_path])) {
+        $needs_update = 1;
+        $available = $update[$plugin_path]->update->new_version;
+      }
+
+      $report[$slug] = array(
+        'slug' => $slug,
+        'installed' => (string) $data['Version'],
+        'available' => (string) $available,
+        'needs_update' => (string) $needs_update,
+        'vulnerable'  => is_array( $vulnerable ) ?  "'".$vulnerable['url'][0]."'" : "none",
       );
     }
     $this->alerts = $report;
@@ -56,7 +69,7 @@ class Plugins extends Checkimplementation {
   public function is_vulnerable($plugin_slug, $current_version) {
     $url = sprintf('https://wpvulndb.com/api/v1/plugins/%s', $plugin_slug);
     $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Pantheon WP Launchcheck');
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Pantheon WP LaunchCheck');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 3);
     $response = curl_exec($ch);
@@ -65,6 +78,7 @@ class Plugins extends Checkimplementation {
     }
 
     $data = json_decode(trim($response));
+    if (!$data) return false;
     foreach ($data->plugin->vulnerabilities as $vulnerability) {
       // if the plugin hasn't been fixed then there's still and issue
       if (!isset($vulnerability->fixed_in))
@@ -80,7 +94,13 @@ class Plugins extends Checkimplementation {
   public function message(Messenger $messenger) {
       if (!empty($this->alerts)) {
         $table = new \cli\Table();
-        $table->setHeaders(array("Plugin","Current","Available","Needs Update","Vulnerabilities"));
+        $table->setHeaders(array(
+          'slug'=>"Plugin",
+          'installed'=>"Current",
+          'available' => "Available",
+          'needs_update'=>"Needs Update",
+          'vulnerable'=>"Vulnerabilities"
+        ));
         $count_update = 0;
         $count_vuln = 0;
         foreach( $this->alerts as $alert ) {
@@ -93,7 +113,7 @@ class Plugins extends Checkimplementation {
           $table->addRow($alert);
         }
         $rendered = PHP_EOL;
-        $rendered .= sprintf("Found %d plugins needing updates and %d known vulnerabilities".PHP_EOL, $count_update, $count_vuln);
+        $rendered .= sprintf("Found %d plugins needing updates and %d known vulnerabilities ... \n".PHP_EOL, $count_update, $count_vuln);
         $rendered .= join("\n", $table->getDisplayLines() );
         $this->result .= $rendered;
         if ($count_update > 0) {

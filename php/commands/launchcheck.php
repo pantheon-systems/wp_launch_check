@@ -8,6 +8,47 @@ class LaunchCheck extends WP_CLI_Command {
   public $output = array();
 
   /**
+  * run all checks
+  *
+  * ## OPTIONS
+  *
+  */
+  public function all($args, $assoc_args) {
+    $searcher = new \Pantheon\Filesearcher(\WP_CLI::get_config("path").'/wp-content');
+    $searcher->register( new \Pantheon\Checks\Sessions() );
+    $searcher->register( new \Pantheon\Checks\Insecure() );
+    $searcher->register( new \Pantheon\Checks\Exploited() );
+    $searcher->execute();
+    $checker = new \Pantheon\Checker();
+    $checker->register( new \Pantheon\Checks\Plugins( isset($assoc_args['all'])) );
+    $checker->execute();
+    $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    \Pantheon\Messenger::emit($format);
+  }
+
+  /**
+  * checks for object caching
+  *
+  * ## OPTIONS
+  *
+  * [--format=<format>]
+  * : output as json
+  *
+  * ## EXAMPLES
+  *
+  *   wp launchcheck object-cache
+  *
+  * @alias object-cache
+  */
+  public function object_cache($args, $assoc_args) {
+    $checker = new \Pantheon\Checker();
+    $checker->register( new \Pantheon\Checks\Objectcache() );
+    $checker->execute();
+    $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    \Pantheon\Messenger::emit($format);
+  }
+
+  /**
   * checks files for insecure code and checks the wpvulndb.com/api for known vulnerabilities
   *
   * ## OPTIONS
@@ -24,7 +65,7 @@ class LaunchCheck extends WP_CLI_Command {
   *
   */
   public function secure($args, $assoc_args) {
-    $searcher = new \Pantheon\Filesearcher(\WP_CLI::get_config("path"));
+    $searcher = new \Pantheon\Filesearcher(\WP_CLI::get_config("path").'/wp-content');
     $searcher->register( new \Pantheon\Checks\Insecure() );
     $searcher->register( new \Pantheon\Checks\Exploited() );
     $searcher->execute();
@@ -71,7 +112,7 @@ class LaunchCheck extends WP_CLI_Command {
   *
   */
   public function sessions( $args, $assoc_args ) {
-    $sessions = new \Pantheon\Checks\Sessions();
+    $sessions = new \Pantheon\Checks\Sessions(\WP_CLI::get_config("path").'/wp-content');
     $message = $sessions->init()->run();
     \Pantheon\Messenger::queue($message);
     $this->handle_output($assoc_args);
