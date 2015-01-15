@@ -18,8 +18,16 @@ class Insecure extends Checkimplementation {
 
   public function run($file) {
     $regex = '.*(eval|base64_decode)\(.*';
-    if ( preg_match('#'.$regex.'#s',$file->getContents()) !== 0 ) {
-      $this->alerts[] = $file->getRelativePathname();
+    preg_match('#'.$regex.'#s',$file->getContents(), $matches, PREG_OFFSET_CAPTURE );
+    if ( $matches ) {
+      $note = '';
+      if (count($matches) > 1) {
+        array_shift($matches);
+      }
+      foreach ($matches as $match) {
+        $note .= sprintf(" [ Line %d, Match: '%s']", $match[1] + 1, substr($match[0],0,50) );
+      }
+      $this->alerts[] = $file->getRelativePathname().$note;
     }
     return $this;
   }
@@ -32,7 +40,7 @@ class Insecure extends Checkimplementation {
       );
       $this->score = 0;
       $this->result .= $details;
-      $this->recommendation = "You do not need to deactivate these files, but please scrutinize them in the event of a security issue.";
+      $this->action = "You do not need to deactivate these files, but please scrutinize them in the event of a security issue.";
     }
     $messenger->addMessage(get_object_vars($this));
     return $this;
