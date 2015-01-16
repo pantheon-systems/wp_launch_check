@@ -15,7 +15,7 @@ class LaunchCheck extends WP_CLI_Command {
   *
   */
   public function all($args, $assoc_args) {
-    $searcher = new \Pantheon\Filesearcher(\WP_CLI::get_config("path").'/wp-content');
+    $searcher = new \Pantheon\Filesearcher(ABSPATH.'/wp-content');
     $searcher->register( new \Pantheon\Checks\Sessions() );
     $searcher->register( new \Pantheon\Checks\Insecure() );
     $searcher->register( new \Pantheon\Checks\Exploited() );
@@ -67,7 +67,7 @@ class LaunchCheck extends WP_CLI_Command {
   *
   */
   public function secure($args, $assoc_args) {
-    $searcher = new \Pantheon\Filesearcher(\WP_CLI::get_config("path").'/wp-content');
+    $searcher = new \Pantheon\Filesearcher(ABSPATH.'/wp-content');
     $searcher->register( new \Pantheon\Checks\Insecure() );
     $searcher->register( new \Pantheon\Checks\Exploited() );
     $searcher->execute();
@@ -114,24 +114,12 @@ class LaunchCheck extends WP_CLI_Command {
   *
   */
   public function sessions( $args, $assoc_args ) {
-    $sessions = new \Pantheon\Checks\Sessions(\WP_CLI::get_config("path").'/wp-content');
-    $message = $sessions->init()->run();
-    \Pantheon\Messenger::queue($message);
-    $this->handle_output($assoc_args);
+    $searcher = new \Pantheon\Filesearcher(ABSPATH.'/wp-content');
+    $searcher->register( new \Pantheon\Checks\Insecure() );
+    $searcher->execute();
+    $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    \Pantheon\Messenger::emit($format);
   }
-
-  private function handle_output($json=false) {
-
-    exit;
-  }
-
-  /**
-   * adds a message to the output array
-   */
-  private function add_message($message) {
-    $this->ouput = array_push($this->output, $message);
-  }
-
 }
 
 // register our autoloader
