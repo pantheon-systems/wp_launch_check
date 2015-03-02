@@ -6,6 +6,8 @@ use Pantheon\Checkimplementation;
 use Pantheon\Messenger;
 
 class Plugins extends Checkimplementation {
+  public $name = 'plugins';
+
   public $check_all_plugins;
 
   public function __construct($check_all_plugins) {

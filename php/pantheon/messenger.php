@@ -36,7 +36,11 @@ class Messenger {
     $messenger = self::instance();
     switch($format) {
       case 'json':
-        \WP_CLI::print_value($messenger->messages,array('format'=>'json'));
+        $formatted = array();
+        foreach($messenger->messages as $message) {
+            $formatted[$message['name']] = $message;
+        }
+        \WP_CLI::print_value($formatted,array('format'=>'json'));
         break;
       case 'raw':
       case 'default':

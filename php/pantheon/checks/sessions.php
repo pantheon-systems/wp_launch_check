@@ -6,6 +6,7 @@ use Pantheon\Checkimplementation;
 use Pantheon\Messenger;
 
 class Sessions extends Checkimplementation {
+  public $name = 'sessions';
 
   public function init() {
     $this->action = 'You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/';

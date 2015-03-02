@@ -8,6 +8,7 @@ use Pantheon\Messenger;
 class Insecure extends Checkimplementation {
 
   public function init() {
+    $this->name = 'insecure';
     $this->action = 'We did not find any files running risky functions.';
     $this->description = 'PHP files running eval or base64_decode on user input can be insecure.';
     $this->score = 2;
