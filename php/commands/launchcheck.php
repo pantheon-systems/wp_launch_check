@@ -1,7 +1,7 @@
 <?php
 /**
 * Implements example command.
-* @version alpha-0.1
+* @version 0.1.4
 */
 class LaunchCheck extends WP_CLI_Command {
   public $fs;
