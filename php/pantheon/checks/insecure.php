@@ -15,7 +15,6 @@ class Insecure extends Checkimplementation {
     $this->score = 0;
     $this->result = '';
     $this->label = 'Risky PHP Functions';
-    $this->format = $format;
     return $this;
   }
 

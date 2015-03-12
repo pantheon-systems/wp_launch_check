@@ -13,7 +13,7 @@ class SearcherTest extends PHPUnit_Framework_TestCase {
 		$searcher->register( new \Pantheon\Checks\Sessions() );
 		$searcher->execute();
 		foreach($searcher->callbacks() as $check) {
-			$this->assertNotEquals(2,$check->score);
+			$this->assertNotEquals(0,$check->score);
 		}
 		Messenger::emit();
 	}

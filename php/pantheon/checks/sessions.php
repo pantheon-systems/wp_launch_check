@@ -16,7 +16,6 @@ class Sessions extends Checkimplementation {
     $this->result = '';
     $this->label = 'PHP Sessions';
     $this->has_plugin = class_exists("Pantheon_Sessions");
-    $this->format = $format;
     return $this;
   }
 

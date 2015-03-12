@@ -26,7 +26,6 @@ class Plugins extends Checkimplementation {
     $this->result = '';
     $this->label = 'Vulnerable Plugins';
     $this->alerts = array();
-    $this->format = $format;
     self::$instance = $this;
     return $this;
   }

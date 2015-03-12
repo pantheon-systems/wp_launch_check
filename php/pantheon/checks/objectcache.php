@@ -17,7 +17,6 @@ class Objectcache extends Checkimplementation {
     $this->result = '';
     $this->label = 'Object Cache';
     $this->alerts = array();
-    $this->format = $format;
     self::$instance = $this;
     return $this;
   }
