@@ -9,7 +9,7 @@ use Pantheon\View;
 class Objectcache extends Checkimplementation {
   public $check_all_plugins;
 
-  public function init($format) {
+  public function init() {
     $this->name = 'objectcache';
     $this->action = 'No action required';
     $this->description = 'Checking the object caching is on and responding.';

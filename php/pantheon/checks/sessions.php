@@ -9,7 +9,7 @@ use Pantheon\View;
 class Sessions extends Checkimplementation {
   public $name = 'sessions';
 
-  public function init($format) {
+  public function init() {
     $this->action = 'You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/';
     $this->description = 'Sessions only work with sessions plugin is enabled';
     $this->score = 0;

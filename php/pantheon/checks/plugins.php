@@ -14,7 +14,7 @@ class Plugins extends Checkimplementation {
     $this->check_all_plugins = $check_all_plugins;
   }
 
-  public function init($format) {
+  public function init() {
     $this->action = 'No action required';
     $this->description = 'Looking for vulnerable plugins';
     if ( $this->check_all_plugins ) {

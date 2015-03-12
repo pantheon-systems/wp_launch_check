@@ -23,9 +23,9 @@ class Checker {
     $this->callbacks[get_class($object)] = $object;
   }
 
-  public function execute($format) {
+  public function execute() {
     foreach($this->callbacks as $class => $object) {
-      $object->init($format);
+      $object->init();
     }
 
     foreach($this->callbacks as $class => $object) {

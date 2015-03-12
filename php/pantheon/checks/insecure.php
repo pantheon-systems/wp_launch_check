@@ -8,7 +8,7 @@ use Pantheon\View;
 
 class Insecure extends Checkimplementation {
 
-  public function init($format) {
+  public function init() {
     $this->name = 'insecure';
     $this->action = 'We did not find any files running risky functions.';
     $this->description = 'PHP files running eval or base64_decode on user input can be insecure.';
@@ -38,7 +38,7 @@ class Insecure extends Checkimplementation {
     if (!empty($this->alerts)) {
       $details = sprintf( "Found %s files that reference risky function. \n\t-> %s",
         count($this->alerts),
-        View::make('table',array('headers'=>array('File','Line','Match'),'rows'=>$this->alerts)),
+        View::make('table', array( 'headers'=>array('File','Line','Match'),'rows'=>$this->alerts ) )
       );
       $this->score = 1;
       $this->result .= $details;
