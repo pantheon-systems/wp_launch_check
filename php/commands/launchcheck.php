@@ -23,8 +23,8 @@ class LaunchCheck extends WP_CLI_Command {
     $checker = new \Pantheon\Checker();
     $checker->register( new \Pantheon\Checks\Plugins( isset($assoc_args['all'])) );
     $checker->register( new \Pantheon\Checks\Objectcache() );
-    $checker->execute();
     $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    $checker->execute($format);
     \Pantheon\Messenger::emit($format);
   }
 
@@ -45,8 +45,8 @@ class LaunchCheck extends WP_CLI_Command {
   public function object_cache($args, $assoc_args) {
     $checker = new \Pantheon\Checker();
     $checker->register( new \Pantheon\Checks\Objectcache() );
-    $checker->execute();
     $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    $checker->execute($format);
     \Pantheon\Messenger::emit($format);
   }
 
@@ -70,8 +70,8 @@ class LaunchCheck extends WP_CLI_Command {
     $searcher = new \Pantheon\Filesearcher(getcwd().'/wp-content');
     $searcher->register( new \Pantheon\Checks\Insecure() );
     $searcher->register( new \Pantheon\Checks\Exploited() );
-    $searcher->execute();
     $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    $searcher->execute($format);
     \Pantheon\Messenger::emit($format);
   }
 
@@ -95,8 +95,8 @@ class LaunchCheck extends WP_CLI_Command {
   public function plugins($args, $assoc_args) {
     $checker = new \Pantheon\Checker();
     $checker->register( new \Pantheon\Checks\Plugins( isset($assoc_args['all'])) );
-    $checker->execute();
     $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    $checker->execute($format);
     \Pantheon\Messenger::emit($format);
   }
 
@@ -115,9 +115,9 @@ class LaunchCheck extends WP_CLI_Command {
   */
   public function sessions( $args, $assoc_args ) {
     $searcher = new \Pantheon\Filesearcher(getcwd().'/wp-content');
-    $searcher->register( new \Pantheon\Checks\Insecure() );
-    $searcher->execute();
+    $searcher->register( new \Pantheon\Checks\Sessions() );
     $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    $searcher->execute($format);
     \Pantheon\Messenger::emit($format);
   }
 }

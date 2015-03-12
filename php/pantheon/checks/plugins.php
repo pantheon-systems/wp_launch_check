@@ -4,17 +4,17 @@ namespace Pantheon\Checks;
 use Pantheon\Utils;
 use Pantheon\Checkimplementation;
 use Pantheon\Messenger;
+use Pantheon\View;
 
 class Plugins extends Checkimplementation {
   public $name = 'plugins';
-
   public $check_all_plugins;
 
   public function __construct($check_all_plugins) {
     $this->check_all_plugins = $check_all_plugins;
   }
 
-  public function init() {
+  public function init($format) {
     $this->action = 'No action required';
     $this->description = 'Looking for vulnerable plugins';
     if ( $this->check_all_plugins ) {
@@ -22,10 +22,11 @@ class Plugins extends Checkimplementation {
     } else {
       $this->description .= ' ( active only )';
     }
-    $this->score = 2;
+    $this->score = 0;
     $this->result = '';
     $this->label = 'Vulnerable Plugins';
     $this->alerts = array();
+    $this->format = $format;
     self::$instance = $this;
     return $this;
   }
@@ -69,24 +70,21 @@ class Plugins extends Checkimplementation {
   * @return array containing the vulnerability or false ... 'unknown' if couldn't be verified
   */
   public function is_vulnerable($plugin_slug, $current_version) {
-    $url = sprintf('https://wpvulndb.com/api/v1/plugins/%s', $plugin_slug);
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Pantheon WP LaunchCheck');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-    $response = curl_exec($ch);
-    if ( '404' == curl_getinfo( $ch, CURLINFO_HTTP_CODE ) ) {
-      return false;
+    static $plugin_data;
+    if (!$plugin_data) {
+      $plugin_data_raw = json_decode(file_get_contents(WP_CLI_ROOT.'/php/pantheon/data.json'),1);
+      foreach ($plugin_data_raw as $plugin_name => $data) {
+        $plugin_data[$plugin_name] = (object) $data;
+      }
     }
-
-    $data = json_decode(trim($response));
-    if (!$data) return false;
-    foreach ($data->plugin->vulnerabilities as $vulnerability) {
+    $data = $plugin_data;
+    if (!isset($data[$plugin_slug])) return false;
+    foreach ($data[$plugin_slug]['vulnerabilities'] as $vulnerability) {
       // if the plugin hasn't been fixed then there's still and issue
-      if (!isset($vulnerability->fixed_in))
+      if (!isset($vulnerability['fixed_in']))
         return (array) $vulnerability;
       // if fixed but in a version greater than installed, still vulnerable
-      if (version_compare($vulnerability->fix_in,$current_version,'>'))
+      if (version_compare($vulnerability['fix_in'],$current_version,'>'))
         return (array) $vulnerability;
     }
 
@@ -95,14 +93,14 @@ class Plugins extends Checkimplementation {
 
   public function message(Messenger $messenger) {
       if (!empty($this->alerts)) {
-        $table = new \cli\Table();
-        $table->setHeaders(array(
+        $headers = array(
           'slug'=>"Plugin",
           'installed'=>"Current",
           'available' => "Available",
           'needs_update'=>"Needs Update",
           'vulnerable'=>"Vulnerabilities"
-        ));
+        );
+        $rows = array();
         $count_update = 0;
         $count_vuln = 0;
         foreach( $this->alerts as $alert ) {
@@ -112,19 +110,21 @@ class Plugins extends Checkimplementation {
           if ('none' !== $alert['vulnerable']) {
             $count_vuln++;
           }
-          $table->addRow($alert);
+          $rows[] = $alert;
         }
+
         $rendered = PHP_EOL;
         $rendered .= sprintf("Found %d plugins needing updates and %d known vulnerabilities ... \n".PHP_EOL, $count_update, $count_vuln);
-        $rendered .= join("\n", $table->getDisplayLines() );
+        $rendered .= View::make('table', array('headers'=>$headers,'rows'=>$rows));
+
         $this->result .= $rendered;
         if ($count_update > 0) {
-          $this->score = 0;
+          $this->score = 1;
           $this->action = "You should update all out-of-date plugins";
         }
 
         if ($count_vuln > 0) {
-          $this->score = -1;
+          $this->score = 2;
           $this->action = "Update plugins to fix vulnerabilities";
         }
     }

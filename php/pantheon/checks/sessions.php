@@ -4,17 +4,19 @@ namespace Pantheon\Checks;
 use Pantheon\Utils;
 use Pantheon\Checkimplementation;
 use Pantheon\Messenger;
+use Pantheon\View;
 
 class Sessions extends Checkimplementation {
   public $name = 'sessions';
 
-  public function init() {
+  public function init($format) {
     $this->action = 'You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/';
     $this->description = 'Sessions only work with sessions plugin is enabled';
-    $this->score = 2;
+    $this->score = 0;
     $this->result = '';
     $this->label = 'PHP Sessions';
     $this->has_plugin = class_exists("Pantheon_Sessions");
+    $this->format = $format;
     return $this;
   }
 
@@ -27,22 +29,19 @@ class Sessions extends Checkimplementation {
       if (count($matches) > 1) {
         array_shift($matches);
       }
-      foreach ($matches as $match) {
-        $note .= sprintf(" [ Line %d, Match: '%s']", $match[1] + 1, substr($match[0],0,50) );
-      }
-      $this->alerts[] = $file->getRelativePathname().$note;
+      $this->alerts[] = array( $file->getRelativePathname(),$match[1] + 1, substr($match[0],0,50));
     }
     return $this;
   }
 
   public function message(Messenger $messenger) {
     if (!empty($this->alerts)) {
-        $details = sprintf( "Found %s files that reference sessions \n\t-> %s",
+      $details = sprintf( "Found %s files that reference sessions \n\t-> %s",
         count($this->alerts),
-        join("\n\t-> ", $this->alerts )
+        View::make('table', array('headers'=>array('File','Line','Match'),'rows'=>$this->alerts))
       );
-      $this->score = -1;
-      $this->result .= $details;
+      $this->score = 2;
+      $this->result = $details;
     } else {
       if ( $this->has_plugin ) {
         $details = 'You are running wp-native-php-sessions plugin. No scan needed';

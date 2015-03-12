@@ -19,9 +19,9 @@ class Filesearcher extends Checker {
     return $this;
   }
 
-  public function execute() {
+  public function execute($format) {
     foreach($this->callbacks() as $class => $object) {
-      $object->init();
+      $object->init($format);
     }
 
     $files = $this->finder->files()->in($this->dir)->name("*.php");

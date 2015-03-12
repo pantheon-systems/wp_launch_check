@@ -35,6 +35,7 @@ class Messenger {
   public static function emit($format='raw') {
     $messenger = self::instance();
     switch($format) {
+      case 'pantheon':
       case 'json':
         $formatted = array();
         foreach($messenger->messages as $message) {
