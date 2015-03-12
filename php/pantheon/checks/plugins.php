@@ -16,7 +16,7 @@ class Plugins extends Checkimplementation {
 
   public function init() {
     $this->action = 'No action required';
-    $this->description = 'Looking for vulnerable plugins';
+    $this->description = 'Looking for plugin info';
     if ( $this->check_all_plugins ) {
       $this->description .= ' ( active and inactive )';
     } else {
@@ -24,7 +24,7 @@ class Plugins extends Checkimplementation {
     }
     $this->score = 0;
     $this->result = '';
-    $this->label = 'Vulnerable Plugins';
+    $this->label = 'Plugins';
     $this->alerts = array();
     self::$instance = $this;
     return $this;
