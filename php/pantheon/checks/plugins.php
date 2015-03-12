@@ -111,7 +111,7 @@ class Plugins extends Checkimplementation {
             $class = 'warning';
             $count_vuln++;
           }
-          $rows[] = array('class'= $class, 'data' => $alert);
+          $rows[] = array('class'=>$class, 'data' => $alert);
         }
 
         $rendered = PHP_EOL;
