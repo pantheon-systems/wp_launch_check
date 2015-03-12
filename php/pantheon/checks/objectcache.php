@@ -53,8 +53,8 @@ class Objectcache extends Checkimplementation {
             $label = 'notice';
           }
           $rows[] = array(
-            'check' => $alert['message'],
-            'status' => $label
+            'data' => $alert['message'],
+            'class' => $label
           );
         }
         $avg = $total/count($this->alerts);

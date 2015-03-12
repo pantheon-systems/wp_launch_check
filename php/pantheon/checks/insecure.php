@@ -28,7 +28,7 @@ class Insecure extends Checkimplementation {
         array_shift($matches);
       }
       foreach($matches as $match) {
-        $this->alerts[] = array($file->getRelativePathname(),  $match[1] + 1, substr($match[0],0,50));
+        $this->alerts[] = array( 'class'=>'warning', 'data'=> array( $file->getRelativePathname(),  $match[1] + 1, substr($match[0],0,50)));
       }
     }
     return $this;
