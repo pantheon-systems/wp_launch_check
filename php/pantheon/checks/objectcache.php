@@ -52,12 +52,12 @@ class Objectcache extends Checkimplementation {
             $label = 'notice';
           }
           $rows[] = array(
-            'data' => $alert['message'],
+            'data' => array($alert['message']),
             'class' => $label
           );
         }
         $avg = $total/count($this->alerts);
-        $this->result = View::make('table', array('rows'=>$rows) );
+        $this->result = View::make('table', array('rows'=> $rows) );
         $this->score = $avg;
         $this->action = "You should use object caching";
     }
