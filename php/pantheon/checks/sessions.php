@@ -28,8 +28,10 @@ class Sessions extends Checkimplementation {
       if (count($matches) > 1) {
         array_shift($matches);
       }
-      $this->alerts[] = array( 'class' => 'error','data'=>array($file->getRelativePathname(),$match[1] + 1, substr($match[0],0,50)));
-    }
+      foreach ($matches as $match) {
+        $this->alerts[] = array( 'class' => 'error','data'=>array($file->getRelativePathname(),$match[1] + 1, substr($match[0],0,50)));
+      }
+    } 
     return $this;
   }
 
