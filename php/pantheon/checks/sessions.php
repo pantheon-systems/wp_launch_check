@@ -37,10 +37,10 @@ class Sessions extends Checkimplementation {
 
   public function message(Messenger $messenger) {
     if (!empty($this->alerts)) {
-      $checks = array( 
+      $checks = array( array(
             'message' => sprintf( "Found %s files that reference sessions. %s <hr/>", count($this->alerts), $this->action ),
             'class'   => 'error',
-       );
+      ) );
       $this->result .= View::make('checklist', array('rows'=>$checks));
       $this->result .= View::make('table', array('headers'=>array('File','Line','Match'),'rows'=>$this->alerts));
       $this->score = 2;
