@@ -77,14 +77,15 @@ class Cron extends Checkimplementation {
         foreach ($this->cron as $timestamp => $crons) { 
           foreach ($crons as $job => $data) {
             $class = 'ok';
+            $data = array_shift($data);
             if ($timestamp < microtime()) {
-              $class = "waring";
+              $class = "warning";
               $this->action = "Some cronjobs are outdated.";
             }
             $rows[] = array('class'=>$class,'data'=> array('jobname' => $job,'schedule' => $data['schedule'], 'next' => date('M j,Y @ H:i:s', $timestamp)));    
           }
         }
-        $this->result .= View::make('table', array('rows'=>$rows,'headers'=>$headers));
+        $this->result .= sprintf( "<hr/>%s",View::make('table', array('rows'=>$rows,'headers'=>$headers)));
         $this->score = $avg;
     }
     $messenger->addMessage(get_object_vars($this));
