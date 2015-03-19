@@ -21,7 +21,8 @@ class LaunchCheck extends WP_CLI_Command {
     $searcher->register( new \Pantheon\Checks\Exploited() );
     $searcher->execute();
     $checker = new \Pantheon\Checker();
-    $checker->register( new \Pantheon\Checks\Plugins( isset($assoc_args['all'])) );
+    $checker->register( new \Pantheon\Checks\Plugins(isset($assoc_args['all'])) );
+    $checker->register( new \Pantheon\Checks\Cron() );
     $checker->register( new \Pantheon\Checks\Objectcache() );
     $checker->execute();
     $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
