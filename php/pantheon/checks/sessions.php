@@ -41,14 +41,14 @@ class Sessions extends Checkimplementation {
             'message' => sprintf( "Found %s files that reference sessions. %s <hr/>", count($this->alerts), $this->action ),
             'class'   => 'error',
        );
-      $this->results .= View::make('checklist', $checks);
-      $this->results .= View::make('table', array('headers'=>array('File','Line','Match'),'rows'=>$this->alerts));
+      $this->result .= View::make('checklist', array('rows'=>$checks));
+      $this->result .= View::make('table', array('headers'=>array('File','Line','Match'),'rows'=>$this->alerts));
       $this->score = 2;
     } else {
       if ( $this->has_plugin ) {
-        $this->results = View::make('checklist', array( array( 'message' => 'You are running wp-native-php-sessions plugin.', 'class'=>'ok' ) ) );
+        $this->result = View::make('checklist', array( array( 'message' => 'You are running wp-native-php-sessions plugin.', 'class'=>'ok' ) ) );
       } else {
-        $this->results = View::make('checklist', array( array( 'message' => 'No files referencing sessions found.', 'class'=>'ok' ) ) );
+        $this->result = View::make('checklist', array( array( 'message' => 'No files referencing sessions found.', 'class'=>'ok' ) ) );
       }
     }
     $messenger->addMessage(get_object_vars($this));
