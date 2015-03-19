@@ -29,6 +29,23 @@ class LaunchCheck extends WP_CLI_Command {
   }
 
   /**
+   * Checks the cron
+   * 
+   * ## OPTIONS
+   * 
+   * [--format=<json>] 
+   * : use to output json
+   * 
+   */
+  function cron($args, $assoc_args) {
+    $checker = new \Pantheon\Checker();
+    $checker->register( new \Pantheon\Checks\Cron() );
+    $checker->execute();
+    $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    \Pantheon\Messenger::emit($format);
+  }
+
+  /**
   * checks for object caching
   *
   * ## OPTIONS
