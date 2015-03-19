@@ -45,19 +45,16 @@ class Objectcache extends Checkimplementation {
         $rows = array();
         foreach ($this->alerts as $alert) {
           $total += $alert['code'];
-          $label = 'ok';
+          $alert['class'] = 'ok';
           if (-1 === $alert['code']) {
-            $label = 'warning';
+            $alert['class'] = 'fail';
           } elseif( 2 > $alert['code']) {
-            $label = 'notice';
+            $alert['class'] = 'warning';
           }
-          $rows[] = array(
-            'data' => array($alert['message']),
-            'class' => $label
-          );
+          $rows[] = $alert;
         }
         $avg = $total/count($this->alerts);
-        $this->result = View::make('table', array('rows'=> $rows) );
+        $this->result = View::make('checklist', array('rows'=> $rows) );
         $this->score = $avg;
         $this->action = "You should use object caching";
     }
