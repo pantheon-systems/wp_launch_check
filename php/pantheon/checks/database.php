@@ -134,7 +134,7 @@ class Database extends Checkimplementation {
         }
         $avg = $total/count($this->alerts);
         $this->result = View::make('checklist', array('rows'=> $rows) );
-        $this->score = $avg;
+        $this->score = round($avg);
     }
     $messenger->addMessage(get_object_vars($this));
   }
