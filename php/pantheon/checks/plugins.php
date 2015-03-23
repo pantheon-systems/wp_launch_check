@@ -71,7 +71,7 @@ class Plugins extends Checkimplementation {
   public function is_vulnerable($plugin_slug, $current_version) {
     static $plugin_data;
     if (!$plugin_data) {
-      $plugin_data_raw = json_decode(file_get_contents(WP_CLI_ROOT.'/php/pantheon/data.json'),1);
+      $plugin_data_raw = json_decode(file_get_contents('https://wpvulndb.com/data/plugin_vulns.json'),1);
       foreach ($plugin_data_raw as $plugin_name => $data) {
         $plugin_data[$plugin_name] = (object) $data;
       }
