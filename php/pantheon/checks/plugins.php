@@ -103,6 +103,7 @@ class Plugins extends Checkimplementation {
         $count_update = 0;
         $count_vuln = 0;
         foreach( $this->alerts as $alert ) {
+          $class = 'ok';
           if ($alert['needs_update']) {
             $class = 'warning';
             $count_update++;
