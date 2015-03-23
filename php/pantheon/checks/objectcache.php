@@ -43,6 +43,7 @@ class Objectcache extends Checkimplementation {
       if (!empty($this->alerts)) {
         $total = 0;
         $rows = array();
+        // this is dumb and left over from the previous iterationg. @TODO move scoring to run() method
         foreach ($this->alerts as $alert) {
           $total += $alert['code'];
           $alert['class'] = 'ok';

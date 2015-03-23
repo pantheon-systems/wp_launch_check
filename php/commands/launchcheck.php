@@ -45,6 +45,23 @@ class LaunchCheck extends WP_CLI_Command {
     $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
     \Pantheon\Messenger::emit($format);
   }
+  
+  /**
+   * Check database for potential issues
+   * 
+   * ## OPTIONS
+   * 
+   * [--format=<json>] 
+   * : use to output json
+   * 
+   */
+  function database($args, $assoc_args) {
+    $checker = new \Pantheon\Checker();
+    $checker->register( new \Pantheon\Checks\Database() );
+    $checker->execute();
+    $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    \Pantheon\Messenger::emit($format);
+  }
 
   /**
   * checks for object caching
