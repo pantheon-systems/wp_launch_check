@@ -74,13 +74,15 @@ class Cron extends Checkimplementation {
           'schedule' => 'Frequency',
           'next'    => 'Next Run',
         );
+
+        // @TODO move this logic to the run() function or checkCron() function
         foreach ($this->cron as $timestamp => $crons) { 
           foreach ($crons as $job => $data) {
             $class = 'ok';
             $data = array_shift($data);
-            if ($timestamp < microtime()) {
-              $class = "warning";
-              $this->action = "Some cronjobs are outdated.";
+            if ($timestamp < time()) {
+              $class = "fail";
+              $this->action = "<div class='warning'>Some cronjobs are outdated.</div>";
             }
             $rows[] = array('class'=>$class,'data'=> array('jobname' => $job,'schedule' => $data['schedule'], 'next' => date('M j,Y @ H:i:s', $timestamp)));    
           }
