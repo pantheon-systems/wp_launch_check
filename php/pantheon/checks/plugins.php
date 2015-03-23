@@ -42,6 +42,7 @@ class Plugins extends Checkimplementation {
       if (stripos($plugin_path,'/')) {
         $slug = substr($plugin_path, 0, stripos($plugin_path,'/'));
       }
+      
       $vulnerable = $this->is_vulnerable($slug, $data['Version']);
 
       $needs_update = 0;
@@ -50,13 +51,19 @@ class Plugins extends Checkimplementation {
         $needs_update = 1;
         $available = $update[$plugin_path]->update->new_version;
       }
-
+      if ( false === $vulnerable ) {
+        $vulnerable = "None";
+      } else {
+        $link = preg_replace("#'(.*)'#s",'$1',$vulnerable['url'][0]);
+        $vulnerable = sprintf('<a href="%s" target="_blank" >%s</a>', $link, $link);
+      }
+      
       $report[$slug] = array(
         'slug' => $slug,
         'installed' => (string) $data['Version'],
         'available' => (string) $available,
         'needs_update' => (string) $needs_update,
-        'vulnerable'  => is_array( $vulnerable ) ?  "'".$vulnerable['url'][0]."'" : "none",
+        'vulnerable'  => $vulnerable, 
       );
     }
     $this->alerts = $report;
@@ -72,18 +79,20 @@ class Plugins extends Checkimplementation {
     static $plugin_data;
     if (!$plugin_data) {
       $plugin_data_raw = json_decode(file_get_contents('https://wpvulndb.com/data/plugin_vulns.json'),1);
-      foreach ($plugin_data_raw as $plugin_name => $data) {
-        $plugin_data[$plugin_name] = (object) $data;
+      foreach ($plugin_data_raw as $plugin) {
+        foreach ($plugin as $plugin_name => $data) {
+          $plugin_data[$plugin_name] = (object) $data;
+        }
       }
     }
     $data = $plugin_data;
     if (!isset($data[$plugin_slug])) return false;
-    foreach ($data[$plugin_slug]['vulnerabilities'] as $vulnerability) {
+    foreach ($data[$plugin_slug]->vulnerabilities as $vulnerability) {
       // if the plugin hasn't been fixed then there's still and issue
       if (!isset($vulnerability['fixed_in']))
         return (array) $vulnerability;
       // if fixed but in a version greater than installed, still vulnerable
-      if (version_compare($vulnerability['fix_in'],$current_version,'>'))
+      if (version_compare($vulnerability['fixed_in'],$current_version,'>'))
         return (array) $vulnerability;
     }
 
