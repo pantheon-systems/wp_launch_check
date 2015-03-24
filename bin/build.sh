@@ -12,10 +12,10 @@ sudo php -dphar.readonly=0 utils/make-phar.php wp-cli.phar --quiet
 sudo cp wp-cli.phar $WORKINGDIR/
 
 if [[ ! $( type s3cmd ) ]]; then 
-	apt-get install s3cmd
+	sudo apt-get install s3cmd
 fi;
 
-echo '[default]
+sudo echo "[default]
 access_key = $AMAZON_ACCESS_ID
 acl_public = False
 bucket_location = US
@@ -49,7 +49,7 @@ simpledb_host = sdb.amazonaws.com
 skip_existing = False
 urlencoding_mode = normal
 use_https = False
-verbosity = WARNING' > ~/.s3cfg
+verbosity = WARNING" > ~/.s3cfg
 
 version=$( cat $WORKINGDIR/VERSION )
 wp_version=$( cat /tmp/wp-cli/VERSION )
