@@ -117,7 +117,7 @@ class Plugins extends Checkimplementation {
             $class = 'warning';
             $count_update++;
           }
-          if ('none' !== $alert['vulnerable']) {
+          if ('None' != $alert['vulnerable']) {
             $class = 'error';
             $count_vuln++;
           }
