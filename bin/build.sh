@@ -1,6 +1,6 @@
 #!/bin/bash
 WORKINGDIR=$PWD
-CLI_DIR=$WORKINGDIR/wp-cli
+CLI_DIR=/tmp/wp-cli
 sudo git clone https://github.com/wp-cli/wp-cli.git $CLI_DIR
 
 cd $CLI_DIR
