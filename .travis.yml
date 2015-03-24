@@ -21,4 +21,4 @@ before_script:
   - gem install fpm
   - gem install package_cloud
 script: bash bin/test.sh
-after_success: bin/build.sh && bin/build-rpm.sh && package_cloud pantheon/internal/wp-cli *.rpm  
+after_success: bin/build.sh && bin/build-rpm.sh && package_cloud pantheon/internal/wp-cli/fedora/20 *.rpm && package_cloud pantheon/internal/wp-cli/fedora/21 *.rpm 
