@@ -13,6 +13,6 @@ ARGS="--working-dir=$CLIDIR --prefer-dist"
 if [ -f composer.phar ]; then php ./composer.phar update $ARGS; else composer update $ARGS; fi
 sudo rsync --exclude=.git -avzu $WORKINGDIR/php/ $CLIDIR/php/
 cd $CLIDIR
-sudo php -dphar.readonly=0 utils/make-phar.php wp-cli.phar --quiet
+php -dphar.readonly=0 utils/make-phar.php wp-cli.phar
 sudo cp wp-cli.phar $WORKINGDIR/wp-cli.phar
 cd $WORKINGDIR
