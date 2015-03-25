@@ -75,15 +75,15 @@ class Database extends Checkimplementation {
     $not_innodb = $innodb = array();
     foreach ($this->getTables() as $table) {
        if ("InnoDB" == $table->ENGINE) {
-          $innodb = $table->TABLE_NAME;
+          $innodb[] = $table->TABLE_NAME;
        } else {
-          $not_innodb = $table->TABLE_NAME;
+          $not_innodb[] = $table->TABLE_NAME;
        }
     }
     if (!empty($not_innodb)) {
       $this->alerts[] = array(
         'code'=> 2,
-        'message' => sprintf("The following tables are not InnoDB: %s. To fix run 'UPDATE mysql.TABLES set ENGINE='InnoDB' WHERE TABLE_SCHEMA = '%s'", DB_NAME, join(', ', $not_innodb)),
+        'message' => sprintf("The following tables are not InnoDB: %s. To fix run 'UPDATE mysql.TABLES set ENGINE='InnoDB' WHERE TABLE_SCHEMA = '%s'", join(', ', $not_innodb), DB_NAME),
         'class' => 'fail',
       );
     } else {
