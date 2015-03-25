@@ -6,10 +6,10 @@ phpunit
 WORKINGDIR=$PWD
 CLIDIR=/home/travis/wp-cli
 sudo git clone https://github.com/wp-cli/wp-cli wp-cli
-ARGS="--working-dir=$CLI_DIR --prefer-dist"
+ARGS="--working-dir=$CLIDIR --prefer-dist"
 if [ -f composer.phar ]; then php ./composer.phar update $ARGS; else composer update $ARGS; fi
-sudo rsync --exclude=.git -avzu $WORKINGDIR/php/ $CLI_DIR/php/
-cd $CLI_DIR
+sudo rsync --exclude=.git -avzu $WORKINGDIR/php/ $CLIDIR/php/
+cd $CLIDIR
 sudo php -dphar.readonly=0 utils/make-phar.php $WORKINGDIR/wp-cli.phar --quiet
 cd $WORKINGDIR
 
