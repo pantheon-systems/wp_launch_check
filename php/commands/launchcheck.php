@@ -65,6 +65,23 @@ class LaunchCheck extends WP_CLI_Command {
   }
 
   /**
+   * Checks for best practice
+   * 
+   * ## OPTIONS
+   * 
+   * [--format=<json>] 
+   * : use to output json
+   * 
+   */
+  function general($args, $assoc_args) {
+    $checker = new \Pantheon\Checker();
+    $checker->register( new \Pantheon\Checks\General() );
+    $checker->execute();
+    $format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+    \Pantheon\Messenger::emit($format);
+  }
+
+  /**
   * checks for object caching
   *
   * ## OPTIONS
