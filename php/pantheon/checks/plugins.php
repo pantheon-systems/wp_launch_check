@@ -54,8 +54,7 @@ class Plugins extends Checkimplementation {
       if ( false === $vulnerable ) {
         $vulnerable = "None";
       } else {
-        $link = preg_replace("#'(.*)'#s",'$1',$vulnerable['url'][0]);
-        $vulnerable = sprintf('<a href="%s" target="_blank" >%s</a>', $link, $link);
+        $vulnerable = sprintf('<a href="https://wpvulndb.com/plugins/%s" target="_blank" >more info</a>', $slug );
       }
       
       $report[$slug] = array(
@@ -89,11 +88,15 @@ class Plugins extends Checkimplementation {
     if (!isset($data[$plugin_slug])) return false;
     foreach ($data[$plugin_slug]->vulnerabilities as $vulnerability) {
       // if the plugin hasn't been fixed then there's still and issue
-      if (!isset($vulnerability['fixed_in']))
+      if (!isset($vulnerability['fixed_in'])) {
         return (array) $vulnerability;
+      }
       // if fixed but in a version greater than installed, still vulnerable
+      //echo "$plugin_slug: Comparing vuln={$vulnerability['fixed_in']} current=$current_version".PHP_EOL;
+      var_dump(version_compare($vulnerability['fixed_in'],$current_version,'>'));
       if (version_compare($vulnerability['fixed_in'],$current_version,'>'))
-        return (array) $vulnerability;
+        return (array) $vulnerability; 
+
     }
 
     return false;
