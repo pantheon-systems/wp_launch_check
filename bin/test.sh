@@ -4,7 +4,7 @@ if [ -f composer.phar ]; then php ./composer.phar update; else composer update; 
 phpunit
 
 WORKINGDIR=$PWD
-CLIDIR=~/wp-cli
+CLIDIR=/tmp/wp-cli
 sudo git clone https://github.com/wp-cli/wp-cli $CLIDIR
 ARGS="--working-dir=$CLIDIR --prefer-dist"
 if [ -f composer.phar ]; then php ./composer.phar update $ARGS; else composer update $ARGS; fi
