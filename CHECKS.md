@@ -66,3 +66,15 @@ This check runs the following db checks
  * Also checks number of rows in the options table. If over 10,000 it alerts 'error' because this is an indication that expired transients are stacking up or that they are using a lugin that over uses the options table. A bloated options table can be a major cause of WP performance issues. 
  * Counts options that are set to 'autoload', alerts is more than 1,000 are found. This is relevant because WordPress runs ```SELECT * FROM wp_options WHERE autoload = 'yes'``` on every page load to prepopulate the runtime cache. In cases where the query takes to long or returns too much data this can slow down page load. The only benefit to the runtime cache comes when object caching is not in use, but it is strongly encourage that some kind of object cache is always in use. 
  * Looks for transients and expired transients. Some plugins will use transients regularly but not add a garbage collection cron task. Core WordPress has not garbage collection for the transient api. Over time this can cause transients to bloat the ```wp_options``` database as mentioned above.
+
+### Cron
+**Cron:** [\Pantheon\Checks\Cron](php/commands/checks/cron.php)
+This check simple examines whether ```DISABLE_WP_CRON``` evaluates ```true``` to see if cron has been disabled. ( We should probably also curl the wp-cron.php?doing_wp_cron and ensure we get a 200 ). Some hosts disable the default WP_Cron functionality, substituting a system cron, because the HTTP base WP_Cron can sometimes have race conditions develop causing what might be referred to as "runaway cron", in which HTTP multiple requests trigger the cron a small amount of time causing a spike in PHP/MySQL resource consumption. This check also dumps the scheduled tasks into a table using ```get_option('cron')```. 
+
+### object-cache
+**objectcache** [\Pantheon\Checks\Cron](php/commands/checks/objectcache.php)
+Checks is the ```wp-content/object-cache.php``` exists to detemine whether object caching is in use. Checks that the ```global $redis_server``` variable is not empty to determine whether redis is being used.
+
+### plugins
+**plugins** [\Pantheon\Checks\Plugins](php/commands/checks/plugins.php)
+Checks all plugins against the wpvulndb.com database we license. Alerts 'error' if a vulnerability is found and links to the wpvulndb.com page for more info. Also checks for available updates and alerts 'warning' if plugins needing an update are found.
