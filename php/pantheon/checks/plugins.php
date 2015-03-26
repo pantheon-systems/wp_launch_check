@@ -93,7 +93,6 @@ class Plugins extends Checkimplementation {
       }
       // if fixed but in a version greater than installed, still vulnerable
       //echo "$plugin_slug: Comparing vuln={$vulnerability['fixed_in']} current=$current_version".PHP_EOL;
-      var_dump(version_compare($vulnerability['fixed_in'],$current_version,'>'));
       if (version_compare($vulnerability['fixed_in'],$current_version,'>'))
         return (array) $vulnerability; 
 
