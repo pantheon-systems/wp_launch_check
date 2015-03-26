@@ -8,15 +8,15 @@ There are currently two broad types of checkers.
 
 
 The Checker oject has two key methods 
-  * register( Check $check ): receives an instance of a check to run.
-  * execute(): executes all registered checks
+  * ```register( Check $check )```: receives an instance of a check to run.
+  * ```execute()```: executes all registered checks
   
 The checks themselves are all extensions of the [\Patheon\Checkimplementation](php/pantheon/Checkimplemtation.php) class, each containing the following methods: 
-  * init()
-  * run()
-  * message();
+  * ```init()```
+  * ```run()```
+  * ```message()```;
 
-The Checker object holds a collection of Check objects which it iterates and invokes each of these methods. In the case of the Filesearcher object, the init() method generates the file list ( if not already present ) and the run() method is passed a $file parameter.
+The Checker object holds a collection of Check objects which it iterates and invokes each of these methods. In the case of the Filesearcher object, the ```init()``` method generates the file list ( if not already present ) and the ```run()``` method is passed a $file parameter.
 
 The message method recieves a [\Pantheon\Messsenger](php/pantheon/messenger.php) and updates the various Check object properties for output. The output of each check is simply the formatted representation of the object properties. 
 
@@ -32,7 +32,7 @@ The message method recieves a [\Pantheon\Messsenger](php/pantheon/messenger.php)
   * ```$alerts```: an array of alerts to rendered for the ```$result```. Each alert should be an array: ``` array(
       'code' => 2,
       'class' => 'error',
-      'message' => 'THis is a sample error message',
+      'message' => 'This is a sample error message',
     );```
 
 ## Filesearchers
@@ -42,4 +42,27 @@ The message method recieves a [\Pantheon\Messsenger](php/pantheon/messenger.php)
 This check does a ```preg_match``` on each file passed to the run() method for the regex ```.*(session_start|SESSION).*```
 
 ### Secure
-**Check:** \Pantheon\Check
+**Check:** [\Pantheon\Check\Insecure](php/pantheon/checks/insecure.php)
+This check looks for insecure code by running ````preg_match("#.*(eval|base64_decode)\(.*#:", $filecontent)```. This regex can be improved but the theory here is that ```eval``` and ```base64_decode``` are insecure because the first is discouraged even by PHP because it executes arbitrary code. The second isn't necessarily insecure by itself but is often combined with eploits to obfuscate the malicious code. ```base64_decode``` can also sometimes lead to php segfaults [ **This check is not currently used in the Pantheon dashboard ** ]
+
+**Check:** [\Pantheon\Check\Exploited](php/pantheon/checks/exploited.php) This check attempts to find actual exploits by running ```'.*eval\(.*base64_decode\(.*';```. The goal here is to find instance of ```eval``` operating on decoded base64, which is almost certainly a bad idea. This regex should be refined because now it technically could alert when it finds the two functions on the same page but not necessary in the right order, leading to a false positive.
+
+## Regular Checkers 
+
+### General 
+**Check:** [\Pantheon\Checks\General](php/pantheon/checks/general.php)
+This check does the following:
+ * Checks for WP_DEBUG=True, returns 'ok' if in dev, 'warning; in live
+ * Checks whether the debug-bar plugin is active, 'ok' in dev, 'warning' in live
+ * Counts active plugins. Alerts if more than 100 are active
+ * Checks database settings for ```home``` and ```siteurl``` and whether they match. If they do not it recommends fixing. You can do this with WP_CLI/Terminus using 'terminus wp search-replace 'domain1' 'domain2' --site=sitename --env=dev'
+ * Checks whether WP Super Cache and/or W3 Total Cache are found and alerts 'warning' if so.
+ * 
+
+### Database
+**Database:** [\Pantheon\Checks\Database](php/pantheon/checks/database.php) 
+This check runs the following db checks
+ * Runs this query ```SELECT TABLES.TABLE_NAME, TABLES.TABLE_SCHEMA, TABLES.TABLE_ROWS, TABLES.DATA_LENGTH, TABLES.ENGINE from information_schema.TABLES where TABLES.TABLE_SCHEMA = '%s'``` and checks that all tables as set to InnoDb storage engine, alerts 'error' if not and specifies a query that can be run to fix the issue.
+ * Also checks number of rows in the options table. If over 10,000 it alerts 'error' because this is an indication that expired transients are stacking up or that they are using a lugin that over uses the options table. A bloated options table can be a major cause of WP performance issues. 
+ * Counts options that are set to 'autoload', alerts is more than 1,000 are found. This is relevant because WordPress runs ```SELECT * FROM wp_options WHERE autoload = 'yes'``` on every page load to prepopulate the runtime cache. In cases where the query takes to long or returns too much data this can slow down page load. The only benefit to the runtime cache comes when object caching is not in use, but it is strongly encourage that some kind of object cache is always in use. 
+ * Looks for transients and expired transients. Some plugins will use transients regularly but not add a garbage collection cron task. Core WordPress has not garbage collection for the transient api. Over time this can cause transients to bloat the ```wp_options``` database as mentioned above.
