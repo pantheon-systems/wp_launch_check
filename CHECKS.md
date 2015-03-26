@@ -33,8 +33,7 @@ The message method recieves a [\Pantheon\Messsenger](php/pantheon/messenger.php)
       'code' => 2,
       'class' => 'error',
       'message' => 'THis is a sample error message',
-    );
-    ```
+    );```
 
 ## Filesearchers
 
