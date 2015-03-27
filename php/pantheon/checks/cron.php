@@ -76,17 +76,19 @@ class Cron extends Checkimplementation {
         );
 
         // @TODO move this logic to the run() function or checkCron() function
-        foreach ($this->cron as $timestamp => $crons) { 
-          foreach ($crons as $job => $data) {
-            $class = 'ok';
-            $data = array_shift($data);
-            if ($timestamp < time()) {
-              $class = "error";
-              $this->action = "<div class='warning'>Some cronjobs are outdated.</div>";
-            }
-            $rows[] = array('class'=>$class,'data'=> array('jobname' => $job,'schedule' => $data['schedule'], 'next' => date('M j,Y @ H:i:s', $timestamp)));    
-          }
-        }
+				if ($this->cron) {
+        	foreach ($this->cron as $timestamp => $crons) { 
+          	foreach ($crons as $job => $data) {
+	            $class = 'ok';
+  	          $data = array_shift($data);
+    	        if ($timestamp < time()) {
+        	      $class = "error";
+      	        $this->action = "<div class='warning'>Some cronjobs are outdated.</div>";
+          	  }
+            	$rows[] = array('class'=>$class,'data'=> array('jobname' => $job,'schedule' => $data['schedule'], 'next' => date('M j,Y @ H:i:s', $timestamp)));    
+          	}
+        	}
+				}
         $this->result .= sprintf( "<hr/>%s",View::make('table', array('rows'=>$rows,'headers'=>$headers)));
         $this->score = $avg;
     }
