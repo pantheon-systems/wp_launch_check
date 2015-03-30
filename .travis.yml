@@ -19,4 +19,8 @@ before_script:
   - gem install fpm
   - gem install package_cloud
 script: bash bin/test.sh
-after_success: bin/build-rpm.sh && package_cloud push pantheon/internal/fedora/20 *.rpm && package_cloud pantheon/internal/fedora/21 *.rpm 
+after_success:
+  - bin/build-rpm.sh
+  - package_cloud push pantheon/internal/fedora/19 *.rpm
+  - package_cloud push pantheon/internal/fedora/20 *.rpm
+  - package_cloud push pantheon/internal/fedora/21 *.rpm
