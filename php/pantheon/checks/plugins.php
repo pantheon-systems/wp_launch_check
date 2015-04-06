@@ -140,6 +140,8 @@ class Plugins extends Checkimplementation {
           $this->score = 2;
           $this->action = "Update plugins to fix vulnerabilities";
         }
+    } else {
+      $this->result .= "No plugins found.";
     }
     $messenger->addMessage(get_object_vars($this));
   }

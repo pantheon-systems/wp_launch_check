@@ -46,9 +46,9 @@ class Sessions extends Checkimplementation {
       $this->score = 2;
     } else {
       if ( $this->has_plugin ) {
-        $this->result = View::make('checklist', array( array( 'message' => 'You are running wp-native-php-sessions plugin.', 'class'=>'ok' ) ) );
+        $this->result .= 'You are running wp-native-php-sessions plugin.';
       } else {
-        $this->result = View::make('checklist', array( array( 'message' => 'No files referencing sessions found.', 'class'=>'ok' ) ) );
+        $this->result .= 'No files referencing sessions found.';
       }
     }
     $messenger->addMessage(get_object_vars($this));
