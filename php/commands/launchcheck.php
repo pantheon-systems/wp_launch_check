@@ -13,6 +13,11 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
+	 * [--format=<json>]
+	 * : use to output json
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
 	 */
 	public function all( $args, $assoc_args ) {
 		unset( $args );
@@ -39,6 +44,8 @@ class LaunchCheck extends WP_CLI_Command {
 	 * [--format=<json>]
 	 * : use to output json
 	 *
+	 * @param array $args
+	 * @param array $assoc_args
 	 */
 	function cron( $args, $assoc_args ) {
 		unset( $args );
@@ -57,6 +64,8 @@ class LaunchCheck extends WP_CLI_Command {
 	 * [--format=<json>]
 	 * : use to output json
 	 *
+	 * @param array $args
+	 * @param array $assoc_args
 	 */
 	function database( $args, $assoc_args ) {
 		unset( $args );
@@ -75,6 +84,8 @@ class LaunchCheck extends WP_CLI_Command {
 	 * [--format=<json>]
 	 * : use to output json
 	 *
+	 * @param array $args
+	 * @param array $assoc_args
 	 */
 	function general( $args, $assoc_args ) {
 		unset( $args );
@@ -97,6 +108,8 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 *     wp launchcheck object-cache
 	 *
+	 * @param array $args
+	 * @param array $assoc_args
 	 * @alias object-cache
 	 */
 	public function object_cache( $args, $assoc_args ) {
@@ -123,6 +136,8 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 *     wp secure --skip=wp-content/themes
 	 *
+	 * @param array $args
+	 * @param array $assoc_args
 	 */
 	public function secure( $args, $assoc_args ) {
 		unset( $args );
@@ -150,6 +165,8 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 *     wp launchcheck plugins --all
 	 *
+	 * @param array $args
+	 * @param array $assoc_args
 	 */
 	public function plugins( $args, $assoc_args ) {
 		unset( $args );
@@ -172,6 +189,8 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 *     wp launchcheck sessions
 	 *
+	 * @param array $args
+	 * @param array $assoc_args
 	 */
 	public function sessions( $args, $assoc_args ) {
 		unset( $args );
