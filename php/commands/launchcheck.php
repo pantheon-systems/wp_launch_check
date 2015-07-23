@@ -15,7 +15,8 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 */
 	public function all( $args, $assoc_args ) {
-		$searcher = new \Pantheon\Filesearcher( getcwd().'/wp-content' );
+		unset( $args );
+		$searcher = new \Pantheon\Filesearcher( getcwd() . '/wp-content' );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
@@ -40,6 +41,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 */
 	function cron( $args, $assoc_args ) {
+		unset( $args );
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Cron() );
 		$checker->execute();
@@ -57,6 +59,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 */
 	function database( $args, $assoc_args ) {
+		unset( $args );
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Database() );
 		$checker->execute();
@@ -74,6 +77,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 */
 	function general( $args, $assoc_args ) {
+		unset( $args );
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\General() );
 		$checker->execute();
@@ -96,9 +100,9 @@ class LaunchCheck extends WP_CLI_Command {
 	 * @alias object-cache
 	 */
 	public function object_cache( $args, $assoc_args ) {
+		unset( $args );
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Objectcache() );
-		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'raw';
 		$checker->execute();
 		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit( $format );
@@ -121,10 +125,10 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 */
 	public function secure( $args, $assoc_args ) {
-		$searcher = new \Pantheon\Filesearcher( getcwd().'/wp-content' );
+		unset( $args );
+		$searcher = new \Pantheon\Filesearcher( getcwd() . '/wp-content' );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
-		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'raw';
 		$searcher->execute();
 		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit( $format );
@@ -147,10 +151,10 @@ class LaunchCheck extends WP_CLI_Command {
 	 *     wp launchcheck plugins --all
 	 *
 	 */
-	public function plugins($args, $assoc_args) {
+	public function plugins( $args, $assoc_args ) {
+		unset( $args );
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Plugins( isset( $assoc_args['all'] ) ) );
-		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'raw';
 		$checker->execute();
 		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit( $format );
@@ -170,9 +174,9 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 */
 	public function sessions( $args, $assoc_args ) {
+		unset( $args );
 		$searcher = new \Pantheon\Filesearcher( getcwd().'/wp-content' );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
-		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'raw';
 		$searcher->execute();
 		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit( $format );
