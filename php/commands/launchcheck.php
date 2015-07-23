@@ -14,7 +14,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 * ## OPTIONS
 	 *
 	 */
-	public function all($args, $assoc_args) {
+	public function all( $args, $assoc_args ) {
 		$searcher = new \Pantheon\Filesearcher( getcwd().'/wp-content' );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
@@ -39,7 +39,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 * : use to output json
 	 *
 	 */
-	function cron($args, $assoc_args) {
+	function cron( $args, $assoc_args ) {
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Cron() );
 		$checker->execute();
@@ -56,7 +56,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 * : use to output json
 	 *
 	 */
-	function database($args, $assoc_args) {
+	function database( $args, $assoc_args ) {
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Database() );
 		$checker->execute();
@@ -73,7 +73,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 * : use to output json
 	 *
 	 */
-	function general($args, $assoc_args) {
+	function general( $args, $assoc_args ) {
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\General() );
 		$checker->execute();
@@ -95,7 +95,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 * @alias object-cache
 	 */
-	public function object_cache($args, $assoc_args) {
+	public function object_cache( $args, $assoc_args ) {
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Objectcache() );
 		$format = isset( $assoc_args['format'] ) ? $assoc_args['format'] : 'raw';
@@ -120,7 +120,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 *     wp secure --skip=wp-content/themes
 	 *
 	 */
-	public function secure($args, $assoc_args) {
+	public function secure( $args, $assoc_args ) {
 		$searcher = new \Pantheon\Filesearcher( getcwd().'/wp-content' );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
