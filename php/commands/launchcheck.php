@@ -185,7 +185,8 @@ spl_autoload_register(function($class) {
   $class = strtolower($class);
   if (strstr($class,"pantheon")) {
     $class = str_replace('\\','/',$class);
-    $path = WP_CLI_ROOT."/php/".$class.'.php';
+    $path = dirname(__FILE__)  . "/../".$class.'.php';
+    print $path . "\n";
     if (file_exists($path)) {
       require_once($path);
     }
