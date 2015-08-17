@@ -85,7 +85,7 @@ class Cron extends Checkimplementation {
         	      $class = "error";
       	        $this->action = "<div class='warning'>Some cronjobs are outdated.</div>";
           	  }
-            	$rows[] = array('class'=>$class,'data'=> array('jobname' => $job,'schedule' => $data['schedule'], 'next' => date('M j,Y @ H:i:s', $timestamp)));    
+            	$rows[] = array('class'=>$class,'data'=> array('jobname' => $job,'schedule' => $data['schedule'], 'next' => date('M j, Y @ H:i:s', $timestamp)));    
           	}
         	}
 				}
