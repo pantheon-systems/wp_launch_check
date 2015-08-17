@@ -31,7 +31,7 @@ class Objectcache extends Checkimplementation {
     }
 
     if (empty($redis_server)) {
-      $this->alerts[] = array("message"=> 'Use redis with WP-Redis object caching to speed up your backend.<a href="https://pantheon.io/docs/articles/sites/installing-redis-on-wordpress/" target="_blank">Learn More</a>', "code" => 1);
+      $this->alerts[] = array("message"=> 'Use redis with WP-Redis object caching to speed up your backend. <a href="https://pantheon.io/docs/articles/sites/installing-redis-on-wordpress/" target="_blank">Learn More</a>', "code" => 1);
     } else {
       $this->alerts[] = array("message"=> "Redis found", "code" => 0);
     }
