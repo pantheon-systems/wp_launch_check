@@ -78,8 +78,9 @@ class Cron extends Checkimplementation {
         // @TODO move this logic to the run() function or checkCron() function
 				if ($this->cron) {
         	foreach ($this->cron as $timestamp => $crons) { 
-            // Truncate the crons list so we're not creating unreasonably large reports
-            // @TODO: A lot of cron jobs may be a sign of trouble and should probably be a warning.
+            // Truncate the crons list so we're not creating unreasonably large reports caused by:
+            // https://core.trac.wordpress.org/ticket/33423
+            // @TODO: Turn this into a warning with a suggestion to patch or upgrade.
             if (count($crons) < 100) {
               $crons = array_slice($crons, 0, 100, true);
             }
