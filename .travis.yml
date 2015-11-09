@@ -24,3 +24,7 @@ after_success:
   - package_cloud push pantheon/internal/fedora/19 *.rpm
   - package_cloud push pantheon/internal/fedora/20 *.rpm
   - package_cloud push pantheon/internal/fedora/22 *.rpm
+notifications:
+  email:
+    on_success: never
+    on_failure: change
