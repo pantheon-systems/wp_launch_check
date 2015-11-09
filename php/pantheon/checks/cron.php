@@ -69,7 +69,7 @@ class Cron extends Checkimplementation {
         else if ($timestamp < $now) {
           $past++;
           $class = "error";
-          $next = date('M j,Y @ H:i:s', $timestamp) . ' (PAST DUE)';
+          $next = date('M j, Y @ H:i:s', $timestamp) . ' (PAST DUE)';
         }
         $this->cron_rows[] = array('class' => $class, 'data' => array('jobname' => $job, 'schedule' => $data['schedule'], 'next' => $next));
         $total++;
