@@ -3,10 +3,10 @@ namespace Pantheon;
 
 interface Checkinterface {
 
-  // set the default state of the test
-  public function init();
+	// set the default state of the test
+	public function init();
 
-  // run the test
-  public function run();
+	// run the test
+	public function run();
 
 }
