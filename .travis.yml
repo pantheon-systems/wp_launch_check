@@ -15,13 +15,16 @@ matrix:
   include:
     - php: 5.3
       env: WP_VERSION=latest WP_MULTISITE=1
-before_script:
+install:
+  - composer install
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
-  - bash bin/prepare.sh
   - sudo apt-get install rpm
   - gem install fpm
   - gem install package_cloud
-script: bash bin/test.sh
+before_script:
+  - bash bin/prepare.sh
+script:
+  - phpunit
 notifications:
   email:
     on_success: never
