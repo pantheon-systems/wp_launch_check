@@ -21,7 +21,7 @@ class Sessions extends Checkimplementation {
 
   public function run($file) {
     if ($this->has_plugin) return;
-    $regex = '.*(session_start|SESSION).*';
+    $regex = '.*(session_start|\$_SESSION).*';
     preg_match('#'.$regex.'#s',$file->getContents(), $matches, PREG_OFFSET_CAPTURE );
     if ( $matches ) {
       $note = '';
