@@ -15,6 +15,7 @@ env:
   - secure: rYtYZdrLJCIMhO3gas4i2FA3uGX0e1XhIwGCB014T2KMiKhPVhfTY0Yz9ZbQHDCO8qnOU7g4t86wGDXXTNMI5crcDm1eg57CSAd8gfuuDt0XK6ATyRbxQGv+zkCi0+q82QL6CL9W/FwtOJQmwcXLw8v5aM3c8rM3FbP2+Q7+jg0=
 before_script:
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - bash bin/prepare.sh
   - sudo apt-get install rpm
   - gem install fpm
   - gem install package_cloud

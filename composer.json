@@ -1,7 +1,6 @@
 {
 	"require": {
 		"symfony/finder": "~2.3",
-		"symfony/filesystem": "~2.3",
-		"wp-cli/php-cli-tools": "0.10.3"
+		"symfony/filesystem": "~2.3"
 	}
 }
