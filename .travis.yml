@@ -19,4 +19,7 @@ before_script:
   - gem install fpm
   - gem install package_cloud
 script: bash bin/test.sh
-
+notifications:
+  email:
+    on_success: never
+    on_failure: change
