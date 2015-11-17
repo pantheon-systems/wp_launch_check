@@ -15,7 +15,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 */
 	public function all($args, $assoc_args) {
-		$searcher = new \Pantheon\Filesearcher(getcwd().'/wp-content');
+		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
@@ -121,7 +121,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 */
 	public function secure($args, $assoc_args) {
-		$searcher = new \Pantheon\Filesearcher(getcwd().'/wp-content');
+		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
@@ -170,7 +170,7 @@ class LaunchCheck extends WP_CLI_Command {
 	 *
 	 */
 	public function sessions( $args, $assoc_args ) {
-		$searcher = new \Pantheon\Filesearcher(getcwd().'/wp-content');
+		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		$searcher->execute();
