@@ -22,6 +22,7 @@ class LaunchCheck extends WP_CLI_Command {
 		$searcher->execute();
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Plugins(isset($assoc_args['all'])) );
+		$checker->register( new \Pantheon\Checks\Config() );
 		$checker->register( new \Pantheon\Checks\Cron() );
 		$checker->register( new \Pantheon\Checks\Objectcache() );
 		$checker->register( new \Pantheon\Checks\Database() );
