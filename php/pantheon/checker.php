@@ -29,7 +29,7 @@ class Checker {
     }
 
     foreach($this->callbacks as $class => $object) {
-      $object->run($file);
+      $object->run();
     }
 
     foreach($this->callbacks as $class => $object) {
