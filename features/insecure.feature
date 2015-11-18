@@ -8,7 +8,7 @@ Feature: Test WordPress for insecure files
       eval('\<\? echo "tem";');
       """
 
-    When I run `wp launchcheck all`
+    When I run `wp launchcheck secure`
     Then STDOUT should contain:
       """
       Recommendation: You do not need to deactivate these files, but please scrutinize them in the event of a security issue.
