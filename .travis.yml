@@ -1,26 +1,27 @@
 language: php
 php:
 - 5.3
-- 5.4
-- 5.5
+- 5.6
 env:
   matrix:
   - WP_VERSION=latest WP_MULTISITE=0
-  - WP_VERSION=latest WP_MULTISITE=1
   global:
   - secure: g2hKXgygRmNeP9BuO2+s7vHj7Yl2HdBoeRn8CLc2sHlKWuqRFNoCAN5l0AiW26CgF73Hp8rnQlXFaUp5ycN9k5gvMOy0a/wOrVQYiNBPC5yrYZvdDbPWJNqc2bsL+bx03G7je5mO/hvv/wcPM2xEv/HOcenm3pb3zQVKtYkYOR0=
   - secure: FGL+m3NfDAQ17UzWxhAnsriAKqUIRKLOIgvBYGsGtEJ4t1yJSG8k6exJExKSUJHaYD74NHXLq1WD0XHlG0OwCOr21+MdpF4kOrxghFZBK7LQSXAU2lHFURa3nOrhmKPANWyIwgY47PDmmkXtFBhPgyC0XNDXqvxs84B+GZ+4nV4=
   - secure: RMULqCfQSi6ZuTLbV6Jwx41HOcxrB95X8nIDXFEqCukdia6UHEma5qBFe0IzpFt1DvhUqnBnTEcQxp4UhfV8+wDJiELfAgul+d90e7to34i7L2/OYKugTXcNhe3II0H5X6Vg/a+lfqUVFcdxownRSiOF1KQygLN7msMpxFxR2Fw=
   - secure: f95V2B3vsz1Brb3mnfNSO0S5BF9qlr+dkUjsDUn/a/9iyNy0TmvlVW5FEk/Vl2vBHL0pRv91+i3mhu1y3ylFmPm4y3bZdw4vof6xbHzgklhhFrCeEOe1FHmYXLvuKrox+Jf82ubSU2ALxjFyareFuLkddzr0LgOBV8mOeTXbgzM=
   - secure: rYtYZdrLJCIMhO3gas4i2FA3uGX0e1XhIwGCB014T2KMiKhPVhfTY0Yz9ZbQHDCO8qnOU7g4t86wGDXXTNMI5crcDm1eg57CSAd8gfuuDt0XK6ATyRbxQGv+zkCi0+q82QL6CL9W/FwtOJQmwcXLw8v5aM3c8rM3FbP2+Q7+jg0=
+matrix:
+  include:
+    - php: 5.3
+      env: WP_VERSION=latest WP_MULTISITE=1
 before_script:
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
   - sudo apt-get install rpm
   - gem install fpm
   - gem install package_cloud
 script: bash bin/test.sh
-after_success:
-  - bin/build-rpm.sh
-  - package_cloud push pantheon/internal/fedora/19 *.rpm
-  - package_cloud push pantheon/internal/fedora/20 *.rpm
-  - package_cloud push pantheon/internal/fedora/21 *.rpm
+notifications:
+  email:
+    on_success: never
+    on_failure: change
