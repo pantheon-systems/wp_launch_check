@@ -55,7 +55,7 @@ class Database extends Checkimplementation {
 			$this->alerts[] = array('code'=>0, 'message'=> sprintf("Found %s rows in the options table.", $options_table->TABLE_ROWS), 'class'=>'ok');
 		} 
 
-		$autoloads = $wpdb->get_results("SELECT * FROM wp_options WHERE autoload = 'yes'");
+		$autoloads = $wpdb->get_results("SELECT * FROM " . $options_table . "options WHERE autoload = 'yes'");
 		if ( 1000 < count($autoloads) ) {
 			$this->alerts[] = array(
 				'code'=>1,
@@ -97,7 +97,7 @@ class Database extends Checkimplementation {
 
 	public function checkTransients() {
 		global $wpdb;
-		$query = "SELECT option_name,option_value from wp_options where option_name LIKE '%_transient_%';";
+		$query = "SELECT option_name,option_value from " . $wpdb->prefix . "options where option_name LIKE '%_transient_%';";
 		$transients = $wpdb->get_results($query);
 		$this->alerts[] = array( 
 			'code'=> 0,
