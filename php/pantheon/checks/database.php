@@ -55,7 +55,7 @@ class Database extends Checkimplementation {
 			$this->alerts[] = array('code'=>0, 'message'=> sprintf("Found %s rows in the options table.", $options_table->TABLE_ROWS), 'class'=>'ok');
 		} 
 
-		$autoloads = $wpdb->get_results("SELECT * FROM " . $options_table . "options WHERE autoload = 'yes'");
+		$autoloads = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "options WHERE autoload = 'yes'");
 		if ( 1000 < count($autoloads) ) {
 			$this->alerts[] = array(
 				'code'=>1,
