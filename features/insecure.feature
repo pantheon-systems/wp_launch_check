@@ -5,7 +5,7 @@ Feature: Test WordPress for insecure files
     And a wp-content/mu-plugins/insecure-file.php file:
       """
       <?php
-      eval('\<\? echo "tem";');
+      eval('echo "tem";');
       """
 
     When I run `wp launchcheck secure`
