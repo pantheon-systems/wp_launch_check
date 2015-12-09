@@ -5,7 +5,7 @@ phpunit
 
 WORKINGDIR=$PWD
 CLIDIR=/tmp/wp-cli
-sudo git clone https://github.com/wp-cli/wp-cli $CLIDIR
+sudo git clone --branch release-0-21-2 https://github.com/wp-cli/wp-cli $CLIDIR
 sudo mkdir -p $CLIDIR/vendor
 sudo chown -R travis: $CLIDIR
 sudo chmod -R 0777 $CLIDIR
