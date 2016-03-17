@@ -23,5 +23,6 @@ env:
 
 before_script:
   - bash bin/install-package-tests.sh
+  - bash bin/prepare.sh
 
 script: ./vendor/bin/behat

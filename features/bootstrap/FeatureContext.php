@@ -13,7 +13,15 @@ if ( file_exists( __DIR__ . '/utils.php' ) ) {
 	require_once __DIR__ . '/utils.php';
 	require_once __DIR__ . '/Process.php';
 	$project_composer = dirname( dirname( dirname( __FILE__ ) ) ) . '/composer.json';
-	if ( file_exists( $project_composer ) ) {
+	$built_phar = dirname( dirname( dirname( __FILE__ ) ) ) . '/wp_launch_check.phar';
+	if ( file_exists( $built_phar ) ) {
+		$contents = 'require:' . PHP_EOL;
+		$contents .= '  - ' . $built_phar;
+		@mkdir( sys_get_temp_dir() . '/wp-cli-package-test/' );
+		$project_config = sys_get_temp_dir() . '/wp-cli-package-test/config.yml';
+		file_put_contents( $project_config, $contents );
+		putenv( 'WP_CLI_CONFIG_PATH=' . $project_config );
+	} else if ( file_exists( $project_composer ) ) {
 		$composer = json_decode( file_get_contents( $project_composer ) );
 		if ( ! empty( $composer->autoload->files ) ) {
 			$contents = 'require:' . PHP_EOL;

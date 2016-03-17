@@ -20,7 +20,7 @@ function set_file_contents( $phar, $path, $content ) {
 	$phar[ $key ] = $content;
 }
 
-$phar = new Phar( 'wp-launch-check.phar', 0, 'wp-launch-check.phar' );
+$phar = new Phar( 'wp_launch_check.phar', 0, 'wp_launch_check.phar' );
 
 $phar->startBuffering();
 
@@ -40,17 +40,14 @@ foreach ( $finder as $file ) {
 	add_file( $phar, $file );
 }
 
-
-add_file( $phar, WP_LAUNCH_CHECK_ROOT . '/vendor/autoload.php' );
-
 $phar->setStub( <<<EOB
 <?php
 Phar::mapPhar();
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
-	echo "Error: wp_launch_check can only be loaded by WP-CLI. Use `wp --require=wp-launch-check.phar`" . PHP_EOL;
+	echo "Error: wp_launch_check can only be loaded by WP-CLI. Use `wp --require=wp_launch_check.phar`" . PHP_EOL;
 	exit(1);
 }
-include 'phar://wp-launch-check.phar/php/commands/launchcheck.php';
+include 'phar://wp_launch_check.phar/php/commands/launchcheck.php';
 __HALT_COMPILER();
 ?>
 EOB
