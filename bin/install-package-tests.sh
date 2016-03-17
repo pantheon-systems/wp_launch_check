@@ -21,15 +21,6 @@ install_wp_cli() {
 
 }
 
-set_package_context() {
-
-	touch $WP_CLI_CONFIG_PATH
-	printf 'require:' > $WP_CLI_CONFIG_PATH
-	printf "\n%2s-%1s$PACKAGE_DIR/wp-launch-check.phar" >> $WP_CLI_CONFIG_PATH
-	printf "\n" >> $WP_CLI_CONFIG_PATH
-
-}
-
 download_behat() {
 
 	mkdir -p $PACKAGE_DIR/behat
@@ -44,6 +35,5 @@ install_db() {
 }
 
 install_wp_cli
-set_package_context
 download_behat
 install_db

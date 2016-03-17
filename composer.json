@@ -1,6 +1,14 @@
 {
-	"require": {
-		"symfony/finder": "~2.3",
-		"symfony/filesystem": "~2.3"
-	}
+    "name": "pantheon-systems/wp_launch_check",
+    "description": "Check against a WordPress for performance and security",
+    "license": "MIT",
+    "authors": [],
+    "minimum-stability": "dev",
+    "autoload": {
+        "files": [ "php/commands/launchcheck.php" ]
+    },
+    "require": {},
+    "require-dev": {
+        "behat/behat": "~2.5"
+    }
 }

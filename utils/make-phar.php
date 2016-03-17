@@ -31,7 +31,6 @@ $finder
 	->ignoreVCS(true)
 	->name('*.php')
 	->in(WP_LAUNCH_CHECK_ROOT . '/php')
-	->in(WP_LAUNCH_CHECK_ROOT . '/vendor/symfony')
 	->exclude('test')
 	->exclude('tests')
 	->exclude('Tests')
