@@ -21,19 +21,10 @@ install_wp_cli() {
 
 }
 
-download_behat() {
-
-	mkdir -p $PACKAGE_DIR/behat
-	cd $PACKAGE_DIR/behat
-	composer require --dev behat/behat='~2.5'
-
-}
-
 install_db() {
 	mysql -e 'CREATE DATABASE IF NOT EXISTS wp_cli_test;' -uroot
 	mysql -e 'GRANT ALL PRIVILEGES ON wp_cli_test.* TO "wp_cli_test"@"localhost" IDENTIFIED BY "password1"' -uroot
 }
 
 install_wp_cli
-download_behat
 install_db
