@@ -23,6 +23,7 @@ env:
 
 before_script:
   - bash bin/install-package-tests.sh
+  - composer install
   - bash bin/prepare.sh
 
 script: ./vendor/bin/behat
