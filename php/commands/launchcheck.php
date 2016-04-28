@@ -3,7 +3,7 @@
 * Implements example command.
 * @version 0.1.4
 */
-class LaunchCheck extends WP_CLI_Command {
+class LaunchCheck {
 	public $fs;
 	public $skipfiles = array();
 	public $output = array();
@@ -192,4 +192,6 @@ spl_autoload_register(function($class) {
 	}
 });
 
-WP_CLI::add_command( 'launchcheck', 'LaunchCheck' );
+if ( class_exists( 'WP_CLI' ) ) {
+	WP_CLI::add_command( 'launchcheck', 'LaunchCheck' );
+}
