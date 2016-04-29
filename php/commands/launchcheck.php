@@ -22,9 +22,27 @@ class LaunchCheck {
 		$searcher->execute();
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Plugins(isset($assoc_args['all'])) );
+		$checker->register( new \Pantheon\Checks\Config() );
 		$checker->register( new \Pantheon\Checks\Cron() );
 		$checker->register( new \Pantheon\Checks\Objectcache() );
 		$checker->register( new \Pantheon\Checks\Database() );
+		$checker->execute();
+		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+		\Pantheon\Messenger::emit($format);
+	}
+
+	/**
+	 * Checks for a properly-configured wp-config
+	 * 
+	 * ## OPTIONS
+	 * 
+	 * [--format=<json>] 
+	 * : use to output json
+	 * 
+	 */
+	function config($args, $assoc_args) {
+		$checker = new \Pantheon\Checker();
+		$checker->register( new \Pantheon\Checks\Config() );
 		$checker->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
