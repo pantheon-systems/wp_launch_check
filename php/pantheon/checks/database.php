@@ -83,7 +83,7 @@ class Database extends Checkimplementation {
 		if (!empty($not_innodb)) {
 			$this->alerts[] = array(
 				'code'=> 2,
-				'message' => sprintf("The following tables are not InnoDB: %s. To fix run 'UPDATE mysql.TABLES set ENGINE='InnoDB' WHERE TABLE_SCHEMA = '%s'", join(', ', $not_innodb), DB_NAME),
+				'message' => sprintf("The following tables are not InnoDB: %s. To fix, please see documentation: %s", join(', ', $not_innodb), 'https://pantheon.io/docs/articles/sites/database/myisam-to-innodb/' ),
 				'class' => 'fail',
 			);
 		} else {
