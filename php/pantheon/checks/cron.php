@@ -54,7 +54,13 @@ class Cron extends Checkimplementation {
 		$cron = get_option('cron');
 
 		// Count the cron jobs and alert if there are an excessive number scheduled.
-		foreach ($cron as $timestamp => $crons) { 
+		foreach ($cron as $timestamp => $crons) {
+
+			// 'cron' option includes a 'version' key... ?!?!
+			if ( 'version' === $timestamp ) {
+				continue;
+			}
+
 			foreach ($crons as $job => $data) {
 				$class = 'ok';
 				$data = array_shift($data);
