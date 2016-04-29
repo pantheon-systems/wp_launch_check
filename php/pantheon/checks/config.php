@@ -22,6 +22,7 @@ class Config extends Checkimplementation {
 
 	public function run() {
 		$this->checkWPCache();
+		$this->checkNoServerNameWPHomeSiteUrl();
 		return $this;
 	}
 
@@ -37,6 +38,23 @@ class Config extends Checkimplementation {
 				'code'  => 0,
 				'class' => 'ok',
 				'message' => 'WP_CACHE not found or is set to false.',
+			);
+		}
+	}
+
+	public function checkNoServerNameWPHomeSiteUrl() {
+		$wp_config = \WP_CLI::get_runner()->get_wp_config_code();
+		if ( preg_match( '#define\(.+WP_(HOME|SITEURL).+\$_SERVER.+SERVER_NAME#', $wp_config ) ) {
+			$this->alerts[]  = array(
+				'code'  => 0,
+				'class' => 'warning',
+				'message' => "\$_SERVER['SERVER_NAME'] appears to be used to define WP_HOME or WP_SITE_URL, which will be unreliable on Pantheon.",
+			);
+		} else {
+			$this->alerts[]  = array(
+				'code'  => 0,
+				'class' => 'ok',
+				'message' => "Verified that \$_SERVER['SERVER_NAME'] isn't being used to define WP_HOME or WP_SITE_URL.",
 			);
 		}
 	}
