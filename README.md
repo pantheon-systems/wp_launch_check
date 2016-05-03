@@ -9,6 +9,16 @@ For more information about WP-CLI you can visit [their github page](https://gith
 
 WP Launch Check should be considered in "BETA". Many of the checks have still not been tested in the wild. If you experience a problem please open an issue. 
 
+## Local install
+
+Grab this repo and place in the web root for your local site. Run these commands from within ```wp_launch_check-master```
+We reocommend using composer to handle dependencies setup. See [Composer installation instructions](https://getcomposer.org/download/) for more information. 
+
+Run ```composer install```
+Run ```bash bin/prepare.sh```
+Start using ```wp``` with the new launchcheck. Example: ```wp --require=wp_launch_check.phar launchcheck all```
+
+
 ## Available commands
 
 Below is a summary of the available commands. *Full technical description of each check run by each command can be found in the [CHECKS.md](CHECKS.md)*
