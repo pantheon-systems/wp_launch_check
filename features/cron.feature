@@ -3,6 +3,21 @@ Feature: Check crons
   Background:
     Given a WP install
 
+  Scenario: Cron check is healthy against a normal WordPress install
+    When I run `wp launchcheck cron`
+    Then STDOUT should contain:
+      """
+      Cron is enabled.
+      """
+    And STDOUT should not contain:
+      """
+      cron job(s) with an invalid time.
+      """
+    And STDOUT should not contain:
+      """
+      This is too many to display and may indicate a problem with your site.
+      """
+
   Scenario: WP Launch Check normally outputs a list of crons
     When I run `wp launchcheck cron`
     Then STDOUT should contain:
@@ -27,4 +42,21 @@ Feature: Check crons
     Then STDOUT should contain:
       """
       Cron is enabled.
+      """
+
+  Scenario: Cron check warns when there are too many crons to display
+    Given a wp-content/mu-plugins/plugin.php file:
+      """
+      <?php
+      for ( $i=0; $i < 55; $i++ ) {
+          // WP Cron doesn't permit registering two at the same time
+          // so we need to distribute these crons against a spread of time
+          wp_schedule_event( time() + ( $i * 3 ), 'hourly', 'too_many_crons_hook' );
+      }
+      """
+
+    When I run `wp launchcheck cron`
+    Then STDOUT should contain:
+      """
+      This is too many to display and may indicate a problem with your site.
       """
