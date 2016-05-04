@@ -25,6 +25,7 @@ class General extends Checkimplementation {
 		$this->checkCaching();
 		$this->checkPluginCount();
 		$this->checkUrls();
+		$this->checkRegisteredDomains();
 	}
 
 	public function checkCaching() {
@@ -133,7 +134,35 @@ class General extends Checkimplementation {
 
 	}
 
-	
+	public function checkRegisteredDomains() {
+		if ( ! is_multisite() || ! function_exists( 'pantheon_curl' ) || empty( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
+			return;
+		}
+		$bits = parse_url( 'https://api.live.getpantheon.com:8443/sites/self/state' );
+		$response = pantheon_curl( sprintf( '%s://%s%s', $bits['scheme'], $bits['host'], $bits['path'] ), null, $bits['port'] );
+		$body = ! empty( $response['body'] ) ? json_decode( $response['body'], true ) : '';
+		$pantheon_domains = ! empty( $body['environments'][ $_ENV['PANTHEON_ENVIRONMENT'] ]['urls'] ) ? $body['environments'][ $_ENV['PANTHEON_ENVIRONMENT'] ]['urls'] : array();
+		$site_domains = array();
+		$it = new \WP_CLI\Iterators\Table( array(
+			'table'   => $GLOBALS['wpdb']->blogs,
+		) );
+		foreach( $it as $blog ) {
+			$site_domains[] = parse_url( get_site_url( $blog->blog_id ), PHP_URL_HOST );
+		}
+		if ( $diff = array_diff( $site_domains, $pantheon_domains ) ) {
+			$this->alerts[] = array(
+				'code'    => 1,
+				'class'   => 'warning',
+				'message' => 'One or more WordPress domains are not registered as Pantheon domains: ' . implode( ', ', $diff ),
+			);
+		} else {
+			$this->alerts[] = array(
+				'code'    => 0,
+				'class'   => 'info',
+				'message' => 'WordPress domains are verified to be in sync with Pantheon domains.'
+			);
+		}
+	}
 
 	public function message(Messenger $messenger) {
 			if (!empty($this->alerts)) {
