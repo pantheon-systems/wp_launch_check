@@ -62,7 +62,7 @@ Feature: Check crons
     When I run `wp launchcheck cron`
     Then STDOUT should contain:
       """
-      Some jobs are registered more than 10 times, which is excessive and may indicate a problem with your code.
+      Some jobs are registered more than 10 times, which is excessive and may indicate a problem with your code. These jobs include: too_many_crons_hook
       """
     And STDOUT should contain:
       """
