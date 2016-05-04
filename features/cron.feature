@@ -15,6 +15,10 @@ Feature: Check crons
       """
     And STDOUT should not contain:
       """
+      Some jobs are registered more than 10 times, which is excessive and may indicate a problem with your code.
+      """
+    And STDOUT should not contain:
+      """
       This is too many to display and may indicate a problem with your site.
       """
 
@@ -57,6 +61,10 @@ Feature: Check crons
 
     When I run `wp launchcheck cron`
     Then STDOUT should contain:
+      """
+      Some jobs are registered more than 10 times, which is excessive and may indicate a problem with your code.
+      """
+    And STDOUT should contain:
       """
       This is too many to display and may indicate a problem with your site.
       """

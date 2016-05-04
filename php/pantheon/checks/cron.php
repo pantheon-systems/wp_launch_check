@@ -8,6 +8,7 @@ use Pantheon\View;
 
 class Cron extends Checkimplementation {
 	const MAX_CRON_DISPLAY = 50;
+	const EXCESSIVE_DUPLICATE_JOBS = 10;
 
 	public function init() {
 		$this->name = 'cron';
@@ -54,6 +55,7 @@ class Cron extends Checkimplementation {
 		$cron = get_option('cron');
 
 		// Count the cron jobs and alert if there are an excessive number scheduled.
+		$job_name_counts = array();
 		foreach ($cron as $timestamp => $crons) {
 
 			// 'cron' option includes a 'version' key... ?!?!
@@ -79,6 +81,10 @@ class Cron extends Checkimplementation {
 				}
 				$this->cron_rows[] = array('class' => $class, 'data' => array('jobname' => $job, 'schedule' => $data['schedule'], 'next' => $next));
 				$total++;
+				if ( ! isset( $job_name_counts[ $job ] ) ) {
+					$job_name_counts[ $job ] = 0;
+				}
+				$job_name_counts[ $job ]++;
 			}
 		}
 
@@ -96,6 +102,19 @@ class Cron extends Checkimplementation {
 				'code' => 1 
 			);
 		}    
+		$excessive_jobs = array();
+		foreach( $job_name_counts as $job_name => $count ) {
+			if ( $count > self::EXCESSIVE_DUPLICATE_JOBS ) {
+				$excessive_jobs[] = $job_name;
+			}
+		}
+		if ( ! empty( $excessive_jobs ) ) {
+			$this->alerts[] = array(
+				'class' => 'fail',
+				'message' => 'Some jobs are registered more than 10 times, which is excessive and may indicate a problem with your code. These jobs include: ' . implode( ', ', $excessive_jobs ),
+				'code'  => 1,
+			);
+		}
 		if ($total > self::MAX_CRON_DISPLAY) {
 			$this->alerts[] = array( 
 				'class' => 'pass', 
