@@ -13,16 +13,21 @@ class LaunchCheck {
 	 *
 	 * ## OPTIONS
 	 *
+	 * @when before_wp_load
 	 */
 	public function all($args, $assoc_args) {
+		// Runs before WordPress loads
+		$checker = new \Pantheon\Checker();
+		$checker->register( new \Pantheon\Checks\Config() );
+		$checker->execute();
+
+		// WordPress is now loaded, so other checks can run
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
 		$searcher->execute();
-		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Plugins(isset($assoc_args['all'])) );
-		$checker->register( new \Pantheon\Checks\Config() );
 		$checker->register( new \Pantheon\Checks\Cron() );
 		$checker->register( new \Pantheon\Checks\Objectcache() );
 		$checker->register( new \Pantheon\Checks\Database() );
@@ -38,7 +43,8 @@ class LaunchCheck {
 	 * 
 	 * [--format=<json>] 
 	 * : use to output json
-	 * 
+	 *
+	 * @when before_wp_load
 	 */
 	function config($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
