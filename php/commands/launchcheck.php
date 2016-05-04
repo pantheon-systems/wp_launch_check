@@ -21,6 +21,10 @@ class LaunchCheck {
 		$checker->register( new \Pantheon\Checks\Config() );
 		$checker->execute();
 
+		// Config only loads WP with valid db credentials. If they're invalid,
+		// Then this will trigger a database connection error.
+		@WP_CLI::get_runner()->load_wordpress();
+
 		// WordPress is now loaded, so other checks can run
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );

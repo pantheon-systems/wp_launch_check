@@ -210,3 +210,9 @@ Feature: Check the wp-config.php file
 			"""
 			Error: Error establishing a database connection
 			"""
+
+		When I try `wp --require=wp-config-env.php launchcheck all`
+		Then STDERR should be:
+			"""
+			Error: Error establishing a database connection
+			"""
