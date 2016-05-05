@@ -92,6 +92,7 @@ class Config extends Checkimplementation {
 				'message' => 'Some database constants differ from their expected $_ENV values: ' . implode( ', ' , $different_values ),
 			);
 			$this->valid_db = false;
+			$this->action = 'Please <a href="https://pantheon.io/docs/wp-config-php/">update your wp-config.php</a> file to support $_ENV-based configuration values.';
 		} else {
 			$this->alerts[]  = array(
 				'code'  => 0,

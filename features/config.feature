@@ -164,6 +164,10 @@ Feature: Check the wp-config.php file
 			"""
 			DB_NAME, DB_USER, DB_PASSWORD, DB_HOST are set to their expected $_ENV values.
 			"""
+		And STDOUT should contain:
+			"""
+			Recommendation: No action required
+			"""
 
 		Given a wp-config.php file:
 			"""
@@ -203,6 +207,10 @@ Feature: Check the wp-config.php file
 		Then STDOUT should contain:
 			"""
 			Some database constants differ from their expected $_ENV values: DB_USER, DB_PASSWORD
+			"""
+		And STDOUT should contain:
+			"""
+			Recommendation: Please <a href="https://pantheon.io/docs/wp-config-php/">update your wp-config.php</a> file to support $_ENV-based configuration values.
 			"""
 
 		When I try `wp --require=wp-config-env.php launchcheck cron`
