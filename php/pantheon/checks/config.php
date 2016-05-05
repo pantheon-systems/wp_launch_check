@@ -9,7 +9,7 @@ use Pantheon\View;
 class Config extends Checkimplementation {
 
 	private $run_once = false;
-	private $valid_db = true;
+	public $valid_db = true;
 
 	public function init() {
 		$this->name = 'config';

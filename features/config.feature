@@ -220,7 +220,19 @@ Feature: Check the wp-config.php file
 			"""
 
 		When I try `wp --require=wp-config-env.php launchcheck all`
-		Then STDERR should be:
+		Then STDOUT should contain:
+			"""
+			Some database constants differ from their expected $_ENV values: DB_USER, DB_PASSWORD
+			"""
+		And STDOUT should contain:
+			"""
+			Recommendation: Please <a href="https://pantheon.io/docs/wp-config-php/">update your wp-config.php</a> file to support $_ENV-based configuration values.
+			"""
+		And STDERR should contain:
+			"""
+			Warning: Detected invalid database credentials, skipping remaining checks
+			"""
+		And STDERR should not contain:
 			"""
 			Error: Error establishing a database connection
 			"""
