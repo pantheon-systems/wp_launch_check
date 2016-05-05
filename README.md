@@ -7,7 +7,13 @@ To use WP Launch Check simply run the ```wp launchcheck <subcommand>``` command 
 
 For more information about WP-CLI you can visit [their github page](https://github.com/wp-cli/wp-cli). 
 
-WP Launch Check should be considered in "BETA". Many of the checks have still not been tested in the wild. If you experience a problem please open an issue. 
+WP Launch Check should be considered in "BETA". Many of the checks have still not been tested in the wild. If you experience a problem please open an issue.
+
+## Installing
+
+Installing this package requires WP-CLI v0.23.0 or greater. Update to the latest stable release with `wp cli update`.
+
+Once you've done so, you can install this package with `wp package install pantheon-systems/wp_launch_check`.
 
 ## Available commands
 
