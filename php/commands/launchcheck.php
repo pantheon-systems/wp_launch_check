@@ -29,6 +29,9 @@ class LaunchCheck {
 			return;
 		}
 
+		// wp-config is going to be loaded again, and we need to avoid notices
+		@WP_CLI::get_runner()->load_wordpress();
+
 		// WordPress is now loaded, so other checks can run
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );

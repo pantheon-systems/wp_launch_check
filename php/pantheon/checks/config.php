@@ -38,10 +38,6 @@ class Config extends Checkimplementation {
 		$this->checkNoServerNameWPHomeSiteUrl();
 		$this->checkUsesEnvDBConfig();
 
-		// wp-config is going to be loaded again, and we need to avoid notices
-		if ( $this->valid_db ) {
-			@$runner->load_wordpress();
-		}
 		$this->run_once = true;
 
 		return $this;
