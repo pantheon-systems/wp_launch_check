@@ -13,16 +13,32 @@ class LaunchCheck {
 	 *
 	 * ## OPTIONS
 	 *
+	 * @when before_wp_load
 	 */
 	public function all($args, $assoc_args) {
+		// Runs before WordPress loads
+		$checker = new \Pantheon\Checker();
+		$config_check = new \Pantheon\Checks\Config();
+		$checker->register( $config_check );
+		$checker->execute();
+		
+		if ( ! $config_check->valid_db ) {
+			WP_CLI::warning( 'Detected invalid database credentials, skipping remaining checks' );
+			$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+			\Pantheon\Messenger::emit($format);
+			return;
+		}
+
+		// wp-config is going to be loaded again, and we need to avoid notices
+		@WP_CLI::get_runner()->load_wordpress();
+
+		// WordPress is now loaded, so other checks can run
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
 		$searcher->execute();
-		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Plugins(isset($assoc_args['all'])) );
-		$checker->register( new \Pantheon\Checks\Config() );
 		$checker->register( new \Pantheon\Checks\Cron() );
 		$checker->register( new \Pantheon\Checks\Objectcache() );
 		$checker->register( new \Pantheon\Checks\Database() );
@@ -38,7 +54,8 @@ class LaunchCheck {
 	 * 
 	 * [--format=<json>] 
 	 * : use to output json
-	 * 
+	 *
+	 * @when before_wp_load
 	 */
 	function config($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
