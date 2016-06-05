@@ -68,3 +68,16 @@ Feature: Check crons
       """
       This is too many to display and may indicate a problem with your site.
       """
+
+  Scenario: Cron check catches when there aren't any crons registered on the site
+    When I run `wp option delete cron`
+    Then STDOUT should contain:
+      """
+      Success: Deleted 'cron' option.
+      """
+
+    When I run `wp launchcheck cron`
+    Then STDOUT should contain:
+      """
+      There don't appear to be any crons registered on this site.
+      """

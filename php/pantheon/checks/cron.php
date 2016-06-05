@@ -53,6 +53,14 @@ class Cron extends Checkimplementation {
 
 		$this->cron_rows = array();
 		$cron = get_option('cron');
+		if ( empty( $cron ) ) {
+			$this->alerts[] = array(
+				'class'   => 'pass',
+				'message' => "There don't appear to be any crons registered on this site.",
+				'code'    => 0,
+			);
+			return;
+		}
 
 		// Count the cron jobs and alert if there are an excessive number scheduled.
 		$job_name_counts = array();
