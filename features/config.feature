@@ -214,7 +214,7 @@ Feature: Check the wp-config.php file
       """
 
     When I try `wp --require=wp-config-env.php launchcheck cron`
-    Then STDERR should be:
+    Then STDERR should contain:
       """
       Error: Error establishing a database connection
       """
