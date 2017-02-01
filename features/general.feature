@@ -41,3 +41,34 @@ Feature: General tests of WP Launch Check
       """
       WordPress domains are verified to be in sync with Pantheon domains.
       """
+
+  Scenario: WordPress is up to date
+    Given a WP install
+
+    When I run `wp launchcheck general`
+    Then STDOUT should contain:
+      """
+      WordPress is at the latest version.
+      """
+
+  Scenario: WordPress has a new minor version but no new major version
+    Given a WP install
+    And I run `wp core download --version=4.5.1 --force`
+    And I run `wp theme activate twentyfifteen`
+
+    When I run `wp launchcheck general`
+    Then STDOUT should contain:
+      """
+      Updating to WordPress' newest minor version is strongly recommended.
+      """
+
+  Scenario: WordPress has a new major version but no new minor version
+    Given a WP install
+    And I run `wp core download --version=4.4.5 --force`
+    And I run `wp theme activate twentyfifteen`
+
+    When I run `wp launchcheck general`
+    Then STDOUT should contain:
+      """
+      A new major version of WordPress is available for update.
+      """
