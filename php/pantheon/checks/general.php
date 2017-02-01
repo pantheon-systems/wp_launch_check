@@ -5,6 +5,7 @@ use Pantheon\Utils;
 use Pantheon\Checkimplementation;
 use Pantheon\Messenger;
 use Pantheon\View;
+use WP_CLI;
 
 class General extends Checkimplementation {
 
@@ -183,14 +184,7 @@ class General extends Checkimplementation {
 	}
 
 	public function checkCoreUpdates() {
-
-		ob_start();
-		\WP_CLI::run_command(array(
-			'core',
-			'check-update'
-		), array('format' => 'json'));
-		$ret = ob_get_clean();
-		$updates = !empty($ret) ? json_decode($ret, TRUE) : array();
+		$updates = WP_CLI::runcommand( 'core check-update --format=json', array( 'return' => true, 'parse' => 'json' ) );
 		$has_minor = $has_major = FALSE;
 		foreach ($updates as $update) {
 			switch ($update['update_type']) {
