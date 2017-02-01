@@ -26,6 +26,7 @@ class General extends Checkimplementation {
 		$this->checkPluginCount();
 		$this->checkUrls();
 		$this->checkRegisteredDomains();
+		$this->checkCoreUpdates();
 	}
 
 	public function checkCaching() {
@@ -179,5 +180,48 @@ class General extends Checkimplementation {
 				$this->action = "You should use object caching";
 		}
 		$messenger->addMessage(get_object_vars($this));
+	}
+
+	public function checkCoreUpdates() {
+
+		ob_start();
+		\WP_CLI::run_command(array(
+			'core',
+			'check-update'
+		), array('format' => 'json'));
+		$ret = ob_get_clean();
+		$updates = !empty($ret) ? json_decode($ret, TRUE) : array();
+		$has_minor = $has_major = FALSE;
+		foreach ($updates as $update) {
+			switch ($update['update_type']) {
+				case 'minor':
+					$has_minor = TRUE;
+					break;
+				case 'major':
+					$has_major = TRUE;
+					break;
+			}
+		}
+
+		if ( $has_minor ) {
+			$this->alerts[] = array(
+				'code'  =>  2,
+				'class' => 'error',
+				'message' => "Updating to WordPress' newest minor version is strongly recommended.",
+			);
+		} else if ( $has_major ) {
+			$this->alerts[] = array(
+				'code'    => 1,
+				'class'   => 'warning',
+				'message' => 'A new major version of WordPress is available for update.'
+			);
+		} else {
+			$this->alerts[]  = array(
+				'code'  => 0,
+				'class' => 'ok',
+				'message' => 'WordPress is at the latest version.',
+			);
+		}
+
 	}
 }
