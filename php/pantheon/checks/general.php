@@ -216,6 +216,5 @@ class General extends Checkimplementation {
 				'message' => 'WordPress is at the latest version.',
 			);
 		}
-
 	}
 }
