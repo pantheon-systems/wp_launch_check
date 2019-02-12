@@ -75,7 +75,7 @@ class Plugins extends Checkimplementation {
 	 * @return array containing vulnerability info or false
 	 */
 	protected function getPluginVulnerability( $plugin_slug )
-    {
+	{
 		// Get the vulnerability API token from the platform
 		$wpvulndb_api_token = getenv('PANTHEON_WPVULNDB_API_TOKEN');
 
@@ -88,17 +88,17 @@ class Plugins extends Checkimplementation {
 		$url = 'https://wpvulndb.com/api/v3/plugins/' . $plugin_slug;
 
 		// Add the token to the headers
-        $headers = array(
-            'Content-Type: application/json',
+		$headers = array(
+			'Content-Type: application/json',
 			'User-Agent: pantheon/wp_launch_check',
 			'Authorization: Token token=' . $wpvulndb_api_token
 		);
 
 		// Make the request to the API
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		$result = curl_exec($ch);
 		curl_close($ch);
@@ -118,7 +118,7 @@ class Plugins extends Checkimplementation {
 
 		// Return the requested plugin vulnerability info
 		return $result[$plugin_slug];
-    }
+	}
 
 	/**
 	* Checks a plugin by slug and version for vulnerabilities
@@ -156,7 +156,7 @@ class Plugins extends Checkimplementation {
 
 			// If the vulnerability has been fixed, but not in the current version, there's an issue
 			if ( version_compare( $vulnerability['fixed_in'], $current_version,'>' ) ){
-				return $vulnerability; 
+				return $vulnerability;
 			}
 
 		}
@@ -166,44 +166,44 @@ class Plugins extends Checkimplementation {
 	}
 
 	public function message(Messenger $messenger) {
-			if (!empty($this->alerts)) {
-				$headers = array(
-					'slug'=>"Plugin",
-					'installed'=>"Current",
-					'available' => "Available",
-					'needs_update'=>"Needs Update",
-					'vulnerable'=>"Vulnerabilities"
-				);
-				$rows = array();
-				$count_update = 0;
-				$count_vuln = 0;
-				foreach( $this->alerts as $alert ) {
-					$class = 'ok';
-					if ($alert['needs_update']) {
-						$class = 'warning';
-						$count_update++;
-					}
-					if ('None' != $alert['vulnerable']) {
-						$class = 'error';
-						$count_vuln++;
-					}
-					$rows[] = array('class'=>$class, 'data' => $alert);
+		if (!empty($this->alerts)) {
+			$headers = array(
+				'slug'=>"Plugin",
+				'installed'=>"Current",
+				'available' => "Available",
+				'needs_update'=>"Needs Update",
+				'vulnerable'=>"Vulnerabilities"
+			);
+			$rows = array();
+			$count_update = 0;
+			$count_vuln = 0;
+			foreach( $this->alerts as $alert ) {
+				$class = 'ok';
+				if ($alert['needs_update']) {
+					$class = 'warning';
+					$count_update++;
 				}
-
-				$rendered = PHP_EOL;
-				$rendered .= sprintf("Found %d plugins needing updates and %d known vulnerabilities ... \n".PHP_EOL, $count_update, $count_vuln);
-				$rendered .= View::make('table', array('headers'=>$headers,'rows'=>$rows));
-
-				$this->result .= $rendered;
-				if ($count_update > 0) {
-					$this->score = 1;
-					$this->action = "You should update all out-of-date plugins";
+				if ('None' != $alert['vulnerable']) {
+					$class = 'error';
+					$count_vuln++;
 				}
+				$rows[] = array('class'=>$class, 'data' => $alert);
+			}
 
-				if ($count_vuln > 0) {
-					$this->score = 2;
-					$this->action = "Update plugins to fix vulnerabilities";
-				}
+			$rendered = PHP_EOL;
+			$rendered .= sprintf("Found %d plugins needing updates and %d known vulnerabilities ... \n".PHP_EOL, $count_update, $count_vuln);
+			$rendered .= View::make('table', array('headers'=>$headers,'rows'=>$rows));
+
+			$this->result .= $rendered;
+			if ($count_update > 0) {
+				$this->score = 1;
+				$this->action = "You should update all out-of-date plugins";
+			}
+
+			if ($count_vuln > 0) {
+				$this->score = 2;
+				$this->action = "Update plugins to fix vulnerabilities";
+			}
 		} else {
 			$this->result .= "No plugins found.";
 		}
