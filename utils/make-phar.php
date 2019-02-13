@@ -6,7 +6,11 @@ require WP_LAUNCH_CHECK_ROOT . '/vendor/autoload.php';
 
 use Symfony\Component\Finder\Finder;
 
-define( 'DEST_PATH', $argv[1] );
+// Alias -- how to refer to paths inside the phar
+$alias = 'wp_launch_check.phar';
+
+// DEST_PATH -- where to write the actual phar on the filesystem
+define( 'DEST_PATH', $alias );
 
 function add_file( $phar, $path ) {
 	$key = str_replace( WP_LAUNCH_CHECK_ROOT, '', $path );
@@ -20,7 +24,7 @@ function set_file_contents( $phar, $path, $content ) {
 	$phar[ $key ] = $content;
 }
 
-$phar = new Phar( 'wp_launch_check.phar', 0, 'wp_launch_check.phar' );
+$phar = new Phar( DEST_PATH, 0, $alias );
 
 $phar->startBuffering();
 

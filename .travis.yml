@@ -1,5 +1,4 @@
 sudo: false
-
 language: php
 
 notifications:
@@ -10,7 +9,7 @@ notifications:
 branches:
   only:
     - master
-    - 0.6.x
+    - "/^v[[:digit:]]+\\.[[:digit:]]+\\.[[:digit:]]+.*$/"
 
 php:
   - 7.0
@@ -18,15 +17,27 @@ php:
 
 cache:
   - composer
-  - $HOME/.composer/cache
+  - "$HOME/.composer/cache"
 
 env:
   global:
-    - WP_CLI_BIN_DIR=/tmp/wp-cli-phar
+  - WP_CLI_BIN_DIR=/tmp/wp-cli-phar
 
 before_script:
   - bash bin/install-package-tests.sh
   - composer install
+
+script: "./vendor/bin/behat"
+
+before_deploy:
   - bash bin/prepare.sh
 
-script: ./vendor/bin/behat
+deploy:
+  provider: releases
+  api_key:
+    secure: bP2iK6kCYDVMrbwLEl43mZe2L5ZiYi464kowLrqmI+0vOEblHx4+m5as6AraK5jDFttL68gNwIkOyzQxFbKZDkyntu/aMNa2nXLmhg8T8aGzsHJahpuJMdU/q4e1hysMYXsn03hz31zQiU54DNbRXn9D6oD71u9Rf23FRWFET1w=
+  file: wp_launch_check.phar
+  skip_cleanup: true
+  on:
+    repo: pantheon-systems/wp_launch_check
+    tags: true
