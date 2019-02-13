@@ -4,6 +4,18 @@ use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode,
     WP_CLI\Process;
 
+$steps->Given( '/^environment variables are loaded$/',
+	function ( $world ) {
+		$dotenv = \Dotenv\Dotenv::create(WP_CLI_ROOT);
+		$dotenv->required(
+			array (
+				'PANTHEON_WPVULNDB_API_TOKEN',
+			)
+		)->notEmpty();
+		$dotenv->load();
+	}
+);
+
 $steps->Given( '/^an empty directory$/',
 	function ( $world ) {
 		$world->create_run_dir();

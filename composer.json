@@ -11,6 +11,7 @@
     "require": {},
     "require-dev": {
         "symfony/finder": "~2.3",
-        "behat/behat": "~2.5"
+        "behat/behat": "~2.5",
+        "vlucas/phpdotenv": "^3.3"
     }
 }
