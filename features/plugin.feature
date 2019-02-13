@@ -2,7 +2,6 @@ Feature: Test WordPress for plugins with known security issues
 
   Scenario: A WordPress install with a plugin with a known security issue
     Given a WP install
-    Given environment variables are loaded
     And I run `wp plugin install akismet --version=3.1.3 --force`
 
     When I run `wp launchcheck all`
@@ -17,7 +16,6 @@ Feature: Test WordPress for plugins with known security issues
 
   Scenario: A WordPress install with no plugin security issues
     Given a WP install
-    Given environment variables are loaded
     And I run `wp plugin update akismet`
 
     When I run `wp launchcheck all`
