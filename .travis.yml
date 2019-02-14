@@ -35,7 +35,7 @@ before_deploy:
 deploy:
   provider: releases
   api_key:
-    secure: bP2iK6kCYDVMrbwLEl43mZe2L5ZiYi464kowLrqmI+0vOEblHx4+m5as6AraK5jDFttL68gNwIkOyzQxFbKZDkyntu/aMNa2nXLmhg8T8aGzsHJahpuJMdU/q4e1hysMYXsn03hz31zQiU54DNbRXn9D6oD71u9Rf23FRWFET1w=
+    secure: mF9U4mO+B+lJKqK6rqom/nOlsLHDRlBVgVIQxUuO4xCPuygD1eer8Hfkvqo58tpsPWF24Iqek4NyFTZ7dY78vmhVUPCxS/nq/+6A0Dyg3uqFYK5F+Sn60e46ZATSOJVDlKTr62ZR04dq0tjrFBwXfNXqv9RMQGjaOVD/U+tKTsw=
   file: wp_launch_check.phar
   skip_cleanup: true
   on:
