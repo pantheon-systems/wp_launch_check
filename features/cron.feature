@@ -52,7 +52,7 @@ Feature: Check crons
     Given a wp-content/mu-plugins/plugin.php file:
       """
       <?php
-      for ( $i=0; $i < 55; $i++ ) {
+      for ( $i=0; $i < 11; $i++ ) {
           // WP Cron doesn't permit registering two at the same time
           // so we need to distribute these crons against a spread of time
           wp_schedule_event( time() + ( $i * 3 ), 'hourly', 'too_many_crons_hook' );
