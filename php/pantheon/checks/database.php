@@ -30,7 +30,7 @@ class Database extends Checkimplementation {
 
 	protected function getTables() {
 		global $wpdb;
-		if (!$this->tables OR empty($this->tables)) {
+		if ( empty($this->tables) ) {
 			$query = "select TABLES.TABLE_NAME, TABLES.TABLE_SCHEMA, TABLES.TABLE_ROWS, TABLES.DATA_LENGTH, TABLES.ENGINE from information_schema.TABLES where TABLES.TABLE_SCHEMA = '%s'";
 			$tables = $wpdb->get_results( $wpdb->prepare( $query, DB_NAME ) );
 			foreach ( $tables as $table ) {

@@ -65,7 +65,8 @@ class Cron extends Checkimplementation {
 
 			foreach ($crons as $job => $data) {
 				$class = 'ok';
-				$data = array_shift($data);
+				$next  = '';
+				$data  = array_shift($data);
 
 				// If this is an invalid timestamp.
 				if (!is_int($timestamp) || $timestamp == 0) {
