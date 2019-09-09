@@ -49,6 +49,7 @@ class Cron extends Checkimplementation {
 		$total = 0;
 		$invalid = 0;
 		$overdue = 0;
+		$past = 0;
 		$now = time();
 
 		$this->cron_rows = array();
