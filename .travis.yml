@@ -15,7 +15,6 @@ branches:
 php:
   - 7.3
   - 7.2
-  - 5.6
 
 cache:
   - composer
