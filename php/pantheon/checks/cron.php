@@ -48,6 +48,7 @@ class Cron extends Checkimplementation {
 	public function checkCron() {
 		$total = 0;
 		$invalid = 0;
+		$past = 0;
 		$overdue = 0;
 		$now = time();
 
