@@ -6,7 +6,7 @@ use Pantheon\Checkimplementation;
 use Pantheon\Messenger;
 use Pantheon\View;
 
-use function Pantheon\Sanitizeinput\sanitizeInput;
+require_once __DIR__ . '/../sanitizeinput.php';
 
 class Plugins extends Checkimplementation {
 	public $name = 'plugins';

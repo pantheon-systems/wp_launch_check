@@ -6,7 +6,7 @@ use Pantheon\Checkimplementation;
 use Pantheon\Messenger;
 use Pantheon\View;
 
-use function Pantheon\Sanitizeinput\sanitizeInput;
+require_once __DIR__ . '/../sanitizeinput.php';
 
 class Cron extends Checkimplementation {
 	const MAX_CRON_DISPLAY = 50;
