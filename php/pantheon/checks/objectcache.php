@@ -31,7 +31,7 @@ class Objectcache extends Checkimplementation {
 		}
 
 		if ( ! defined( 'WP_REDIS_OBJECT_CACHE' ) || ! WP_REDIS_OBJECT_CACHE ) {
-			$this->alerts[] = array("message"=> 'Use Redis with the WP Redis object cache drop-in to speed up your backend. <a href="https://pantheon.io/docs/wordpress-redis/" target="_blank">Learn More</a', "code" => 1);
+			$this->alerts[] = array("message"=> 'Use Redis with the WP Redis object cache drop-in to speed up your backend. <a href="https://pantheon.io/docs/wordpress-redis/" target="_blank">Learn More</a>', "code" => 1);
 		} else {
 			$this->alerts[] = array("message"=> "Redis found", "code" => 0);
 		}
