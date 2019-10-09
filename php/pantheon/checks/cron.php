@@ -6,6 +6,8 @@ use Pantheon\Checkimplementation;
 use Pantheon\Messenger;
 use Pantheon\View;
 
+use function Pantheon\Sanitizeinput\sanitizeInput;
+
 class Cron extends Checkimplementation {
 	const MAX_CRON_DISPLAY = 50;
 	const EXCESSIVE_DUPLICATE_JOBS = 10;
@@ -53,7 +55,7 @@ class Cron extends Checkimplementation {
 		$now = time();
 
 		$this->cron_rows = array();
-		$cron = get_option('cron');
+		$cron = sanitizeInput( get_option('cron') );
 
 		// Count the cron jobs and alert if there are an excessive number scheduled.
 		$job_name_counts = array();

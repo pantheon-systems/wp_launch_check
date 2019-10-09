@@ -6,6 +6,8 @@ use Pantheon\Checkimplementation;
 use Pantheon\Messenger;
 use Pantheon\View;
 
+use function Pantheon\Sanitizeinput\sanitizeInput;
+
 class Plugins extends Checkimplementation {
 	public $name = 'plugins';
 	public $check_all_plugins;
@@ -34,8 +36,8 @@ class Plugins extends Checkimplementation {
 		if (!function_exists('get_plugins')) {
 			require_once \WP_CLI::get_config('path') . '/wp-admin/includes/plugin.php';
 		}
-		$all_plugins = get_plugins();
-		$update = get_plugin_updates();
+		$all_plugins = sanitizeInput( get_plugins() );
+		$update = sanitizeInput( get_plugin_updates() );
 		$report = array();
 		foreach( $all_plugins as $plugin_path => $data ) {
 			$slug = $plugin_path;
