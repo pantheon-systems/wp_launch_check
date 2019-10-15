@@ -14,7 +14,7 @@ class View {
 	 **/
 	static function make($view, $data) {
 		@\WP_CLI::get_runner()->load_wordpress();
-		require_once \WP_CLI::get_config('path') . '/wp-includes/formatting.php';
+		require_once \WP_CLI\Utils::get_home_dir() . '/wp-load.php';
 
 		ob_start();
 		if (file_exists(__DIR__.self::$viewsdir."/$view.php")) {
