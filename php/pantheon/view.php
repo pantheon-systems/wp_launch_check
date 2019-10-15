@@ -13,6 +13,9 @@ class View {
 	 * @return array an array of matched files or empty if none found
 	 **/
 	static function make($view, $data) {
+		@\WP_CLI::get_runner()->load_wordpress();
+		require_once \WP_CLI::get_config('path') . '/wp-includes/formatting.php';
+
 		ob_start();
 		if (file_exists(__DIR__.self::$viewsdir."/$view.php")) {
 			extract($data);
