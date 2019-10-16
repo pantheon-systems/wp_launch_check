@@ -46,5 +46,23 @@ class Utils {
 		return self::$fs;
 	}
 
+        /**
+	 * Sanitizes data and keys recursively
+	 *
+	 * @param array|object|string $data
+	 * @return array|object|string
+	 */
+	public static function sanitize_data($data) {
+		$sanitizer_function = 'htmlspecialchars';
+		if ( is_array( $data ) || is_object( $data ) ) {
+			$sanitized_data = array_combine(
+				array_map($sanitizer_function, array_keys((array)$data)),
+				array_map('self::sanitize_data', array_values((array)$data))
+			);
+			return is_object( $data ) ? (object)$sanitized_data : $sanitized_data;
+		}
+
+		return $sanitizer_function($data);
+	}
 
 }
