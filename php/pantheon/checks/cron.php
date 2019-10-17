@@ -53,7 +53,7 @@ class Cron extends Checkimplementation {
 		$now = time();
 
 		$this->cron_rows = array();
-		$cron = get_option('cron');
+		$cron = Utils::sanitize_data( get_option('cron') );
 
 		// Count the cron jobs and alert if there are an excessive number scheduled.
 		$job_name_counts = array();

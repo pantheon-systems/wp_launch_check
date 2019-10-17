@@ -32,7 +32,7 @@ class Database extends Checkimplementation {
 		global $wpdb;
 		if ( empty($this->tables) ) {
 			$query = "select TABLES.TABLE_NAME, TABLES.TABLE_SCHEMA, TABLES.TABLE_ROWS, TABLES.DATA_LENGTH, TABLES.ENGINE from information_schema.TABLES where TABLES.TABLE_SCHEMA = '%s'";
-			$tables = $wpdb->get_results( $wpdb->prepare( $query, DB_NAME ) );
+			$tables = Utils::sanitize_data( $wpdb->get_results( $wpdb->prepare( $query, DB_NAME ) ) );
 			foreach ( $tables as $table ) {
 				$this->tables[$table->TABLE_NAME] = $table;
 			}
