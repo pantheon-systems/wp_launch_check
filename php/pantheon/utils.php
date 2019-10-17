@@ -4,6 +4,7 @@ namespace Pantheon;
 use \Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
 use \Pantheon\Utils as Pantheon;
+use \WP_CLI\Utils as WPCLIUtils;
 
 class Utils {
 	static $fs;
@@ -46,14 +47,13 @@ class Utils {
 		return self::$fs;
 	}
 
-        /**
+	/**
 	 * Sanitizes data and keys recursively
 	 *
 	 * @param array|object|string $data
 	 * @return array|object|string
 	 */
-	public static function sanitize_data($data) {
-		$sanitizer_function = 'htmlspecialchars';
+	public static function sanitize_data($data, $sanitizer_function = 'esc_attr') {
 		if ( is_array( $data ) || is_object( $data ) ) {
 			$sanitized_data = array_combine(
 				array_map($sanitizer_function, array_keys((array)$data)),
