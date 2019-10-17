@@ -24,6 +24,7 @@ class Sessions extends Checkimplementation {
 		$regex = '.*(session_start|\$_SESSION).*';
 		preg_match('#'.$regex.'#s',$file->getContents(), $matches, PREG_OFFSET_CAPTURE );
 		if ( $matches ) {
+                        $matches = Util::sanitize_data($matches);
 			$note = '';
 			if (count($matches) > 1) {
 				array_shift($matches);
