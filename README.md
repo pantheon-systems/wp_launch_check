@@ -25,7 +25,7 @@ Below is a summary of the available commands. *Full technical description of eac
   * **wp launchcheck cron** : Checks whether cron is enabled and what jobs are scheduled
   * **wp launchcheck general**: General checks for data and best practice, i.e. are you running the debug-bar plugin or have WP_DEBUG defined? This will tell you. 
   * **wp launchcheck database**: Checks related to the databases.
-  * **wp launchcheck objectcache**: Checks whether object caching is enabled and if on Pantheon whether redis is enabled.
+  * **wp launchcheck object_cache**: Checks whether object caching is enabled and if on Pantheon whether redis is enabled.
   * **wp launchcheck sessions**: Checks for plugins refering to the php session_start() function or the superglobal ```$SESSION``` variable. In either case, if you are on a cloud/distributed platform you will need additional configuration achieve the expected functionality
   * **wp launchcheck secure**: Does some rudimentary security checks
   * **wp launchcheck plugins**: Checks plugins for updates and known vulnerabilities
