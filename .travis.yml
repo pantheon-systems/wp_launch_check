@@ -1,7 +1,11 @@
-sudo: false
 language: php
-dist: trusty
-
+php:
+  - 7.4
+  - 7.3
+  - 7.2
+services:
+  - mysql
+os: linux
 notifications:
   email:
     on_success: never
@@ -12,17 +16,15 @@ branches:
     - master
     - "/^v[[:digit:]]+\\.[[:digit:]]+\\.[[:digit:]]+.*$/"
 
-php:
-  - 7.3
-  - 7.2
-
 cache:
   - composer
   - "$HOME/.composer/cache"
 
 env:
   global:
-  - WP_CLI_BIN_DIR=/tmp/wp-cli-phar
+    - WP_CLI_BIN_DIR=/tmp/wp-cli-phar
+    - PANTHEON_WPVULNDB_API_TOKEN=NI7BJgWm40MppXU3MedPTqsc9O3W6urSkClOcacagzM
+    - secure: qVuABE9laRLFk+2J5pJjmJI6YmRqEEailCvkwiN0Gqx+68KaB2t64djEnVYxWo2nxzZE7jZ0cNabQxd1mvFOWAZAvCetlKmLBfO8qoBsfMtqimWprSUA3fXqqXJ9YDmscK/zeOzM0cbnD7HbJ+bB7Zl6zHcjzTD019PD8FT3iDc=
 
 before_script:
   - bash bin/install-package-tests.sh
@@ -35,10 +37,9 @@ before_deploy:
 
 deploy:
   provider: releases
-  api_key:
+  token:
     secure: mF9U4mO+B+lJKqK6rqom/nOlsLHDRlBVgVIQxUuO4xCPuygD1eer8Hfkvqo58tpsPWF24Iqek4NyFTZ7dY78vmhVUPCxS/nq/+6A0Dyg3uqFYK5F+Sn60e46ZATSOJVDlKTr62ZR04dq0tjrFBwXfNXqv9RMQGjaOVD/U+tKTsw=
   file: wp_launch_check.phar
-  skip_cleanup: true
   on:
     repo: pantheon-systems/wp_launch_check
     tags: true
