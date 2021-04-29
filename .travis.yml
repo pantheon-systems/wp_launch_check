@@ -20,8 +20,8 @@ cache:
   - "$HOME/.composer/cache"
 
 env:
-  global:
   - WP_CLI_BIN_DIR=/tmp/wp-cli-phar
+  - secure: qVuABE9laRLFk+2J5pJjmJI6YmRqEEailCvkwiN0Gqx+68KaB2t64djEnVYxWo2nxzZE7jZ0cNabQxd1mvFOWAZAvCetlKmLBfO8qoBsfMtqimWprSUA3fXqqXJ9YDmscK/zeOzM0cbnD7HbJ+bB7Zl6zHcjzTD019PD8FT3iDc=
 
 before_script:
   - bash bin/install-package-tests.sh
