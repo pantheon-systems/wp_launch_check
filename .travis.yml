@@ -1,5 +1,12 @@
-language: php
 os: linux
+
+language: php
+php:
+  - 7.4
+  - 7.3
+  - 7.2
+services:
+  - mysql
 
 notifications:
   email:
@@ -10,10 +17,6 @@ branches:
   only:
     - master
     - "/^v[[:digit:]]+\\.[[:digit:]]+\\.[[:digit:]]+.*$/"
-
-php:
-  - 7.3
-  - 7.2
 
 cache:
   - composer
