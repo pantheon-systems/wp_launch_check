@@ -1,6 +1,6 @@
 <?php
 /**
-* Implements example command.
+* Audit WordPress configuration.
 * @version 0.1.4
 */
 class LaunchCheck {
@@ -186,7 +186,6 @@ class LaunchCheck {
 	public function plugins($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Plugins( isset($assoc_args['all'])) );
-		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		$checker->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
@@ -211,8 +210,7 @@ class LaunchCheck {
 	 */
 	public function themes($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
-		$checker->register( new \Pantheon\Checks\Themes( isset($assoc_args['all'])) );
-		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+		$checker->register( new \Pantheon\Checks\Themes( isset($assoc_args['all']) ) );
 		$checker->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
