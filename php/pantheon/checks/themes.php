@@ -9,6 +9,7 @@ use Pantheon\View;
 class Themes extends Checkimplementation {
 	public $name = 'themes';
 	public $check_all_themes;
+	public $alerts = array();
 
 	public function __construct($check_all_themes) {
 		$this->check_all_themes = $check_all_themes;
@@ -25,7 +26,6 @@ class Themes extends Checkimplementation {
 		$this->score = 0;
 		$this->result = '';
 		$this->label = 'Themes';
-		$this->alerts = array();
 		self::$instance = $this;
 		return $this;
 	}
@@ -34,6 +34,7 @@ class Themes extends Checkimplementation {
 		if (!function_exists('wp_get_themes')) {
 			require_once \WP_CLI::get_config('path') . '/wp-includes/theme.php';
 		}
+		$current_theme = wp_get_theme();
 		$all_themes = Utils::sanitize_data( wp_get_themes() );
 		$update = Utils::sanitize_data( get_theme_updates() );
 		$report = array();
@@ -43,13 +44,23 @@ class Themes extends Checkimplementation {
 				$slug = substr($theme_path, 0, stripos($theme_path,'/'));
 			}
 
-			$vulnerable = $this->is_vulnerable($slug, $data['Version']);
+			// Check if we only want to scan the active theme.
+			if (!$this->check_all_themes) {
+				// If theme list index doesn't match current theme, skip.
+				if ($current_theme->stylesheet !== $slug) {
+					continue;
+				}
+			}
+
+			$data = wp_get_theme($slug);
+			$version = $data->version;
+			$vulnerable = $this->is_vulnerable($slug, $version);
 
 			$needs_update = 0;
 			$available = '-';
 			if (isset($update[$theme_path])) {
 				$needs_update = 1;
-				$available = $update[$theme_path]->update->new_version;
+				$available = $update[$slug]->update["new_version"];
 			}
 			if ( false === $vulnerable ) {
 				$vulnerable = "None";
@@ -59,7 +70,7 @@ class Themes extends Checkimplementation {
 
 			$report[$slug] = array(
 				'slug' => $slug,
-				'installed' => (string) $data['Version'],
+				'installed' => (string) $version,
 				'available' => (string) $available,
 				'needs_update' => (string) $needs_update,
 				'vulnerable'  => $vulnerable,
@@ -121,12 +132,13 @@ class Themes extends Checkimplementation {
 	}
 
 	/**
-	* Checks a theme by slug and version for vulnerabilities
-	* @param $theme_slug string (required) string representing the theme slug
-	* @param $current_version string (required) string representing the theme version
-	*
-	* @return array containing the vulnerability or false
-	*/
+	 * Checks a theme by slug and version for vulnerabilities
+	 * @param $theme_slug string (required) string representing the theme slug
+	 * @param $current_version string (required) string representing the theme version
+	 *
+	 * @return array containing the vulnerability or false
+	 * @throws \Exception
+	 */
 	public function is_vulnerable($theme_slug, $current_version) {
 
 		// Fetch the theme data if we don't have it already
@@ -140,7 +152,7 @@ class Themes extends Checkimplementation {
 		}
 
 		// No issues if the theme has no vulnerabilities
-		if ( ! isset( $theme_results['vulnerabilities'] ) || empty( $theme_results['vulnerabilities'] ) ) {
+		if ( empty( $theme_results['vulnerabilities'] ) ) {
 			return false;
 		}
 
