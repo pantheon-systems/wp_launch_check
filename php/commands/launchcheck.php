@@ -38,8 +38,8 @@ class LaunchCheck {
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
 		$searcher->execute();
-		$checker->register( new \Pantheon\Checks\Plugins(isset($assoc_args['all'])) );
-		$checker->register( new \Pantheon\Checks\Themes(isset($assoc_args['all'])) );
+		$checker->register( new \Pantheon\Checks\Plugins(TRUE));
+		$checker->register( new \Pantheon\Checks\Themes(TRUE));
 		$checker->register( new \Pantheon\Checks\Cron() );
 		$checker->register( new \Pantheon\Checks\Objectcache() );
 		$checker->register( new \Pantheon\Checks\Database() );
