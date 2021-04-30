@@ -134,7 +134,6 @@ class LaunchCheck {
 	public function object_cache($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Objectcache() );
-		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		$checker->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
@@ -160,7 +159,6 @@ class LaunchCheck {
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
-		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		$searcher->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
@@ -232,7 +230,6 @@ class LaunchCheck {
 	public function sessions( $args, $assoc_args ) {
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
-		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		$searcher->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);

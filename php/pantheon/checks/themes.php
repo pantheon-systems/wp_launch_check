@@ -84,6 +84,7 @@ class Themes extends Checkimplementation {
 	 * @param $theme_slug string (required) string representing the theme slug
 	 *
 	 * @return array containing vulnerability info or false
+	 * @throws \Exception
 	 */
 	protected function getThemeVulnerability($theme_slug )
 	{
