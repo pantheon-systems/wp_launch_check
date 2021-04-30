@@ -152,7 +152,7 @@ class LaunchCheck {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *   wp secure --skip=wp-content/themes
+	 *   wp launchcheck secure --skip=wp-content/themes
 	 *
 	 */
 	public function secure($args, $assoc_args) {
