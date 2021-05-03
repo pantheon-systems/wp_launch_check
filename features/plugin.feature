@@ -3,7 +3,7 @@ Feature: Test WordPress for plugins with known security issues
   Scenario: A WordPress install with a plugin with a known security issue
     Given a WP install
     And I run `wp plugin install akismet --version=3.1.3 --force`
-	And I run `wp plugin update --dry-run`
+	And I run `wp plugin update akismet --dry-run`
 
     When I run `wp launchcheck all`
     Then STDOUT should contain:
