@@ -4,7 +4,7 @@
     "type": "wp-cli-package",
     "license": "MIT",
     "authors": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "autoload": {
         "files": [ "php/commands/launchcheck.php" ]
     },

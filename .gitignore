@@ -2,3 +2,4 @@ composer.lock
 *.phar
 vendor/*
 behat/*
+/.idea
