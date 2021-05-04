@@ -65,7 +65,7 @@ class Themes extends Checkimplementation {
 			if ( false === $vulnerable ) {
 				$vulnerable = "None";
 			} else {
-				$vulnerable = sprintf('<a href="https://wpvulndb.com/themes/%s" target="_blank" >more info</a>', $slug );
+				$vulnerable = sprintf('<a href="https://wpscan.com/themes/%s" target="_blank" >more info</a>', $slug );
 			}
 
 			$report[$slug] = array(
@@ -97,7 +97,7 @@ class Themes extends Checkimplementation {
 		}
 
 		// Set the request URL to the requested theme
-		$url = 'https://wpvulndb.com/api/v3/themes/' . $theme_slug;
+		$url = 'https://wpscan.com/api/v3/themes/' . $theme_slug;
 
 		// Add the token to the headers
 		$headers = array(

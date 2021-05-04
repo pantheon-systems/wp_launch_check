@@ -140,7 +140,7 @@ class LaunchCheck {
 	}
 
 	/**
-	 * checks files for insecure code and checks the wpvulndb.com/api for known vulnerabilities
+	 * Checks files for insecure code and checks the wpscan.com/api for known vulnerabilities
 	 *
 	 * ## OPTIONS
 	 *
@@ -165,8 +165,8 @@ class LaunchCheck {
 	}
 
 	/**
-	 * checks plugins for vulnerabilities using the wpscan vulnerability DB
-	 * - https://wpvulndb.com/api
+	 * Checks plugins for vulnerabilities using the wpscan vulnerability DB
+	 * - https://wpscan.com/api
 	 *
 	 * ## OPTIONS
 	 *
@@ -190,8 +190,8 @@ class LaunchCheck {
 	}
 
 	/**
-	 * checks themes for vulnerabilities using the wpscan vulnerability DB
-	 * - https://wpvulndb.com/api
+	 * Checks themes for vulnerabilities using the wpscan vulnerability DB
+	 * - https://wpscan.com/api
 	 *
 	 * ## OPTIONS
 	 *

@@ -77,8 +77,8 @@ Checks is the ```wp-content/object-cache.php``` exists to determine whether obje
 
 ### Plugins
 **plugins** [\Pantheon\Checks\Plugins](php/commands/checks/plugins.php)
-Checks all plugins against the wpvulndb.com database we license. Alerts 'error' if a vulnerability is found and links to the wpvulndb.com page for more info. Also checks for available updates and alerts 'warning' if plugins needing an update are found.
+Checks all plugins against the wpscan.com database we license. Alerts 'error' if a vulnerability is found and links to the wpvulndb.com page for more info. Also checks for available updates and alerts 'warning' if plugins needing an update are found.
 
 ### Themes
 **themes** [\Pantheon\Checks\Themes](php/commands/checks/themes.php)
-Checks all themes against the wpvulndb.com database we license. Alerts 'error' if a vulnerability is found and links to the wpvulndb.com page for more info. Also checks for available updates and alerts 'warning' if themes needing an update are found.
+Checks all themes against the wpscan.com database we license. Alerts 'error' if a vulnerability is found and links to the wpvulndb.com page for more info. Also checks for available updates and alerts 'warning' if themes needing an update are found.

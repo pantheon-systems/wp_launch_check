@@ -42,7 +42,7 @@ class Plugins extends Checkimplementation {
 			if (stripos($plugin_path,'/')) {
 				$slug = substr($plugin_path, 0, stripos($plugin_path,'/'));
 			}
-			
+
 			$vulnerable = $this->is_vulnerable($slug, $data['Version']);
 
 			$needs_update = 0;
@@ -54,15 +54,15 @@ class Plugins extends Checkimplementation {
 			if ( false === $vulnerable ) {
 				$vulnerable = "None";
 			} else {
-				$vulnerable = sprintf('<a href="https://wpvulndb.com/plugins/%s" target="_blank" >more info</a>', $slug );
+				$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
 			}
-			
+
 			$report[$slug] = array(
 				'slug' => $slug,
 				'installed' => (string) $data['Version'],
 				'available' => (string) $available,
 				'needs_update' => (string) $needs_update,
-				'vulnerable'  => $vulnerable, 
+				'vulnerable'  => $vulnerable,
 			);
 		}
 		$this->alerts = $report;
@@ -85,7 +85,7 @@ class Plugins extends Checkimplementation {
 		}
 
 		// Set the request URL to the requested plugin
-		$url = 'https://wpvulndb.com/api/v3/plugins/' . $plugin_slug;
+		$url = 'https://wpscan.com/api/v3/plugins/' . $plugin_slug;
 
 		// Add the token to the headers
 		$headers = array(
@@ -148,7 +148,7 @@ class Plugins extends Checkimplementation {
 
 		// Loop through all vulnerabilities
 		foreach ( $plugin_results['vulnerabilities'] as $vulnerability ) {
-			
+
 			// If the vulnerability hasn't been fixed, then there's an issue
 			if ( ! isset( $vulnerability['fixed_in'] ) ) {
 				return $vulnerability;
