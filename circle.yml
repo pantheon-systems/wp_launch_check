@@ -4,7 +4,7 @@ jobs:
     working_directory: ~/pantheon-systems/wp_launch_check
     parallelism: 1
     docker:
-    - image: circleci/php:7.1
+      - image: circleci/php:7.4
     steps:
-    - checkout
-    - run: echo 'No tests to run'
+      - checkout
+      - run: echo 'No tests to run'

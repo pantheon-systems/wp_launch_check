@@ -1,7 +1,6 @@
 <?php
 
 use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
     Behat\Behat\Context\BehatContext,
     Behat\Behat\Event\SuiteEvent;
 
@@ -12,8 +11,10 @@ use \WP_CLI\Utils;
 if ( file_exists( __DIR__ . '/utils.php' ) ) {
 	require_once __DIR__ . '/utils.php';
 	require_once __DIR__ . '/Process.php';
+
 	$project_composer = dirname( dirname( dirname( __FILE__ ) ) ) . '/composer.json';
 	$built_phar = dirname( dirname( dirname( __FILE__ ) ) ) . '/wp_launch_check.phar';
+	
 	if ( file_exists( $built_phar ) ) {
 		$contents = 'require:' . PHP_EOL;
 		$contents .= '  - ' . $built_phar;
@@ -21,6 +22,7 @@ if ( file_exists( __DIR__ . '/utils.php' ) ) {
 		$project_config = sys_get_temp_dir() . '/wp-cli-package-test/config.yml';
 		file_put_contents( $project_config, $contents );
 		putenv( 'WP_CLI_CONFIG_PATH=' . $project_config );
+		print file_get_contents($project_config);
 	} else if ( file_exists( $project_composer ) ) {
 		$composer = json_decode( file_get_contents( $project_composer ) );
 		if ( ! empty( $composer->autoload->files ) ) {
@@ -48,9 +50,9 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	private static $cache_dir, $suite_cache_dir;
 
 	private static $db_settings = array(
-		'dbname' => 'wp_cli_test',
-		'dbuser' => 'wp_cli_test',
-		'dbpass' => 'password1',
+		'dbname' => 'pantheon',
+		'dbuser' => 'pantheon',
+		'dbpass' => 'pantheon',
 		'dbhost' => '127.0.0.1',
 	);
 

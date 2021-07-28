@@ -1,11 +1,10 @@
 <?php
 /**
-* Implements example command.
-* @version 0.1.4
+* Performs series of status and vulnerability checks for WordPress.
+* @version 0.6.8
 */
 class LaunchCheck {
 	public $fs;
-	public $skipfiles = array();
 	public $output = array();
 
 	/**
@@ -49,10 +48,10 @@ class LaunchCheck {
 
 	/**
 	 * Checks for a properly-configured wp-config
-	 * 
+	 *
 	 * ## OPTIONS
-	 * 
-	 * [--format=<json>] 
+	 *
+	 * [--format=<json>]
 	 * : use to output json
 	 *
 	 * @when before_wp_load
@@ -67,12 +66,12 @@ class LaunchCheck {
 
 	/**
 	 * Checks the cron
-	 * 
+	 *
 	 * ## OPTIONS
-	 * 
-	 * [--format=<json>] 
+	 *
+	 * [--format=<json>]
 	 * : use to output json
-	 * 
+	 *
 	 */
 	function cron($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
@@ -81,15 +80,15 @@ class LaunchCheck {
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
 	}
-	
+
 	/**
 	 * Check database for potential issues
-	 * 
+	 *
 	 * ## OPTIONS
-	 * 
-	 * [--format=<json>] 
+	 *
+	 * [--format=<json>]
 	 * : use to output json
-	 * 
+	 *
 	 */
 	function database($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
@@ -101,12 +100,12 @@ class LaunchCheck {
 
 	/**
 	 * Checks for best practice
-	 * 
+	 *
 	 * ## OPTIONS
-	 * 
-	 * [--format=<json>] 
+	 *
+	 * [--format=<json>]
 	 * : use to output json
-	 * 
+	 *
 	 */
 	function general($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
