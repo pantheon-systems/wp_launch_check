@@ -1,14 +1,41 @@
 name: Deploy and Release
 on:
-  workflow_run:
-    workflows: ["Behat tests"]
-    types: [completed]
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+.*$/"
 
 jobs:
-  deploy-packages:
-    name: Deploy
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  validate:
+    name: "Run validation test suite"
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ["7.2", "7.3", "7.4"]
+    env:
+      # GITHUB_CONTEXT: ${{ toJson(github) }}
+      PANTHEON_WPVULNDB_API_TOKEN: ${{ secrets.PANTHEON_WPVULNDB_API_TOKEN }}
+      WP_CLI_BIN_DIR: /tmp/wp-cli-phar
+      DB_NAME: pantheon
+      DB_USER: pantheon
+      DB_PASSWORD: pantheon
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: ${{ env.DB_NAME }}
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_USER: ${{ env.DB_USER }}
+          MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: rootpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -16,7 +43,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: ${{ matrix.php-versions }}
+          ini-values: post_max_size=256M, max_execution_time=120
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -34,16 +62,47 @@ jobs:
       - name: Cache PHP dependencies
         uses: actions/cache@v2
         with:
-          path: ~/vendor
+          path: vendor
           key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
 
       - name: Install composer dependencies
         run: |
           composer --no-interaction --no-progress --prefer-dist install
 
+      - name: Install WP-CLI
+        run: |
+          # The Behat test suite will pick up the executable found in $WP_CLI_BIN_DIR
+          mkdir -p $WP_CLI_BIN_DIR
+          curl -s https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > $WP_CLI_BIN_DIR/wp
+          chmod +x $WP_CLI_BIN_DIR/wp
+
       - name: Generate Phar
         run: |
           php -dphar.readonly=0 vendor/bin/box build -v
+
+      - name: Run Behat tests
+        run: |
+          vendor/bin/behat --ansi
+
+      - name: Archive phar
+        uses: actions/upload-artifact@v2
+        with:
+          name: wp-launch-check-phar
+          path: wp_launch_check.phar
+          retention-days: 5
+
+  deploy-packages:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [validate]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download Phar
+        uses: actions/download-artifact@v2
+        with:
+          name: wp-launch-check-phar
 
       - name: Create Changelog
         id: changelog
