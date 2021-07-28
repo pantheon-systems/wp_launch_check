@@ -1,6 +1,6 @@
 <?php
 /**
-* Performs series of status and vulnerability checks for WordPress.
+* Performs performance and security checks for WordPress.
 * @version 0.6.8
 */
 class LaunchCheck {

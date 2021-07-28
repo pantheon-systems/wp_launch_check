@@ -1,6 +1,6 @@
 {
   "name": "pantheon-systems/wp_launch_check",
-  "description": "Check against a WordPress for performance and security",
+  "description": "Performs performance and security checks for WordPress.",
   "type": "wp-cli-package",
   "license": "MIT",
   "authors": [],
