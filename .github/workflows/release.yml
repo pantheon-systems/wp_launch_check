@@ -103,11 +103,11 @@ jobs:
         with:
           name: wp-launch-check-phar
 
-      - name: Create Changelog
+      - name: Generate changelog
         id: changelog
-        uses: heinrichreimer/github-changelog-generator-action@v2.1.1
+        uses: metcalfc/changelog-generator@v1.0.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          myToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
         id: create_release
@@ -116,7 +116,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: ${{ github.ref }}
           body: |
             ${{ steps.changelog.outputs.changelog }}
           draft: false
