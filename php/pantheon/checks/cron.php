@@ -32,14 +32,14 @@ class Cron extends Checkimplementation {
 	public function checkIsRegularCron() {
 		if ( defined("DISABLE_WP_CRON") and true == DISABLE_WP_CRON ) {
 			$this->alerts[] = array(
-				'class' => 'fail',
-				'message' => 'Cron appears to be disabled, make sure DISABLE_WP_CRON is not defined in your wp-config.php',
-				'code' => 2
+				'class' => 'pass',
+				'message' => 'WP-Cron is disabled.  Pantheon is running `wp cron event run --due-now` once per hour.',
+				'code' => 0
 			);
 		} else {
 			$this->alerts[] = array(
 				'class' => 'pass',
-				'message' => 'Cron is enabled.',
+				'message' => 'WP-Cron is enabled.  Pantheon is also running `wp cron event run --due-now` once per hour.',
 				'code' => 0,
 			);
 		}
