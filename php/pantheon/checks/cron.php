@@ -31,10 +31,10 @@ class Cron extends Checkimplementation {
 
 	public function checkIsRegularCron() {
 		if ( defined("DISABLE_WP_CRON") and true == DISABLE_WP_CRON ) {
-			$this->alerts[] = array( 
-				'class' => 'fail', 
-				'message' => 'Cron appears to be disabled, make sure DISABLE_WP_CRON is not defined in your wp-config.php', 
-				'code' => 2 
+			$this->alerts[] = array(
+				'class' => 'fail',
+				'message' => 'Cron appears to be disabled, make sure DISABLE_WP_CRON is not defined in your wp-config.php',
+				'code' => 2
 			);
 		} else {
 			$this->alerts[] = array(
@@ -91,19 +91,19 @@ class Cron extends Checkimplementation {
 		}
 
 		if ($invalid) {
-			$this->alerts[] = array( 
-				'class' => 'fail', 
-				'message' => "You have $invalid cron job(s) with an invalid time.", 
+			$this->alerts[] = array(
+				'class' => 'fail',
+				'message' => "You have $invalid cron job(s) with an invalid time.",
 				'code' => 2
 			);
-		}    
+		}
 		if ($overdue) {
-			$this->alerts[] = array( 
-				'class' => 'pass', 
-				'message' => "You have $past cron job(s) which are past due. Make sure that cron jobs are running on your site.", 
-				'code' => 1 
+			$this->alerts[] = array(
+				'class' => 'pass',
+				'message' => "You have $past cron job(s) which are past due. Make sure that cron jobs are running on your site.",
+				'code' => 1
 			);
-		}    
+		}
 		$excessive_jobs = array();
 		foreach( $job_name_counts as $job_name => $count ) {
 			if ( $count > self::EXCESSIVE_DUPLICATE_JOBS ) {
@@ -118,10 +118,10 @@ class Cron extends Checkimplementation {
 			);
 		}
 		if ($total > self::MAX_CRON_DISPLAY) {
-			$this->alerts[] = array( 
-				'class' => 'pass', 
-				'message' => "You have $total cron jobs scheduled. This is too many to display and may indicate a problem with your site.", 
-				'code' => 1 
+			$this->alerts[] = array(
+				'class' => 'pass',
+				'message' => "You have $total cron jobs scheduled. This is too many to display and may indicate a problem with your site.",
+				'code' => 1
 			);
 			// Truncate the output.
 			// @TODO: Put a note next to the output table reiterating that these are not the full results.
@@ -146,19 +146,19 @@ class Cron extends Checkimplementation {
 					'class' => $label
 				);
 			}
-			
+
 			$avg = $total/count($this->alerts);
 			$this->result = sprintf("%s\n%s", $this->description, View::make('checklist', array('rows' => $rows)));
-			
+
 			// format the cron table
 			$rows = array();
 			if ($this->cron_rows) {
-				$headers = array( 
+				$headers = array(
 					'jobname' => 'Job',
 					'schedule' => 'Frequency',
 					'next'    => 'Next Run',
 				);
-				
+
 				$this->result .= sprintf( "<hr/>%s",View::make('table', array('rows' => $this->cron_rows, 'headers' => $headers)));
 				$this->score = $avg;
 			}
