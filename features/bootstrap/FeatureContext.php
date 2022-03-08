@@ -77,8 +77,8 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		if ( $config_path = getenv( 'WP_CLI_CONFIG_PATH' ) ) {
 			$env['WP_CLI_CONFIG_PATH'] = $config_path;
 		}
-		if ( $wpvulndb_api_token = getenv( 'PANTHEON_WPVULNDB_API_TOKEN' ) ) {
-			$env['PANTHEON_WPVULNDB_API_TOKEN'] = $wpvulndb_api_token;
+		if ( $wpvulndb_api_token = getenv( 'PANTHEON_WPSCAN_API_TOKEN' ) ) {
+			$env['PANTHEON_WPSCAN_API_TOKEN'] = $wpvulndb_api_token;
 		}
 		return $env;
 	}

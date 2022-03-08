@@ -42,7 +42,7 @@ class Plugins extends Checkimplementation {
 			if (stripos($plugin_path,'/')) {
 				$slug = substr($plugin_path, 0, stripos($plugin_path,'/'));
 			}
-			
+
 			$vulnerable = $this->is_vulnerable($slug, $data['Version']);
 
 			$needs_update = 0;
@@ -56,13 +56,13 @@ class Plugins extends Checkimplementation {
 			} else {
 				$vulnerable = sprintf('<a href="https://wpvulndb.com/plugins/%s" target="_blank" >more info</a>', $slug );
 			}
-			
+
 			$report[$slug] = array(
 				'slug' => $slug,
 				'installed' => (string) $data['Version'],
 				'available' => (string) $available,
 				'needs_update' => (string) $needs_update,
-				'vulnerable'  => $vulnerable, 
+				'vulnerable'  => $vulnerable,
 			);
 		}
 		$this->alerts = $report;
@@ -77,11 +77,11 @@ class Plugins extends Checkimplementation {
 	protected function getPluginVulnerability( $plugin_slug )
 	{
 		// Get the vulnerability API token from the platform
-		$wpvulndb_api_token = getenv('PANTHEON_WPVULNDB_API_TOKEN');
+		$wpvulndb_api_token = getenv('PANTHEON_WPSCAN_API_TOKEN');
 
 		// Throw an exception if there is no token
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
-			throw new \Exception('No WP Vulnerability DB API Token. Please ensure the PANTHEON_WPVULNDB_API_TOKEN environment variable is set');
+			throw new \Exception('No WP Vulnerability DB API Token. Please ensure the PANTHEON_WPSCAN_API_TOKEN environment variable is set');
 		}
 
 		// Set the request URL to the requested plugin
@@ -148,7 +148,7 @@ class Plugins extends Checkimplementation {
 
 		// Loop through all vulnerabilities
 		foreach ( $plugin_results['vulnerabilities'] as $vulnerability ) {
-			
+
 			// If the vulnerability hasn't been fixed, then there's an issue
 			if ( ! isset( $vulnerability['fixed_in'] ) ) {
 				return $vulnerability;
