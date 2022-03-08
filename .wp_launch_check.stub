@@ -1,0 +1,12 @@
+<?php
+
+if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
+	echo "Error: wp_launch_check can only be loaded by WP-CLI. Use `wp --require=wp_launch_check.phar`" . PHP_EOL;
+	exit(1);
+}
+
+Phar::mapPhar();
+require 'phar://' . __FILE__ . '/php/commands/launchcheck.php';
+
+__HALT_COMPILER();
+?>

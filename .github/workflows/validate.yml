@@ -1,0 +1,86 @@
+name: Behat tests
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+
+jobs:
+  validate:
+    name: "Run validation test suite"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ["7.2", "7.3", "7.4"]
+    env:
+      # GITHUB_CONTEXT: ${{ toJson(github) }}
+      PANTHEON_WPVULNDB_API_TOKEN: ${{ secrets.PANTHEON_WPVULNDB_API_TOKEN }}
+      WP_CLI_BIN_DIR: /tmp/wp-cli-phar
+      DB_NAME: pantheon
+      DB_USER: pantheon
+      DB_PASSWORD: pantheon
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: ${{ env.DB_NAME }}
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_USER: ${{ env.DB_USER }}
+          MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: rootpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          ini-values: post_max_size=256M, max_execution_time=120
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache Composer Downloads
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Cache PHP dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
+
+      - name: Install composer dependencies
+        run: |
+          composer --no-interaction --no-progress --prefer-dist install
+
+      - name: Install WP-CLI
+        run: |
+          # The Behat test suite will pick up the executable found in $WP_CLI_BIN_DIR
+          mkdir -p $WP_CLI_BIN_DIR
+          curl -s https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > $WP_CLI_BIN_DIR/wp
+          chmod +x $WP_CLI_BIN_DIR/wp
+
+      - name: Generate Phar
+        run: |
+          php -dphar.readonly=0 vendor/bin/box build -v
+
+      - name: Run Behat tests
+        run: |
+          vendor/bin/behat --ansi
