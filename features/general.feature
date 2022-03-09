@@ -70,5 +70,5 @@ Feature: General tests of WP Launch Check
     When I run `wp launchcheck general`
     Then STDOUT should contain:
       """
-      Updating to WordPress' newest minor version is strongly recommended
+      A new major version of WordPress is available for update.
       """
