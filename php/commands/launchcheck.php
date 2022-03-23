@@ -1,11 +1,10 @@
 <?php
 /**
-* Audit WordPress configuration.
-* @version 0.1.4
+* Performs performance and security checks for WordPress.
+* @version 0.6.8
 */
 class LaunchCheck {
 	public $fs;
-	public $skipfiles = array();
 	public $output = array();
 
 	/**

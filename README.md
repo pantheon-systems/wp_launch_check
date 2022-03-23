@@ -5,6 +5,8 @@
 WP Launch Check is an extension for WP-CLI designed for Pantheon.io WordPress customers. While designed initially for the Pantheon dashboard it is intended to be fully usable outside of Pantheon.
 
 [![Build Status](https://travis-ci.org/pantheon-systems/wp_launch_check.svg?branch=master)](https://travis-ci.org/pantheon-systems/wp_launch_check)
+[![Actively Maintained](https://img.shields.io/badge/Pantheon-Actively_Maintained-yellow?logo=pantheon&color=FFDC28)](https://pantheon.io/docs/oss-support-levels#actively-maintained)
+
 
 To use WP Launch Check simply run the ```wp launchcheck <subcommand>``` command like you would any other WP-CLI command.
 

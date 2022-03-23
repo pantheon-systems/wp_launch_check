@@ -81,7 +81,8 @@ class Plugins extends Checkimplementation {
 
 		// Throw an exception if there is no token
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
-			throw new \Exception('No WP Vulnerability DB API Token. Please ensure the PANTHEON_WPVULNDB_API_TOKEN environment variable is set');
+			//TODO: return a value indicating no scan was performed.
+			return false;
 		}
 
 		// Set the request URL to the requested plugin

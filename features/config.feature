@@ -34,13 +34,13 @@ Feature: Check the wp-config.php file
       <?php
       // ** MySQL settings ** //
       /** The name of the database for WordPress */
-      define('DB_NAME', 'wp_cli_test');
+      define('DB_NAME', 'pantheon');
 
       /** MySQL database username */
-      define('DB_USER', 'wp_cli_test');
+      define('DB_USER', 'pantheon');
 
       /** MySQL database password */
-      define('DB_PASSWORD', 'password1');
+      define('DB_PASSWORD', 'pantheon');
 
       /** MySQL hostname */
       define('DB_HOST', '127.0.0.1');
@@ -76,13 +76,13 @@ Feature: Check the wp-config.php file
       <?php
       // ** MySQL settings ** //
       /** The name of the database for WordPress */
-      define('DB_NAME', 'wp_cli_test');
+      define('DB_NAME', 'pantheon');
 
       /** MySQL database username */
-      define('DB_USER', 'wp_cli_test');
+      define('DB_USER', 'pantheon');
 
       /** MySQL database password */
-      define('DB_PASSWORD', 'password1');
+      define('DB_PASSWORD', 'pantheon');
 
       /** MySQL hostname */
       define('DB_HOST', '127.0.0.1');
@@ -152,9 +152,9 @@ Feature: Check the wp-config.php file
       """
       <?php
       $_ENV['PANTHEON_ENVIRONMENT'] = 'dev';
-      $_ENV['DB_NAME'] = 'wp_cli_test';
-      $_ENV['DB_USER'] = 'wp_cli_test';
-      $_ENV['DB_PASSWORD'] = 'password1';
+      $_ENV['DB_NAME'] = 'pantheon';
+      $_ENV['DB_USER'] = 'pantheon';
+      $_ENV['DB_PASSWORD'] = 'pantheon';
       $_ENV['DB_HOST'] = '127.0.0.1';
       $_ENV['DB_PORT'] = '3306';
       """

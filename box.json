@@ -1,0 +1,12 @@
+{
+  "main": "php/commands/launchcheck.php",
+  "output": "wp_launch_check.phar",
+  "finder": [
+    {
+      "name": "*.php",
+      "exclude": ["test", "tests", "Tests"],
+      "in": "php"
+    }
+  ],
+  "stub": ".wp_launch_check.stub"
+}
