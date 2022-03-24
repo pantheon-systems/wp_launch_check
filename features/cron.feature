@@ -39,7 +39,7 @@ Feature: Check crons
     When I run `wp --require=local-config.php launchcheck cron`
     Then STDOUT should contain:
       """
-      Cron appears to be disabled, make sure DISABLE_WP_CRON is not defined in your wp-config.php
+      WP-Cron is disabled.  Pantheon is running `wp cron event run --due-now` once per hour.
       """
 
     When I run `wp launchcheck cron`
