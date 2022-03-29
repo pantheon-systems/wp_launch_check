@@ -78,7 +78,10 @@ class Plugins extends Checkimplementation {
 	{
 		// Get the vulnerability API token from the platform
 		$wpvulndb_api_token = getenv('PANTHEON_WPVULNDB_API_TOKEN');
-
+		if(defined("WPSCAN_API_TOKEN")) {
+			$wpvulndb_api_token = WPSCAN_API_TOKEN;
+		}
+		
 		// Throw an exception if there is no token
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
 			//TODO: return a value indicating no scan was performed.
