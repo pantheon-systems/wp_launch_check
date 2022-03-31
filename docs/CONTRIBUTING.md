@@ -5,7 +5,7 @@ Make your changes to the `wp_launch_check` source code.
 
 Temporarily update the logic so the `wp_launch_check.phar` is created on all branches. In `.github/workflows/validate.yml`, replace the two branch names with one line:
 ```
-- *
+- '**'
 ```
 
 Create a Release Candidate tag based on your source branch.  The RC number should be one more, incremented on the patch version, than the most recent non-RC tag.
