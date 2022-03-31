@@ -1,4 +1,4 @@
-#Testing
+# Testing
 
 ## Make a RC Release including a wp_launch_check.phar
 Make your changes to the `wp_launch_check` source code.
