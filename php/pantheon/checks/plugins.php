@@ -123,10 +123,10 @@ class Plugins extends Checkimplementation {
 
 
 	protected function getWpScanApiToken() {
-		if( !defined( "WPSCAN_API_TOKEN" ) ) {
+		if( !defined( 'WPSCAN_API_TOKEN' ) ) {
 			return false;
 		}
-		if( !defined( "PANTHEON_WPSCAN_ENVIRONMENTS" ) ) {
+		if( !defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
 			return false;
 		}
 		$environments = explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS );
