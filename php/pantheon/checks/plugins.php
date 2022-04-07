@@ -126,7 +126,12 @@ class Plugins extends Checkimplementation {
 		if( !defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
 			return false;
 		}
-		$environments = explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS );
+
+		if ( ! is_array( PANTHEON_WPSCAN_ENVIRONMENTS ) ) {
+			$environments = explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS );
+		} else {
+			$environments = PANTHEON_WPSCAN_ENVIRONMENTS;
+		}
 
 		if(
 			!in_array( getenv( 'PANTHEON_ENVIRONMENT' ), $environments )
