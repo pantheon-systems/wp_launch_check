@@ -123,9 +123,6 @@ class Plugins extends Checkimplementation {
 
 
 	protected function getWpScanApiToken() {
-		if( !defined( 'WPSCAN_API_TOKEN' ) ) {
-			return false;
-		}
 		if( !defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
 			return false;
 		}
@@ -138,7 +135,7 @@ class Plugins extends Checkimplementation {
 			return false;
 		}
 
-		if( defined( 'WPSCAN_API_TOKEN') ) {
+		if( defined( 'WPSCAN_API_TOKEN' ) ) {
 			return WPSCAN_API_TOKEN;
 		}
 
