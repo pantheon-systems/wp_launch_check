@@ -77,7 +77,7 @@ class Plugins extends Checkimplementation {
 	protected function getPluginVulnerability( $plugin_slug )
 	{
 		// Get the vulnerability API token from the platform
-		$wpvulndb_api_token = getenv('PANTHEON_WPVULNDB_API_TOKEN');
+		$wpvulndb_api_token = $this->getWpScanApiToken();
 
 		// Throw an exception if there is no token
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
@@ -119,6 +119,32 @@ class Plugins extends Checkimplementation {
 
 		// Return the requested plugin vulnerability info
 		return $result[$plugin_slug];
+	}
+
+
+	protected function getWpScanApiToken() {
+		if( !defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
+			return false;
+		}
+
+		if ( ! is_array( PANTHEON_WPSCAN_ENVIRONMENTS ) ) {
+			$environments = explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS );
+		} else {
+			$environments = PANTHEON_WPSCAN_ENVIRONMENTS;
+		}
+
+		if(
+			!in_array( getenv( 'PANTHEON_ENVIRONMENT' ), $environments )
+			&& !in_array( '*', $environments )
+		) {
+			return false;
+		}
+
+		if( defined( 'WPSCAN_API_TOKEN' ) ) {
+			return WPSCAN_API_TOKEN;
+		}
+
+		return getenv( 'PANTHEON_WPVULNDB_API_TOKEN' );
 	}
 
 	/**
