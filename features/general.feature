@@ -53,7 +53,7 @@ Feature: General tests of WP Launch Check
 
   Scenario: WordPress has a new minor version but no new major version
     Given a WP install
-    And I run `wp core download --version=5.9 --force`
+    And I run `wp core download --version=6.0 --force`
     And I run `wp theme activate twentytwentytwo`
 
     When I run `wp launchcheck general`
@@ -64,7 +64,7 @@ Feature: General tests of WP Launch Check
 
   Scenario: WordPress has a new major version but no new minor version
     Given a WP install
-    And I run `wp core download --version=5.8.4 --force`
+    And I run `wp core download --version=5.5.9 --force`
     And I run `wp theme activate twentytwentytwo`
 
     When I run `wp launchcheck general`
