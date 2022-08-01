@@ -54,7 +54,7 @@ class Plugins extends Checkimplementation {
 			if ( false === $vulnerable ) {
 				$vulnerable = "None";
 			} else {
-				$vulnerable = sprintf('<a href="https://wpvulndb.com/plugins/%s" target="_blank" >more info</a>', $slug );
+				$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
 			}
 
 			$report[$slug] = array(
@@ -86,7 +86,7 @@ class Plugins extends Checkimplementation {
 		}
 
 		// Set the request URL to the requested plugin
-		$url = 'https://wpvulndb.com/api/v3/plugins/' . $plugin_slug;
+		$url = 'https://wpscan.com/api/v3/plugins/' . $plugin_slug;
 
 		// Add the token to the headers
 		$headers = array(
