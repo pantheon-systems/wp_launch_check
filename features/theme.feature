@@ -17,6 +17,7 @@ Feature: Test WordPress for themes with known security issues
 
   Scenario: A WordPress install with no theme security issues
     Given a WP install
+		And I run `wp theme install twentyfifteen --version=1.1 --force`
     And I run `wp theme update twentyfifteen`
 
     When I run `wp launchcheck all --all`
