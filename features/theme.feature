@@ -12,7 +12,7 @@ Feature: Test WordPress for themes with known security issues
       """
     And STDOUT should contain:
       """
-      Recommendation: Update themes to fix vulnerabilities
+      Recommendation: You should update all out-of-date themes
       """
 
   Scenario: A WordPress install with no theme security issues
