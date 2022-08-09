@@ -79,9 +79,8 @@ class Plugins extends Checkimplementation {
 		// Get the vulnerability API token from the platform
 		$wpvulndb_api_token = $this->getWpScanApiToken();
 
-		// Throw an exception if there is no token
+		// Fail silently if there is no API token.
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
-			//TODO: return a value indicating no scan was performed.
 			return false;
 		}
 
