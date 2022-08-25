@@ -26,7 +26,7 @@ git clone git@github.com:pantheon-systems/cos-framework-clis.git
 ```
 
 * Checkout a new branch called `wplc-1.2.3-RC1`
-* In `wpcli/Dockerfile`, bump the version of WP-CLI.
+* In `wpcli/Dockerfile`, bump the version of WP Launch Check.
 * In `.circleci/config.yml`, do the following so the non-default branch will push a tag to Quay.
   1. Remove the `if`/`fi` lines around  `make push-wpcli-tags`
   2. Remove two spaces of indentation prior to `make push-wpcli-tags`
