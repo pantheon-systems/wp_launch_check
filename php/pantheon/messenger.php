@@ -56,13 +56,14 @@ class Messenger {
 					}
 
 					// @todo might be a better way to do this
-					echo \cli\Colors::colorize( sprintf(str_repeat('-',80).PHP_EOL."%s: (%s) \n%s\nResult:%s %s\nRecommendation: %s\n\n".PHP_EOL,
+					echo \cli\Colors::colorize( sprintf(str_repeat('-',80).PHP_EOL."%s: (%s) \n%s\nResult:%s %s\n%s\n\n".PHP_EOL,
 						strtoupper($message['label']),
 						$message['description'],
 						str_repeat('-',80),
 						$color,
 						$message['result'].'%n', // ugly
-						$message['action'])
+						// Check for a recommended action before printing something.
+						isset( $message['action'] ) ?? sprintf( "Recommendation: %s", $message['action'] ) )
 					);
 				}
 				break;
