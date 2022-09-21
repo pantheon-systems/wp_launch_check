@@ -46,7 +46,10 @@ Feature: General tests of WP Launch Check
     Given a WP install
 
 		When I run `wp core version`
-		Then STDOUT should not be empty
+		Then STDOUT should contain:
+			"""
+			6.0
+			"""
 
     When I run `wp launchcheck general`
     Then STDOUT should contain:
