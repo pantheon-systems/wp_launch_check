@@ -45,6 +45,9 @@ Feature: General tests of WP Launch Check
   Scenario: WordPress is up to date
     Given a WP install
 
+		When I run `wp core version`
+		Then STDOUT should not be empty
+
     When I run `wp launchcheck general`
     Then STDOUT should contain:
       """
