@@ -55,6 +55,8 @@ class Messenger {
 						$color = "%R";
 					}
 
+					$recommendation = isset( $message['action'] ) ? sprintf( "Recommendation: %s", $message['action'] ) : '';
+
 					// @todo might be a better way to do this
 					echo \cli\Colors::colorize( sprintf(str_repeat('-',80).PHP_EOL."%s: (%s) \n%s\nResult:%s %s\n%s\n\n".PHP_EOL,
 						strtoupper($message['label']),
@@ -63,8 +65,8 @@ class Messenger {
 						$color,
 						$message['result'].'%n', // ugly
 						// Check for a recommended action before printing something.
-						isset( $message['action'] ) ?? sprintf( "Recommendation: %s", $message['action'] ) )
-					);
+						$recommendation
+					) );
 				}
 				break;
 		}
