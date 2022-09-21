@@ -46,6 +46,7 @@ Feature: General tests of WP Launch Check
     Given a WP install
 
 		When I run `wp core version`
+		# This check is here to remind us to update versions when new releases are available.
 		Then STDOUT should contain:
 			"""
 			6.0
