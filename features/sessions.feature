@@ -6,7 +6,7 @@ Feature: Test for the existence of the PHP Native Sessions plugin
     When I run `wp launchcheck sessions`
     Then STDOUT should contain:
       """
-      You should install the Native PHP Sessions plugin
+      Recommendation: You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/
       """
 
   Scenario: A WordPress install with the native sessions plugin installed but not active
@@ -16,7 +16,7 @@ Feature: Test for the existence of the PHP Native Sessions plugin
 	When I run `wp launchcheck sessions`
 	Then STDOUT should contain:
 	  """
-	  You should isntall the Native PHP Sessions plugin
+	  Recommendation: You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/
 	  """
 
   Scenario: A WordPress install with the native sessions plugin installed and active
@@ -27,5 +27,5 @@ Feature: Test for the existence of the PHP Native Sessions plugin
 	When I run `wp launchcheck sessions`
 	Then STDOUT should contain:
 	  """
-	  No action required
+	  Recommendation: No action required
 	  """
