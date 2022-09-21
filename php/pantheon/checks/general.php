@@ -178,7 +178,7 @@ class General extends Checkimplementation {
 				$avg = $total/count($this->alerts);
 				$this->result = View::make('checklist', array('rows'=> $rows) );
 				$this->score = $avg;
-				$this->action = "You should use object caching";
+				$this->action = $this->action ?? "You should use object caching";
 		}
 		$messenger->addMessage(get_object_vars($this));
 	}
@@ -204,6 +204,7 @@ class General extends Checkimplementation {
 				'class' => 'error',
 				'message' => $action,
 			);
+			$this->action = $action;
 		} else if ( $has_major ) {
 			$action= 'A new major version of WordPress is available for update.';
 			$this->alerts[] = array(
@@ -211,6 +212,7 @@ class General extends Checkimplementation {
 				'class'   => 'warning',
 				'message' => $action,
 			);
+			$this->action = $action;
 		} else {
 			$this->alerts[]  = array(
 				'code'  => 0,
