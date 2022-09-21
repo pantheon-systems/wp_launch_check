@@ -17,7 +17,7 @@ class Sessions extends Checkimplementation {
 		$this->has_plugin = class_exists("Pantheon_Sessions");
 		// If the plugin was not found, define the recommended action.
 		// Otherwise, we don't want to recommend anything, we're all good here.
-		$this->action = ! $this->has_plugin ? 'You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/' : null;
+		$this->action = ! $this->has_plugin ? 'You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/' : 'No action required';
 
 		return $this;
 	}
