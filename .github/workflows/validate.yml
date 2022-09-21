@@ -76,7 +76,7 @@ jobs:
           mkdir -p $WP_CLI_BIN_DIR
           curl -s https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > $WP_CLI_BIN_DIR/wp
           chmod +x $WP_CLI_BIN_DIR/wp
-          wp core version
+          $WP_CLI_BIN_DIR/wp core version
 
       - name: Generate Phar
         run: |
