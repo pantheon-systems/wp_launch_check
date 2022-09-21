@@ -65,8 +65,8 @@ class Messenger {
 						$color,
 						$message['result'].'%n', // ugly
 						// Check for a recommended action before printing something.
-						$recommendation
-					) );
+						$recommendation )
+					);
 				}
 				break;
 		}
