@@ -198,16 +198,18 @@ class General extends Checkimplementation {
 		}
 
 		if ( $has_minor ) {
+			$action = "Updating to WordPress' newest minor version is strongly recommended.";
 			$this->alerts[] = array(
 				'code'  =>  2,
 				'class' => 'error',
-				'message' => "Updating to WordPress' newest minor version is strongly recommended.",
+				'message' => $action,
 			);
 		} else if ( $has_major ) {
+			$action= 'A new major version of WordPress is available for update.';
 			$this->alerts[] = array(
 				'code'    => 1,
 				'class'   => 'warning',
-				'message' => 'A new major version of WordPress is available for update.'
+				'message' => $action,
 			);
 		} else {
 			$this->alerts[]  = array(
