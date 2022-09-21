@@ -206,7 +206,7 @@ class General extends Checkimplementation {
 			);
 			$this->action = $action;
 		} else if ( $has_major ) {
-			$action= 'A new major version of WordPress is available for update.';
+			$action = 'A new major version of WordPress is available for update.';
 			$this->alerts[] = array(
 				'code'    => 1,
 				'class'   => 'warning',
