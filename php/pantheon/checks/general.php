@@ -37,7 +37,7 @@ class General extends Checkimplementation {
 				'class' => 'warning',
 				'message' => 'W3 Total Cache plugin found. This plugin is not needed on Pantheon and should be removed.',
 			);
-		} else {  
+		} else {
 			$this->alerts[] = array(
 				'code' => 0,
 				'class' => 'ok',
@@ -50,7 +50,7 @@ class General extends Checkimplementation {
 				'class' => 'warning',
 				'message' => 'WP Super Cache plugin found. This plugin is not needed on Pantheon and should be removed.',
 			);
-		} else { 
+		} else {
 			$this->alerts[] = array(
 				'code' => 0,
 				'class' => 'ok',
@@ -64,13 +64,13 @@ class General extends Checkimplementation {
 		$siteurl = \get_option('siteurl');
 		$home = \get_option('home');
 		if ( $siteurl !== $home ) {
-			$this->alerts[] = array( 
+			$this->alerts[] = array(
 				'code'  =>  2,
 				'class' => 'error',
 				'message' => "Site url and home settings do not match. ( 'siteurl'=$siteurl and 'home'=>$home )",
 			);
 		} else {
-			$this->alerts[] = array( 
+			$this->alerts[] = array(
 				'code'  =>  0,
 				'class' => 'ok',
 				'message' => "Site and home url settings match. ( $siteurl )",
@@ -82,19 +82,19 @@ class General extends Checkimplementation {
 		$active = get_option('active_plugins');
 		$plugins = count($active);
 		if ( 100 <= $plugins ) {
-			$this->alerts[] = array(  
+			$this->alerts[] = array(
 				'code' => 1,
 				'class' => 'warning',
 				'message' =>  sprintf('%d active plugins found. You are running more than 100 plugins. The more plugins you run the worse your performance will be. You should uninstall any plugin that is not necessary.', $plugins),
 			);
-		} else { 
+		} else {
 			$this->alerts[] = array(
 				'code'  => 0,
 				'class' => 'ok',
 				'message' => sprintf('%d active plugins found.',$plugins),
 			);
 		}
-	} 
+	}
 
 	public function checkDebug() {
 
@@ -113,7 +113,7 @@ class General extends Checkimplementation {
 				);
 			}
 		} else {
-			$this->alerts[]  = array( 
+			$this->alerts[]  = array(
 				'code'  => 0,
 				'class' => 'ok',
 				'message' => 'WP_DEBUG not found or is set to false.',
@@ -132,7 +132,7 @@ class General extends Checkimplementation {
 					 'message' => 'Looks like you are running the debug bar plugin. You should disable this plugin in the live environment'
 				);
 			}
-		}   
+		}
 
 	}
 
