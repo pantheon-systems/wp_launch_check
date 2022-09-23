@@ -55,9 +55,8 @@ This check does the following:
  * Checks for WP_DEBUG=True, returns 'ok' if in dev, 'warning; in live
  * Checks whether the debug-bar plugin is active, 'ok' in dev, 'warning' in live
  * Counts active plugins. Alerts if more than 100 are active
- * Checks database settings for ```home``` and ```siteurl``` and whether they match. If they do not it recommends fixing. You can do this with WP_CLI/Terminus using 'terminus wp search-replace 'domain1' 'domain2' --site=sitename --env=dev'
+ * Checks database settings for ```home``` and ```siteurl``` and whether they match. If they do not it recommends fixing. You can do this with ```WP_CLI/Terminus using 'terminus wp search-replace 'domain1' 'domain2' --site=sitename --env=dev'```
  * Checks whether WP Super Cache and/or W3 Total Cache are found and alerts 'warning' if so.
- *
 
 ### Database
 **Database:** [\Pantheon\Checks\Database](php/pantheon/checks/database.php)
@@ -69,7 +68,7 @@ This check runs the following db checks
 
 ### Cron
 **Cron:** [\Pantheon\Checks\Cron](php/commands/checks/cron.php)
-This check simple examines whether ```DISABLE_WP_CRON``` evaluates ```true``` to see if cron has been disabled. ( We should probably also curl the wp-cron.php?doing_wp_cron and ensure we get a 200 ). Some hosts disable the default WP_Cron functionality, substituting a system cron, because the HTTP base WP_Cron can sometimes have race conditions develop causing what might be referred to as "runaway cron", in which HTTP multiple requests trigger the cron a small amount of time causing a spike in PHP/MySQL resource consumption. This check also dumps the scheduled tasks into a table using ```get_option('cron')```.
+This check simple examines whether ```DISABLE_WP_CRON``` evaluates ```true``` to see if cron has been disabled. ( We should probably also curl the ```wp-cron.php?doing_wp_cron``` and ensure we get a 200 ). Some hosts disable the default WP_Cron functionality, substituting a system cron, because the HTTP base WP_Cron can sometimes have race conditions develop causing what might be referred to as "runaway cron", in which HTTP multiple requests trigger the cron a small amount of time causing a spike in PHP/MySQL resource consumption. This check also dumps the scheduled tasks into a table using ```get_option('cron')```. 
 
 ### object-cache
 **objectcache** [\Pantheon\Checks\Cron](php/commands/checks/objectcache.php)
