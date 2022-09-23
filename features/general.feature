@@ -45,6 +45,13 @@ Feature: General tests of WP Launch Check
   Scenario: WordPress is up to date
     Given a WP install
 
+    When I run `wp core version`
+    # This check is here to remind us to update versions when new releases are available.
+    Then STDOUT should contain:
+      """
+      6.0
+      """
+
     When I run `wp launchcheck general`
     Then STDOUT should contain:
       """
@@ -64,7 +71,7 @@ Feature: General tests of WP Launch Check
 
   Scenario: WordPress has a new major version but no new minor version
     Given a WP install
-    And I run `wp core download --version=5.8.4 --force`
+    And I run `wp core download --version=5.8.5 --force`
     And I run `wp theme activate twentytwentytwo`
 
     When I run `wp launchcheck general`
