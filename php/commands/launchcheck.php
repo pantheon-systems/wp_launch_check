@@ -1,11 +1,10 @@
 <?php
 /**
-* Implements example command.
-* @version 0.1.4
+* Performs performance and security checks for WordPress.
+* @version 0.6.8
 */
 class LaunchCheck {
 	public $fs;
-	public $skipfiles = array();
 	public $output = array();
 
 	/**
@@ -21,7 +20,7 @@ class LaunchCheck {
 		$config_check = new \Pantheon\Checks\Config();
 		$checker->register( $config_check );
 		$checker->execute();
-		
+
 		if ( ! $config_check->valid_db ) {
 			WP_CLI::warning( 'Detected invalid database credentials, skipping remaining checks' );
 			$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
@@ -38,7 +37,8 @@ class LaunchCheck {
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
 		$searcher->execute();
-		$checker->register( new \Pantheon\Checks\Plugins(isset($assoc_args['all'])) );
+		$checker->register( new \Pantheon\Checks\Plugins(TRUE));
+		$checker->register( new \Pantheon\Checks\Themes(TRUE));
 		$checker->register( new \Pantheon\Checks\Cron() );
 		$checker->register( new \Pantheon\Checks\Objectcache() );
 		$checker->register( new \Pantheon\Checks\Database() );
@@ -49,10 +49,10 @@ class LaunchCheck {
 
 	/**
 	 * Checks for a properly-configured wp-config
-	 * 
+	 *
 	 * ## OPTIONS
-	 * 
-	 * [--format=<json>] 
+	 *
+	 * [--format=<json>]
 	 * : use to output json
 	 *
 	 * @when before_wp_load
@@ -67,12 +67,12 @@ class LaunchCheck {
 
 	/**
 	 * Checks the cron
-	 * 
+	 *
 	 * ## OPTIONS
-	 * 
-	 * [--format=<json>] 
+	 *
+	 * [--format=<json>]
 	 * : use to output json
-	 * 
+	 *
 	 */
 	function cron($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
@@ -81,15 +81,15 @@ class LaunchCheck {
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
 	}
-	
+
 	/**
 	 * Check database for potential issues
-	 * 
+	 *
 	 * ## OPTIONS
-	 * 
-	 * [--format=<json>] 
+	 *
+	 * [--format=<json>]
 	 * : use to output json
-	 * 
+	 *
 	 */
 	function database($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
@@ -101,12 +101,12 @@ class LaunchCheck {
 
 	/**
 	 * Checks for best practice
-	 * 
+	 *
 	 * ## OPTIONS
-	 * 
-	 * [--format=<json>] 
+	 *
+	 * [--format=<json>]
 	 * : use to output json
-	 * 
+	 *
 	 */
 	function general($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
@@ -133,14 +133,13 @@ class LaunchCheck {
 	public function object_cache($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Objectcache() );
-		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		$checker->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
 	}
 
 	/**
-	 * checks files for insecure code and checks the wpvulndb.com/api for known vulnerabilities
+	 * Checks files for insecure code and checks the wpscan.com/api for known vulnerabilities
 	 *
 	 * ## OPTIONS
 	 *
@@ -159,15 +158,14 @@ class LaunchCheck {
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->register( new \Pantheon\Checks\Exploited() );
-		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		$searcher->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
 	}
 
 	/**
-	 * checks plugins for vulnerbities using the wpscan vulnerability DB
-	 * - https://wpvulndb.com/api
+	 * Checks plugins for vulnerabilities using the wpscan vulnerability DB
+	 * - https://wpscan.com/api
 	 *
 	 * ## OPTIONS
 	 *
@@ -185,7 +183,31 @@ class LaunchCheck {
 	public function plugins($args, $assoc_args) {
 		$checker = new \Pantheon\Checker();
 		$checker->register( new \Pantheon\Checks\Plugins( isset($assoc_args['all'])) );
+		$checker->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
+		\Pantheon\Messenger::emit($format);
+	}
+
+	/**
+	 * Checks themes for vulnerabilities using the wpscan vulnerability DB
+	 * - https://wpscan.com/api
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--all]
+	 * : check both active and inactive themes ( default is active only )
+	 *
+	 * [--format=<format>]
+	 * : output as json
+	 *
+	 * ## EXAMPLES
+	 *
+	 *   wp launchcheck themes --all
+	 *
+	 */
+	public function themes($args, $assoc_args) {
+		$checker = new \Pantheon\Checker();
+		$checker->register( new \Pantheon\Checks\Themes( isset($assoc_args['all']) ) );
 		$checker->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
@@ -207,7 +229,6 @@ class LaunchCheck {
 	public function sessions( $args, $assoc_args ) {
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
-		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		$searcher->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);

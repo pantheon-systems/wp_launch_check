@@ -42,7 +42,7 @@ class Plugins extends Checkimplementation {
 			if (stripos($plugin_path,'/')) {
 				$slug = substr($plugin_path, 0, stripos($plugin_path,'/'));
 			}
-			
+
 			$vulnerable = $this->is_vulnerable($slug, $data['Version']);
 
 			$needs_update = 0;
@@ -54,15 +54,15 @@ class Plugins extends Checkimplementation {
 			if ( false === $vulnerable ) {
 				$vulnerable = "None";
 			} else {
-				$vulnerable = sprintf('<a href="https://wpvulndb.com/plugins/%s" target="_blank" >more info</a>', $slug );
+				$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
 			}
-			
+
 			$report[$slug] = array(
 				'slug' => $slug,
 				'installed' => (string) $data['Version'],
 				'available' => (string) $available,
 				'needs_update' => (string) $needs_update,
-				'vulnerable'  => $vulnerable, 
+				'vulnerable'  => $vulnerable,
 			);
 		}
 		$this->alerts = $report;
@@ -77,15 +77,15 @@ class Plugins extends Checkimplementation {
 	protected function getPluginVulnerability( $plugin_slug )
 	{
 		// Get the vulnerability API token from the platform
-		$wpvulndb_api_token = getenv('PANTHEON_WPVULNDB_API_TOKEN');
+		$wpvulndb_api_token = $this->getWpScanApiToken();
 
-		// Throw an exception if there is no token
+		// Fail silently if there is no API token.
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
-			throw new \Exception('No WP Vulnerability DB API Token. Please ensure the PANTHEON_WPVULNDB_API_TOKEN environment variable is set');
+			return false;
 		}
 
 		// Set the request URL to the requested plugin
-		$url = 'https://wpvulndb.com/api/v3/plugins/' . $plugin_slug;
+		$url = 'https://wpscan.com/api/v3/plugins/' . $plugin_slug;
 
 		// Add the token to the headers
 		$headers = array(
@@ -120,6 +120,32 @@ class Plugins extends Checkimplementation {
 		return $result[$plugin_slug];
 	}
 
+
+	protected function getWpScanApiToken() {
+		if( !defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
+			return false;
+		}
+
+		if ( ! is_array( PANTHEON_WPSCAN_ENVIRONMENTS ) ) {
+			$environments = explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS );
+		} else {
+			$environments = PANTHEON_WPSCAN_ENVIRONMENTS;
+		}
+
+		if(
+			!in_array( getenv( 'PANTHEON_ENVIRONMENT' ), $environments )
+			&& !in_array( '*', $environments )
+		) {
+			return false;
+		}
+
+		if( defined( 'WPSCAN_API_TOKEN' ) ) {
+			return WPSCAN_API_TOKEN;
+		}
+
+		return getenv( 'PANTHEON_WPVULNDB_API_TOKEN' );
+	}
+
 	/**
 	* Checks a plugin by slug and version for vulnerabilities
 	* @param $plugin_slug string (required) string representing the plugin slug
@@ -148,7 +174,7 @@ class Plugins extends Checkimplementation {
 
 		// Loop through all vulnerabilities
 		foreach ( $plugin_results['vulnerabilities'] as $vulnerability ) {
-			
+
 			// If the vulnerability hasn't been fixed, then there's an issue
 			if ( ! isset( $vulnerability['fixed_in'] ) ) {
 				return $vulnerability;
