@@ -10,12 +10,15 @@ class Sessions extends Checkimplementation {
 	public $name = 'sessions';
 
 	public function init() {
-		$this->action = 'You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/';
-		$this->description = 'Sessions only work with sessions plugin is enabled';
+		$this->description = 'Sessions only work when sessions plugin is enabled';
 		$this->score = 0;
 		$this->result = '';
 		$this->label = 'PHP Sessions';
 		$this->has_plugin = class_exists("Pantheon_Sessions");
+		// If the plugin was not found, define the recommended action.
+		// Otherwise, we don't want to recommend anything, we're all good here.
+		$this->action = ! $this->has_plugin ? 'You should install the Native PHP Sessions plugin - https://wordpress.org/plugins/wp-native-php-sessions/' : 'No action required';
+
 		return $this;
 	}
 
@@ -32,7 +35,7 @@ class Sessions extends Checkimplementation {
 			foreach ($matches as $match) {
 				$this->alerts[] = array( 'class' => 'error','data'=>array($file->getRelativePathname(),$match[1] + 1, substr($match[0],0,50)));
 			}
-		} 
+		}
 		return $this;
 	}
 
