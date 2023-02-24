@@ -44,7 +44,7 @@ class Database extends Checkimplementation {
 		global $wpdb;
 		foreach ( $this->getTables() as $table ) {
 			$this->tables[$table->TABLE_NAME] = $table;
-			if ( $wpdb->prefix . 'options' ) { 
+			if ( $table->TABLE_NAME == $wpdb->prefix . 'options' ) { 
 				$options_table = $table;
 				break;
 			}
