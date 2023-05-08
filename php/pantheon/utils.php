@@ -77,7 +77,7 @@ class Utils {
 				$sanitized_link_text = call_user_func($sanitizer_function, $anchors[0]->textContent);
 				
 				// Rebuild anchor tags to ensure there are no injected attributes.
-				$rebuilt_link = '<a href="' . $sanitized_href . '">' . $sanitized_link_text . '</a>';
+				$rebuilt_link = '<a href="' . $sanitized_href . ' target="_blank"">' . $sanitized_link_text . '</a>';
 				return $rebuilt_link;
 			}
 		}
