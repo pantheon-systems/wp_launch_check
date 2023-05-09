@@ -31,6 +31,17 @@ class LaunchCheck {
 		// wp-config is going to be loaded again, and we need to avoid notices
 		@WP_CLI::get_runner()->load_wordpress();
 
+		// Check for multisite. If we're on multisite, switch to the main site.
+		if ( is_multisite() ) {
+			if ( defined( 'BLOG_ID_CURRENT_SITE' ) ) {
+				switch_to_blog( BLOG_ID_CURRENT_SITE );
+			} else {
+				switch_to_blog( 1 );
+			}
+			\WP_CLI::log( sprintf( esc_html__( 'Multisite detected. Running checks on %s site.' ), get_bloginfo( 'name' ) ) );
+		}
+
+
 		// WordPress is now loaded, so other checks can run
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
