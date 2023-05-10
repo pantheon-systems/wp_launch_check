@@ -3,7 +3,6 @@ namespace Pantheon;
 
 use \Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
-use \Pantheon\Utils as Pantheon;
 
 class Utils {
 	static $fs;
@@ -60,8 +59,27 @@ class Utils {
 				array_map('self::sanitize_data', array_values((array)$data))
 			);
 			return is_object( $data ) ? (object)$sanitized_data : $sanitized_data;
-		} elseif ( is_integer($data) ) {
+		} elseif ( is_integer( $data ) ) {
 			return (string)$data;
+		} elseif ( is_string( $data ) ) {
+			if ( ! empty( $data ) ) {
+				$dom = new \DOMDocument;
+				$dom->loadHTML( $data );
+				$anchors = $dom->getElementsByTagName('a');
+
+				// Bail if our string does not only contain an anchor tag.
+				if ( 0 === $anchors->length ) {;
+					return $sanitizer_function($data);
+				}
+
+				$href = $anchors[0]->getAttribute('href');
+				$sanitized_href = call_user_func($sanitizer_function, $href);
+				$sanitized_link_text = call_user_func($sanitizer_function, $anchors[0]->textContent);
+				
+				// Rebuild anchor tags to ensure there are no injected attributes.
+				$rebuilt_link = '<a href="' . $sanitized_href . ' target="_blank"">' . $sanitized_link_text . '</a>';
+				return $rebuilt_link;
+			}
 		}
 
 		return $sanitizer_function($data);
