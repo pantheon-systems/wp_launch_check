@@ -30,7 +30,7 @@ Feature: Suggest object cache to be enabled
 
   Scenario: WP Redis is present as the enabled object-cache
     Given a WP install
-    And I run `wp plugin install wp-redis --activate`
+    And I run `wp plugin install wp-redis --version=1.3.5 --activate`
     And I run `wp redis enable`
 
     When I run `wp launchcheck object-cache`
