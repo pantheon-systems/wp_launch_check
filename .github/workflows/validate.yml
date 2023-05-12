@@ -9,9 +9,7 @@ jobs:
   validate:
     name: "Run validation test suite"
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-versions: ["7.4"]
+
     env:
       # GITHUB_CONTEXT: ${{ toJson(github) }}
       PANTHEON_WPVULNDB_API_TOKEN: ${{ secrets.PANTHEON_WPVULNDB_API_TOKEN }}
@@ -44,7 +42,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: 7.4
           ini-values: post_max_size=256M, max_execution_time=120
 
       - name: Get Composer Cache Directory
