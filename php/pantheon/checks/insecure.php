@@ -25,6 +25,10 @@ class Insecure extends Checkimplementation {
 		if ( $matches ) {
 			$note = '';
 			foreach($matches as $match) {
+				// Don't flag if the file in question is inside wp-redis.
+				if ( false !== strpos( $file->getPath(), 'wp-redis' ) ) {
+					continue;
+				}
 				$linenum = substr_count(substr($file_contents, 0, $match[1]), "\n") + 1;
 				$this->alerts[] = array( 'class'=>'warning', 'data'=> array( $file->getRelativePathname(),  $linenum, substr($match[0],0,50)));
 			}

@@ -30,6 +30,7 @@ Feature: Suggest object cache to be enabled
 
   Scenario: WP Redis is present as the enabled object-cache
     Given a WP install
+		# TODO Remove the version flag.
     And I run `wp plugin install wp-redis --activate`
     And I run `wp redis enable`
 
