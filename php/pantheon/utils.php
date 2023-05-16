@@ -63,13 +63,14 @@ class Utils {
 			return (string)$data;
 		} elseif ( is_string( $data ) ) {
 			if ( ! empty( $data ) ) {
+				$sanitized_data = $sanitizer_function($data);
 				$dom = new \DOMDocument;
-				$dom->loadHTML( $data );
+				$dom->loadHTML( $sanitized_data );
 				$anchors = $dom->getElementsByTagName('a');
 
 				// Bail if our string does not only contain an anchor tag.
 				if ( 0 === $anchors->length ) {;
-					return $sanitizer_function($data);
+					return $sanitized_data;
 				}
 
 				$href = $anchors[0]->getAttribute('href');
