@@ -217,6 +217,8 @@ class Plugins extends Checkimplementation {
 				$rows[] = array('class'=>$class, 'data' => $alert);
 			}
 
+			// Todo: Previous message included %d known vulnerabilities linked to $count_vuln.
+			$result_message = sprintf( __( 'Found %s needing updates ...' ), _n( 'one plugin', '%d plugins', $count_update ) );
 			$rendered = PHP_EOL;
 			$rendered .= "$result_message \n" . PHP_EOL;
 			$rendered .= View::make('table', array('headers'=>$headers,'rows'=>$rows));
