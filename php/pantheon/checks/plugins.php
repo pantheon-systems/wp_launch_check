@@ -73,8 +73,8 @@ class Plugins extends Checkimplementation {
 	/**
 	 * Checks the plugin slug against the vulnerability db
 	 * @param $plugin_slug string (required) string representing the plugin slug
-	 *
 	 * @return array containing vulnerability info or false
+	 * @todo Refactor to use Patchstack API.
 	 */
 	protected function getPluginVulnerability( $plugin_slug )
 	{
