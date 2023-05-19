@@ -232,11 +232,13 @@ class Plugins extends Checkimplementation {
 				$rows[] = array('class'=>$class, 'data' => $alert);
 			}
 
+			$updates_message = $count_update === 1 ? __( 'Found one plugin needing updates' ) : sprintf( _n( 'Found %d plugin needing updates', 'Found %d plugins needing updates', $count_update ), $count_update );
 			$result_message = ! $should_check_vulnerabilities ?
 				// Not checking vulnerabilities message.
-				sprintf( __( 'Found %s needing updates ...' ), _n( 'one plugin', '%d plugins', $count_update ) ) :
+				$updates_message . ' ...':
 				// Checking vulnerabilities message.
-				sprintf( __( 'Found %s needing updates and %s known vulnerabilities ...' ), _n( 'one plugin', '%d plugins', $count_update ), _n( 'one plugin', '%d plugins', $count_vuln ) );
+				$updates_message . ' ' .
+				( $count_vuln === 1 ? __( 'Also found one plugin with known vulnerabilities ...' ) : sprintf( _n( 'Also found %d plugin with known vulnerabilities ...', 'Also found %d plugins with known vulnerabilities ...', $count_vuln ), $count_vuln ) );
 			$rendered = PHP_EOL;
 			$rendered .= "$result_message \n" . PHP_EOL;
 			$rendered .= View::make('table', array('headers'=>$headers,'rows'=>$rows));
