@@ -189,13 +189,17 @@ class Plugins extends Checkimplementation {
 	}
 
 	public function message(Messenger $messenger) {
+		$plugin_message = __( 'You should update all out-of-date plugins' );
+		$vuln_message = __( 'Update plugins to fix vulnerabilities' );
+		$no_plugins_message = __( 'No plugins found' );
+
 		if (!empty($this->alerts)) {
 			$headers = array(
-				'slug'=>"Plugin",
-				'installed'=>"Current",
-				'available' => "Available",
-				'needs_update'=>"Needs Update",
-				'vulnerable'=>"Vulnerabilities"
+				'slug'=> __( 'Plugin' ),
+				'installed'=> __( 'Current' ),
+				'available' => __( 'Available' ),
+				'needs_update'=> __( 'Needs Update' ),
+				// 'vulnerable'=> __( ' Vulnerabilities' ),
 			);
 			$rows = array();
 			$count_update = 0;
@@ -214,21 +218,21 @@ class Plugins extends Checkimplementation {
 			}
 
 			$rendered = PHP_EOL;
-			$rendered .= sprintf("Found %d plugins needing updates and %d known vulnerabilities ... \n".PHP_EOL, $count_update, $count_vuln);
+			$rendered .= "$result_message \n" . PHP_EOL;
 			$rendered .= View::make('table', array('headers'=>$headers,'rows'=>$rows));
 
 			$this->result .= $rendered;
 			if ($count_update > 0) {
 				$this->score = 1;
-				$this->action = "You should update all out-of-date plugins";
+				$this->action = $plugin_message;
 			}
 
 			if ($count_vuln > 0) {
 				$this->score = 2;
-				$this->action = "Update plugins to fix vulnerabilities";
+				$this->action = $vuln_message;
 			}
 		} else {
-			$this->result .= "No plugins found.";
+			$this->result .= $no_plugins_message;
 		}
 		$messenger->addMessage(get_object_vars($this));
 	}
