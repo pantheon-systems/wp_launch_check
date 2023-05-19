@@ -122,28 +122,23 @@ class Plugins extends Checkimplementation {
 
 
 	protected function getWpScanApiToken() {
-		if( !defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
-			return false;
+		if ( defined( 'WPSCAN_API_TOKEN' ) ) {
+			// Don't use WPSCAN if PANTHEON_WPSCAN_ENVIRONMENTS have not been specified.
+			if( ! defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
+				return false;
+			}
+
+			$environments = ( ! is_array( PANTHEON_WPSCAN_ENVIRONMENTS ) ) ? explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS ) : PANTHEON_WPSCAN_ENVIRONMENTS;
+
+			// Only run WPSCAN on the specified environments unless it's been configured to run on all (*).
+			if ( in_array( getenv( 'PANTHEON_ENVIRONMENT' ), $environments, true ) || in_array( '*', $environments, true ) ) {
+				return WPSCAN_API_TOKEN;
+			}
 		}
 
-		if ( ! is_array( PANTHEON_WPSCAN_ENVIRONMENTS ) ) {
-			$environments = explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS );
-		} else {
-			$environments = PANTHEON_WPSCAN_ENVIRONMENTS;
-		}
-
-		if(
-			!in_array( getenv( 'PANTHEON_ENVIRONMENT' ), $environments )
-			&& !in_array( '*', $environments )
-		) {
-			return false;
-		}
-
-		if( defined( 'WPSCAN_API_TOKEN' ) ) {
-			return WPSCAN_API_TOKEN;
-		}
-
-		return getenv( 'PANTHEON_WPVULNDB_API_TOKEN' );
+		// TODO: Replace this PANTHEON_WPVULNDB_API_TOKEN with a new Patchstack API token.
+		// return getenv( 'PANTHEON_WPVULNDB_API_TOKEN' );
+		return false;
 	}
 
 	/**
