@@ -37,14 +37,18 @@ class Plugins extends Checkimplementation {
 		$all_plugins = Utils::sanitize_data( get_plugins() );
 		$update = Utils::sanitize_data( get_plugin_updates() );
 		$report = array();
+		$should_check_vulnerabilities = $this->getWpScanApiToken();
+		$vulnerable = false;
+
 		foreach( $all_plugins as $plugin_path => $data ) {
 			$slug = $plugin_path;
 			if (stripos($plugin_path,'/')) {
 				$slug = substr($plugin_path, 0, stripos($plugin_path,'/'));
 			}
 
-			// Todo: Commented out pending Patchstack integration.
-			// $vulnerable = $this->is_vulnerable($slug, $data['Version']);
+			if ( $should_check_vulnerabilities ) {
+				$vulnerable = $this->is_vulnerable($slug, $data['Version']);
+			}
 
 			$needs_update = 0;
 			$available = '-';
@@ -52,20 +56,24 @@ class Plugins extends Checkimplementation {
 				$needs_update = 1;
 				$available = $update[$plugin_path]->update->new_version;
 			}
-			// Todo: Commented out pending Patchstack integration.
-			// if ( false === $vulnerable ) {
-			// 	$vulnerable = "None";
-			// } else {
-			// 	$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
-			// }
 
-			$report[$slug] = array(
+			if ( $should_check_vulnerabilities && isset( $vulnerable ) ) {
+				// Todo: Replace this URL with a Patchstack URL
+				$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
+			} elseif ( $should_check_vulnerabilities ) {
+				$vulnerable = "None";
+			}
+
+			$report[ $slug ] = array(
 				'slug' => $slug,
 				'installed' => (string) $data['Version'],
 				'available' => (string) $available,
 				'needs_update' => (string) $needs_update,
-				// 'vulnerable'  => $vulnerable,
 			);
+
+			if ( $should_check_vulnerabilities ) {
+				$report[ $slug ]['vulnerable'] = $vulnerable;
+			}
 		}
 		$this->alerts = $report;
 	}
@@ -192,6 +200,7 @@ class Plugins extends Checkimplementation {
 		$plugin_message = __( 'You should update all out-of-date plugins' );
 		$vuln_message = __( 'Update plugins to fix vulnerabilities' );
 		$no_plugins_message = __( 'No plugins found' );
+		$should_check_vulnerabilities = $this->getWpScanApiToken();
 
 		if (!empty($this->alerts)) {
 			$headers = array(
@@ -199,8 +208,12 @@ class Plugins extends Checkimplementation {
 				'installed'=> __( 'Current' ),
 				'available' => __( 'Available' ),
 				'needs_update'=> __( 'Needs Update' ),
-				// 'vulnerable'=> __( ' Vulnerabilities' ),
 			);
+
+			if ( $should_check_vulnerabilities ) {
+				$headers['vulnerable'] = __( ' Vulnerabilities' );
+			}
+
 			$rows = array();
 			$count_update = 0;
 			$count_vuln = 0;
@@ -210,15 +223,20 @@ class Plugins extends Checkimplementation {
 					$class = 'warning';
 					$count_update++;
 				}
-				// if ('None' != $alert['vulnerable']) {
-				// 	$class = 'error';
-				// 	$count_vuln++;
-				// }
+
+				if ( $should_check_vulnerabilities && 'None' !== $alert['vulnerable']) {
+					$class = 'error';
+					$count_vuln++;
+				}
+
 				$rows[] = array('class'=>$class, 'data' => $alert);
 			}
 
-			// Todo: Previous message included %d known vulnerabilities linked to $count_vuln.
-			$result_message = sprintf( __( 'Found %s needing updates ...' ), _n( 'one plugin', '%d plugins', $count_update ) );
+			$result_message = ! $should_check_vulnerabilities ?
+				// Not checking vulnerabilities message.
+				sprintf( __( 'Found %s needing updates ...' ), _n( 'one plugin', '%d plugins', $count_update ) ) :
+				// Checking vulnerabilities message.
+				sprintf( __( 'Found %s needing updates and %s known vulnerabilities ...' ), _n( 'one plugin', '%d plugins', $count_update ), _n( 'one plugin', '%d plugins', $count_vuln ) );
 			$rendered = PHP_EOL;
 			$rendered .= "$result_message \n" . PHP_EOL;
 			$rendered .= View::make('table', array('headers'=>$headers,'rows'=>$rows));
