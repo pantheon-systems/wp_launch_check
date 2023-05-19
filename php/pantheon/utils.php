@@ -3,6 +3,7 @@ namespace Pantheon;
 
 use \Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
+use \Pantheon\Utils as Pantheon;
 
 class Utils {
 	static $fs;
@@ -59,7 +60,7 @@ class Utils {
 				array_map('self::sanitize_data', array_values((array)$data))
 			);
 			return is_object( $data ) ? (object)$sanitized_data : $sanitized_data;
-		} elseif ( is_integer( $data ) ) {
+		} elseif ( is_integer($data) ) {
 			return (string)$data;
 		} elseif ( is_string( $data ) ) {
 			if ( ! empty( $data ) ) {

@@ -30,6 +30,7 @@ class LaunchCheck {
 
 		// wp-config is going to be loaded again, and we need to avoid notices
 		@WP_CLI::get_runner()->load_wordpress();
+		WP_CLI::add_hook( 'before_run_command', [ $this, 'maybe_switch_to_blog' ] );
 
 		// WordPress is now loaded, so other checks can run
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
@@ -45,6 +46,24 @@ class LaunchCheck {
 		$checker->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
+	}
+
+	/**
+	 * Switch to BLOG_ID_CURRENT_SITE if we're on a multisite.
+	 *
+	 * This forces the launchcheck command to use the main site's info for all
+	 * the checks.
+	 */
+	public function maybe_switch_to_blog() {
+		// Check for multisite. If we're on multisite, switch to the main site.
+		if ( is_multisite() ) {
+			if ( defined( 'BLOG_ID_CURRENT_SITE' ) ) {
+				switch_to_blog( BLOG_ID_CURRENT_SITE );
+			} else {
+				switch_to_blog( 1 );
+			}
+			\WP_CLI::log( sprintf( esc_html__( 'Multisite detected. Running checks on %s site.' ), get_bloginfo( 'name' ) ) );
+		}
 	}
 
 	/**
