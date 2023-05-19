@@ -210,10 +210,10 @@ class Plugins extends Checkimplementation {
 					$class = 'warning';
 					$count_update++;
 				}
-				if ('None' != $alert['vulnerable']) {
-					$class = 'error';
-					$count_vuln++;
-				}
+				// if ('None' != $alert['vulnerable']) {
+				// 	$class = 'error';
+				// 	$count_vuln++;
+				// }
 				$rows[] = array('class'=>$class, 'data' => $alert);
 			}
 
