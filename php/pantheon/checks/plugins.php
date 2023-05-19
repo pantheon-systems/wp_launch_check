@@ -43,7 +43,8 @@ class Plugins extends Checkimplementation {
 				$slug = substr($plugin_path, 0, stripos($plugin_path,'/'));
 			}
 
-			$vulnerable = $this->is_vulnerable($slug, $data['Version']);
+			// Todo: Commented out pending Patchstack integration.
+			// $vulnerable = $this->is_vulnerable($slug, $data['Version']);
 
 			$needs_update = 0;
 			$available = '-';
@@ -51,18 +52,19 @@ class Plugins extends Checkimplementation {
 				$needs_update = 1;
 				$available = $update[$plugin_path]->update->new_version;
 			}
-			if ( false === $vulnerable ) {
-				$vulnerable = "None";
-			} else {
-				$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
-			}
+			// Todo: Commented out pending Patchstack integration.
+			// if ( false === $vulnerable ) {
+			// 	$vulnerable = "None";
+			// } else {
+			// 	$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
+			// }
 
 			$report[$slug] = array(
 				'slug' => $slug,
 				'installed' => (string) $data['Version'],
 				'available' => (string) $available,
 				'needs_update' => (string) $needs_update,
-				'vulnerable'  => $vulnerable,
+				// 'vulnerable'  => $vulnerable,
 			);
 		}
 		$this->alerts = $report;
