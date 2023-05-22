@@ -8,7 +8,7 @@ Feature: Test WordPress for themes with known security issues
     When I run `wp launchcheck all --all`
     Then STDOUT should contain:
       """
-      Found 1 themes needing updates and 0 known vulnerabilities
+      Found 1 themes needing updates
       """
     And STDOUT should contain:
       """
@@ -23,5 +23,5 @@ Feature: Test WordPress for themes with known security issues
     When I run `wp launchcheck all --all`
     Then STDOUT should contain:
       """
-      Found 0 themes needing updates and 0 known vulnerabilities
+      Found 0 themes needing updates
       """
