@@ -57,7 +57,7 @@ class Plugins extends Checkimplementation {
 				$available = $update[$plugin_path]->update->new_version;
 			}
 
-			if ( $should_check_vulnerabilities && isset( $vulnerable ) ) {
+			if ( $should_check_vulnerabilities && $vulnerable ) {
 				// Todo: Replace this URL with a Patchstack URL
 				$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
 			} elseif ( $should_check_vulnerabilities ) {
