@@ -65,7 +65,6 @@ class Plugins extends Checkimplementation {
 			// If we're checking for vulnerabilities, do stuff.
 			if ( $should_check_vulnerabilities ) {
 				$vulnerable = $this->is_vulnerable($slug, $data['Version']);
-				$report[ $slug ]['vulnerable'] = $vulnerable;
 
 				if ( $vulnerable ) {
 					// Todo: Replace this URL with a Patchstack URL
@@ -73,6 +72,8 @@ class Plugins extends Checkimplementation {
 				} else {
 					$vulnerable = "None";
 				}
+
+				$report[ $slug ]['vulnerable'] = $vulnerable;
 			}
 		}
 		$this->alerts = $report;

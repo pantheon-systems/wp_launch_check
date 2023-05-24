@@ -77,7 +77,6 @@ class Themes extends Checkimplementation {
 			// If we're checking for vulnerabilities, do stuff.
 			if ( $should_check_vulnerabilities ) {
 				$vulnerable = $this->is_vulnerable($slug, $version);
-				$report[ $slug ]['vulnerable'] = $vulnerable;
 
 				if ( $vulnerable ) {
 					// Todo: Replace this link with one to Patchstack.
@@ -85,6 +84,8 @@ class Themes extends Checkimplementation {
 				} else {
 					$vulnerable = "None";
 				}
+
+				$report[ $slug ]['vulnerable'] = $vulnerable;
 			}
 		}
 		$this->alerts = $report;
