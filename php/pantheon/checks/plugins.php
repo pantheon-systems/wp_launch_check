@@ -39,7 +39,7 @@ class Plugins extends Checkimplementation {
 		$all_plugins = Utils::sanitize_data( get_plugins() );
 		$update = Utils::sanitize_data( get_plugin_updates() );
 		$report = array();
-		$should_check_vulnerabilities = $this->getWpVulnApiToken();
+		$should_check_vulnerabilities = Common\get_wp_vuln_api_token();
 		$vulnerable = false;
 
 		foreach( $all_plugins as $plugin_path => $data ) {
@@ -89,7 +89,7 @@ class Plugins extends Checkimplementation {
 	protected function getPluginVulnerability( $plugin_slug )
 	{
 		// Get the vulnerability API token from the platform
-		$wpvulndb_api_token = $this->getWpVulnApiToken();
+		$wpvulndb_api_token = Common\get_wp_vuln_api_token();
 
 		// Fail silently if there is no API token.
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
