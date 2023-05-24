@@ -70,7 +70,7 @@ class Utils {
 				$anchors = $dom->getElementsByTagName('a');
 
 				// Bail if our string does not only contain an anchor tag.
-				if ( 0 === $anchors->length ) {;
+				if ( 0 === $anchors->length ) {
 					return $sanitized_data;
 				}
 
