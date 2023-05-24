@@ -59,20 +59,12 @@ class Themes extends Checkimplementation {
 
 			$data = wp_get_theme($slug);
 			$version = $data->version;
-			if ( $should_check_vulnerabilities ) {
-				$vulnerable = $this->is_vulnerable($slug, $version);
-			}
-
 			$needs_update = 0;
 			$available = '-';
+
 			if (isset($update[$theme_path])) {
 				$needs_update = 1;
 				$available = $update[$slug]->update["new_version"];
-			}
-			if ( $should_check_vulnerabilities && $vulnerable ) {
-				$vulnerable = sprintf('<a href="https://wpscan.com/themes/%s" target="_blank" >more info</a>', $slug );
-			} elseif ( $should_check_vulnerabilities ) {
-				$vulnerable = "None";
 			}
 
 			$report[$slug] = array(
@@ -82,8 +74,17 @@ class Themes extends Checkimplementation {
 				'needs_update' => (string) $needs_update,
 			);
 
+			// If we're checking for vulnerabilities, do stuff.
 			if ( $should_check_vulnerabilities ) {
+				$vulnerable = $this->is_vulnerable($slug, $version);
 				$report[ $slug ]['vulnerable'] = $vulnerable;
+
+				if ( $vulnerable ) {
+					// Todo: Replace this link with one to Patchstack.
+					$vulnerable = sprintf('<a href="https://wpscan.com/themes/%s" target="_blank" >more info</a>', $slug );
+				} else {
+					$vulnerable = "None";
+				}
 			}
 		}
 		$this->alerts = $report;

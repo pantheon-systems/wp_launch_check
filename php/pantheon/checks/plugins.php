@@ -48,22 +48,11 @@ class Plugins extends Checkimplementation {
 				$slug = substr($plugin_path, 0, stripos($plugin_path,'/'));
 			}
 
-			if ( $should_check_vulnerabilities ) {
-				$vulnerable = $this->is_vulnerable($slug, $data['Version']);
-			}
-
 			$needs_update = 0;
 			$available = '-';
 			if (isset($update[$plugin_path])) {
 				$needs_update = 1;
 				$available = $update[$plugin_path]->update->new_version;
-			}
-
-			if ( $should_check_vulnerabilities && $vulnerable ) {
-				// Todo: Replace this URL with a Patchstack URL
-				$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
-			} elseif ( $should_check_vulnerabilities ) {
-				$vulnerable = "None";
 			}
 
 			$report[ $slug ] = array(
@@ -73,8 +62,17 @@ class Plugins extends Checkimplementation {
 				'needs_update' => (string) $needs_update,
 			);
 
+			// If we're checking for vulnerabilities, do stuff.
 			if ( $should_check_vulnerabilities ) {
+				$vulnerable = $this->is_vulnerable($slug, $data['Version']);
 				$report[ $slug ]['vulnerable'] = $vulnerable;
+
+				if ( $vulnerable ) {
+					// Todo: Replace this URL with a Patchstack URL
+					$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
+				} else {
+					$vulnerable = "None";
+				}
 			}
 		}
 		$this->alerts = $report;
@@ -198,6 +196,7 @@ class Plugins extends Checkimplementation {
 			$rows = array();
 			$count_update = 0;
 			$count_vuln = 0;
+
 			foreach( $this->alerts as $alert ) {
 				$class = 'ok';
 				if ($alert['needs_update']) {
