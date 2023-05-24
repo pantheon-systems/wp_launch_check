@@ -12,6 +12,8 @@ class Themes extends Checkimplementation {
 	public $alerts = array();
 
 	public function __construct($check_all_themes) {
+		require_once __DIR__ . '/namespace.php';
+
 		$this->check_all_themes = $check_all_themes;
 	}
 
@@ -38,7 +40,7 @@ class Themes extends Checkimplementation {
 		$all_themes = Utils::sanitize_data( wp_get_themes() );
 		$update = Utils::sanitize_data( get_theme_updates() );
 		$report = array();
-		$should_check_vulnerabilities = $this->getWpVulnApiToken();
+		$should_check_vulnerabilities = Common\get_wp_vuln_api_token();
 		$vulnerable = false;
 
 		foreach( $all_themes as $theme_path => $data ) {
@@ -99,7 +101,7 @@ class Themes extends Checkimplementation {
 		if ( defined( 'WPSCAN_API_TOKEN' ) ) {
 			// Don't use WPSCAN if PANTHEON_WPSCAN_ENVIRONMENTS have not been specified.
 			if( ! defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
-				return false;
+				return '';
 			}
 
 			$environments = ( ! is_array( PANTHEON_WPSCAN_ENVIRONMENTS ) ) ? explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS ) : PANTHEON_WPSCAN_ENVIRONMENTS;
@@ -112,7 +114,7 @@ class Themes extends Checkimplementation {
 
 		// TODO: Replace this PANTHEON_WPVULNDB_API_TOKEN with a new Patchstack API token.
 		// return getenv( 'PANTHEON_WPVULNDB_API_TOKEN' );
-		return false;
+		return '';
 	}
 
 	/**
@@ -124,7 +126,7 @@ class Themes extends Checkimplementation {
 	 * @todo Refactor this to use the Patchstack API
 	 */
 	protected function getThemeVulnerability($theme_slug ) {
-		$wpvulndb_api_token = $this->getWpVulnApiToken();
+		$wpvulndb_api_token = Common\get_wp_vuln_api_token();
 
 		// Fail silently if there is no API token.
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
@@ -214,7 +216,7 @@ class Themes extends Checkimplementation {
 
 	public function message(Messenger $messenger) {
 		if (!empty($this->alerts)) {
-			$should_check_vulnerabilities = $this->getWpVulnApiToken();
+			$should_check_vulnerabilities = Common\get_wp_vuln_api_token();
 			$theme_message = __( 'You should update all out-of-date themes' );
 			$vuln_message = __( 'Update themes to fix vulnerabilities' );
 			$no_themes_message = __( 'No themes found' );

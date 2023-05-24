@@ -11,6 +11,8 @@ class Plugins extends Checkimplementation {
 	public $check_all_plugins;
 
 	public function __construct($check_all_plugins) {
+		require_once __DIR__ . '/namespace.php';
+
 		$this->check_all_plugins = $check_all_plugins;
 	}
 
@@ -37,7 +39,7 @@ class Plugins extends Checkimplementation {
 		$all_plugins = Utils::sanitize_data( get_plugins() );
 		$update = Utils::sanitize_data( get_plugin_updates() );
 		$report = array();
-		$should_check_vulnerabilities = $this->getWpScanApiToken();
+		$should_check_vulnerabilities = $this->getWpVulnApiToken();
 		$vulnerable = false;
 
 		foreach( $all_plugins as $plugin_path => $data ) {
@@ -87,7 +89,7 @@ class Plugins extends Checkimplementation {
 	protected function getPluginVulnerability( $plugin_slug )
 	{
 		// Get the vulnerability API token from the platform
-		$wpvulndb_api_token = $this->getWpScanApiToken();
+		$wpvulndb_api_token = $this->getWpVulnApiToken();
 
 		// Fail silently if there is no API token.
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
@@ -128,27 +130,6 @@ class Plugins extends Checkimplementation {
 
 		// Return the requested plugin vulnerability info
 		return $result[$plugin_slug];
-	}
-
-
-	protected function getWpScanApiToken() {
-		if ( defined( 'WPSCAN_API_TOKEN' ) ) {
-			// Don't use WPSCAN if PANTHEON_WPSCAN_ENVIRONMENTS have not been specified.
-			if( ! defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
-				return false;
-			}
-
-			$environments = ( ! is_array( PANTHEON_WPSCAN_ENVIRONMENTS ) ) ? explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS ) : PANTHEON_WPSCAN_ENVIRONMENTS;
-
-			// Only run WPSCAN on the specified environments unless it's been configured to run on all (*).
-			if ( in_array( getenv( 'PANTHEON_ENVIRONMENT' ), $environments, true ) || in_array( '*', $environments, true ) ) {
-				return WPSCAN_API_TOKEN;
-			}
-		}
-
-		// TODO: Replace this PANTHEON_WPVULNDB_API_TOKEN with a new Patchstack API token.
-		// return getenv( 'PANTHEON_WPVULNDB_API_TOKEN' );
-		return false;
 	}
 
 	/**
@@ -200,7 +181,7 @@ class Plugins extends Checkimplementation {
 		$plugin_message = __( 'You should update all out-of-date plugins' );
 		$vuln_message = __( 'Update plugins to fix vulnerabilities' );
 		$no_plugins_message = __( 'No plugins found' );
-		$should_check_vulnerabilities = $this->getWpScanApiToken();
+		$should_check_vulnerabilities = Common\get_wp_vuln_api_token();
 
 		if (!empty($this->alerts)) {
 			$headers = array(
