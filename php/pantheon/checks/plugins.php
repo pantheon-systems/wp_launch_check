@@ -11,6 +11,8 @@ class Plugins extends Checkimplementation {
 	public $check_all_plugins;
 
 	public function __construct($check_all_plugins) {
+		require_once __DIR__ . '/namespace.php';
+
 		$this->check_all_plugins = $check_all_plugins;
 	}
 
@@ -37,13 +39,14 @@ class Plugins extends Checkimplementation {
 		$all_plugins = Utils::sanitize_data( get_plugins() );
 		$update = Utils::sanitize_data( get_plugin_updates() );
 		$report = array();
+		$should_check_vulnerabilities = Common\get_wp_vuln_api_token();
+		$vulnerable = false;
+
 		foreach( $all_plugins as $plugin_path => $data ) {
 			$slug = $plugin_path;
 			if (stripos($plugin_path,'/')) {
 				$slug = substr($plugin_path, 0, stripos($plugin_path,'/'));
 			}
-
-			$vulnerable = $this->is_vulnerable($slug, $data['Version']);
 
 			$needs_update = 0;
 			$available = '-';
@@ -51,19 +54,27 @@ class Plugins extends Checkimplementation {
 				$needs_update = 1;
 				$available = $update[$plugin_path]->update->new_version;
 			}
-			if ( false === $vulnerable ) {
-				$vulnerable = "None";
-			} else {
-				$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
-			}
 
-			$report[$slug] = array(
+			$report[ $slug ] = array(
 				'slug' => $slug,
 				'installed' => (string) $data['Version'],
 				'available' => (string) $available,
 				'needs_update' => (string) $needs_update,
-				'vulnerable'  => $vulnerable,
 			);
+
+			// If we're checking for vulnerabilities, do stuff.
+			if ( $should_check_vulnerabilities ) {
+				$vulnerable = $this->is_vulnerable($slug, $data['Version']);
+
+				if ( $vulnerable ) {
+					// Todo: Replace this URL with a Patchstack URL
+					$vulnerable = sprintf('<a href="https://wpscan.com/plugins/%s" target="_blank" >more info</a>', $slug );
+				} else {
+					$vulnerable = "None";
+				}
+
+				$report[ $slug ]['vulnerable'] = $vulnerable;
+			}
 		}
 		$this->alerts = $report;
 	}
@@ -71,13 +82,13 @@ class Plugins extends Checkimplementation {
 	/**
 	 * Checks the plugin slug against the vulnerability db
 	 * @param $plugin_slug string (required) string representing the plugin slug
-	 *
 	 * @return array containing vulnerability info or false
+	 * @todo Refactor to use Patchstack API.
 	 */
 	protected function getPluginVulnerability( $plugin_slug )
 	{
 		// Get the vulnerability API token from the platform
-		$wpvulndb_api_token = $this->getWpScanApiToken();
+		$wpvulndb_api_token = Common\get_wp_vuln_api_token();
 
 		// Fail silently if there is no API token.
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
@@ -118,32 +129,6 @@ class Plugins extends Checkimplementation {
 
 		// Return the requested plugin vulnerability info
 		return $result[$plugin_slug];
-	}
-
-
-	protected function getWpScanApiToken() {
-		if( !defined( 'PANTHEON_WPSCAN_ENVIRONMENTS' ) ) {
-			return false;
-		}
-
-		if ( ! is_array( PANTHEON_WPSCAN_ENVIRONMENTS ) ) {
-			$environments = explode( ',', PANTHEON_WPSCAN_ENVIRONMENTS );
-		} else {
-			$environments = PANTHEON_WPSCAN_ENVIRONMENTS;
-		}
-
-		if(
-			!in_array( getenv( 'PANTHEON_ENVIRONMENT' ), $environments )
-			&& !in_array( '*', $environments )
-		) {
-			return false;
-		}
-
-		if( defined( 'WPSCAN_API_TOKEN' ) ) {
-			return WPSCAN_API_TOKEN;
-		}
-
-		return getenv( 'PANTHEON_WPVULNDB_API_TOKEN' );
 	}
 
 	/**
@@ -192,46 +177,65 @@ class Plugins extends Checkimplementation {
 	}
 
 	public function message(Messenger $messenger) {
+		$plugin_message = __( 'You should update all out-of-date plugins' );
+		$vuln_message = __( 'Update plugins to fix vulnerabilities' );
+		$no_plugins_message = __( 'No plugins found' );
+		$should_check_vulnerabilities = Common\get_wp_vuln_api_token();
+
 		if (!empty($this->alerts)) {
 			$headers = array(
-				'slug'=>"Plugin",
-				'installed'=>"Current",
-				'available' => "Available",
-				'needs_update'=>"Needs Update",
-				'vulnerable'=>"Vulnerabilities"
+				'slug'=> __( 'Plugin' ),
+				'installed'=> __( 'Current' ),
+				'available' => __( 'Available' ),
+				'needs_update'=> __( 'Needs Update' ),
 			);
+
+			if ( $should_check_vulnerabilities ) {
+				$headers['vulnerable'] = __( ' Vulnerabilities' );
+			}
+
 			$rows = array();
 			$count_update = 0;
 			$count_vuln = 0;
+
 			foreach( $this->alerts as $alert ) {
 				$class = 'ok';
 				if ($alert['needs_update']) {
 					$class = 'warning';
 					$count_update++;
 				}
-				if ('None' != $alert['vulnerable']) {
+
+				if ( $should_check_vulnerabilities && 'None' !== $alert['vulnerable']) {
 					$class = 'error';
 					$count_vuln++;
 				}
+
 				$rows[] = array('class'=>$class, 'data' => $alert);
 			}
 
+			$updates_message = $count_update === 1 ? __( 'Found one plugin needing updates' ) : sprintf( _n( 'Found %d plugin needing updates', 'Found %d plugins needing updates', $count_update ), $count_update );
+			$result_message = ! $should_check_vulnerabilities ?
+				// Not checking vulnerabilities message.
+				$updates_message . ' ...':
+				// Checking vulnerabilities message.
+				$updates_message . ' ' .
+				( $count_vuln === 1 ? __( 'Also found one plugin with known vulnerabilities ...' ) : sprintf( _n( 'Also found %d plugin with known vulnerabilities ...', 'Also found %d plugins with known vulnerabilities ...', $count_vuln ), $count_vuln ) );
 			$rendered = PHP_EOL;
-			$rendered .= sprintf("Found %d plugins needing updates and %d known vulnerabilities ... \n".PHP_EOL, $count_update, $count_vuln);
+			$rendered .= "$result_message \n" . PHP_EOL;
 			$rendered .= View::make('table', array('headers'=>$headers,'rows'=>$rows));
 
 			$this->result .= $rendered;
 			if ($count_update > 0) {
 				$this->score = 1;
-				$this->action = "You should update all out-of-date plugins";
+				$this->action = $plugin_message;
 			}
 
 			if ($count_vuln > 0) {
 				$this->score = 2;
-				$this->action = "Update plugins to fix vulnerabilities";
+				$this->action = $vuln_message;
 			}
 		} else {
-			$this->result .= "No plugins found.";
+			$this->result .= $no_plugins_message;
 		}
 		$messenger->addMessage(get_object_vars($this));
 	}

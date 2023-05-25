@@ -12,6 +12,8 @@ class Themes extends Checkimplementation {
 	public $alerts = array();
 
 	public function __construct($check_all_themes) {
+		require_once __DIR__ . '/namespace.php';
+
 		$this->check_all_themes = $check_all_themes;
 	}
 
@@ -38,6 +40,9 @@ class Themes extends Checkimplementation {
 		$all_themes = Utils::sanitize_data( wp_get_themes() );
 		$update = Utils::sanitize_data( get_theme_updates() );
 		$report = array();
+		$should_check_vulnerabilities = Common\get_wp_vuln_api_token();
+		$vulnerable = false;
+
 		foreach( $all_themes as $theme_path => $data ) {
 			$slug = $theme_path;
 			if (stripos($theme_path,'/')) {
@@ -54,18 +59,12 @@ class Themes extends Checkimplementation {
 
 			$data = wp_get_theme($slug);
 			$version = $data->version;
-			$vulnerable = $this->is_vulnerable($slug, $version);
-
 			$needs_update = 0;
 			$available = '-';
+
 			if (isset($update[$theme_path])) {
 				$needs_update = 1;
 				$available = $update[$slug]->update["new_version"];
-			}
-			if ( false === $vulnerable ) {
-				$vulnerable = "None";
-			} else {
-				$vulnerable = sprintf('<a href="https://wpscan.com/themes/%s" target="_blank" >more info</a>', $slug );
 			}
 
 			$report[$slug] = array(
@@ -73,8 +72,21 @@ class Themes extends Checkimplementation {
 				'installed' => (string) $version,
 				'available' => (string) $available,
 				'needs_update' => (string) $needs_update,
-				'vulnerable'  => $vulnerable,
 			);
+
+			// If we're checking for vulnerabilities, do stuff.
+			if ( $should_check_vulnerabilities ) {
+				$vulnerable = $this->is_vulnerable($slug, $version);
+
+				if ( $vulnerable ) {
+					// Todo: Replace this link with one to Patchstack.
+					$vulnerable = sprintf('<a href="https://wpscan.com/themes/%s" target="_blank" >more info</a>', $slug );
+				} else {
+					$vulnerable = "None";
+				}
+
+				$report[ $slug ]['vulnerable'] = $vulnerable;
+			}
 		}
 		$this->alerts = $report;
 	}
@@ -85,11 +97,10 @@ class Themes extends Checkimplementation {
 	 *
 	 * @return array containing vulnerability info or false
 	 * @throws \Exception
+	 * @todo Refactor this to use the Patchstack API
 	 */
-	protected function getThemeVulnerability($theme_slug )
-	{
-		// Get the vulnerability API token from the platform
-		$wpvulndb_api_token = getenv('PANTHEON_WPVULNDB_API_TOKEN');
+	protected function getThemeVulnerability($theme_slug ) {
+		$wpvulndb_api_token = Common\get_wp_vuln_api_token();
 
 		// Fail silently if there is no API token.
 		if( false === $wpvulndb_api_token || empty( $wpvulndb_api_token ) ) {
@@ -179,13 +190,20 @@ class Themes extends Checkimplementation {
 
 	public function message(Messenger $messenger) {
 		if (!empty($this->alerts)) {
+			$should_check_vulnerabilities = Common\get_wp_vuln_api_token();
+			$theme_message = __( 'You should update all out-of-date themes' );
+			$vuln_message = __( 'Update themes to fix vulnerabilities' );
+			$no_themes_message = __( 'No themes found' );
 			$headers = array(
-				'slug'=>"Theme",
-				'installed'=>"Current",
-				'available' => "Available",
-				'needs_update'=>"Needs Update",
-				'vulnerable'=>"Vulnerabilities"
+				'slug' => __( 'Theme' ),
+				'installed' => __( 'Current' ),
+				'available' => __( 'Available' ),
+				'needs_update' => __( 'Needs Update' ),
 			);
+			if ( $should_check_vulnerabilities ) {
+				$headers['vulnerable'] = __( 'Vulnerable' );
+			}
+
 			$rows = array();
 			$count_update = 0;
 			$count_vuln = 0;
@@ -195,29 +213,36 @@ class Themes extends Checkimplementation {
 					$class = 'warning';
 					$count_update++;
 				}
-				if ('None' != $alert['vulnerable']) {
+				if ( $should_check_vulnerabilities && 'None' !== $alert['vulnerable']) {
 					$class = 'error';
 					$count_vuln++;
 				}
 				$rows[] = array('class'=>$class, 'data' => $alert);
 			}
 
+			$updates_message = $count_update === 1 ? __( 'Found one theme needing updates' ) : sprintf( _n( 'Found %d theme needing updates', 'Found %d themes needing updates', $count_update ), $count_update );
+			$result_message = ! $should_check_vulnerabilities ?
+				// Not checking vulnerabilities message.
+				$updates_message . ' ...':
+				// Checking vulnerabilities message.
+				$updates_message . ' ' .
+				( $count_vuln === 1 ? __( 'Also found one theme with known vulnerabilities ...' ) : sprintf( _n( 'Also found %d theme with known vulnerabilities ...', 'Also found %d themes with known vulnerabilities ...', $count_vuln ), $count_vuln ) );
 			$rendered = PHP_EOL;
-			$rendered .= sprintf("Found %d themes needing updates and %d known vulnerabilities ... \n".PHP_EOL, $count_update, $count_vuln);
+			$rendered .= "$result_message \n" .PHP_EOL;
 			$rendered .= View::make('table', array('headers'=>$headers,'rows'=>$rows));
 
 			$this->result .= $rendered;
 			if ($count_update > 0) {
 				$this->score = 1;
-				$this->action = "You should update all out-of-date themes";
+				$this->action = $theme_message;
 			}
 
-			if ($count_vuln > 0) {
+			if ( $should_check_vulnerabilities && $count_vuln > 0 ) {
 				$this->score = 2;
-				$this->action = "Update themes to fix vulnerabilities";
+				$this->action = $vuln_message;
 			}
 		} else {
-			$this->result .= "No themes found.";
+			$this->result .= $no_themes_message;
 		}
 		$messenger->addMessage(get_object_vars($this));
 	}
