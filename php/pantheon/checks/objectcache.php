@@ -29,7 +29,7 @@ class Objectcache extends Checkimplementation {
 		} else {
 			$this->alerts[] = array("message"=> "object-cache.php exists", "code" => 0);
 		}
-		if ( defined( 'WP_REDIS_OBJECT_CACHE' ) {
+		if ( defined( 'WP_REDIS_OBJECT_CACHE' )) {
 			$this->alerts[] = array('message'=> 'WP Redis for object caching was found. We recommend using Object Cache Pro as a replacement. <a href="https://docs.pantheon.io/guides/object-cache-pro/installing-configuring/" target="_blank">Learn More</a> about how to install Object Cache Pro.', 'code' => 1);
 		}
 		elseif ( ! defined( 'WP_REDIS_CONFIG' ) || ! WP_REDIS_CONFIG ) {
