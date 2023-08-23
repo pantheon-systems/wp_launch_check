@@ -13,7 +13,7 @@ Feature: Suggest object cache to be enabled
       <p class="result">Use Object Cache Pro to speed up your backend
       """
 
-  Scenario: An object cache is present but it's not WP Redis
+  Scenario: An object cache is present but it's not Object Cache Pro
     Given a WP install
     And I run `wp plugin install wp-lcache --activate`
     And I run `wp lcache enable`
