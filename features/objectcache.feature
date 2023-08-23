@@ -10,7 +10,7 @@ Feature: Suggest object cache to be enabled
       """
     And STDOUT should contain:
       """
-      <p class="result">Use Redis with the WP Redis object cache drop-in
+      <p class="result">Use Object Cache Pro to speed up your backend
       """
 
   Scenario: An object cache is present but it's not WP Redis
@@ -25,7 +25,7 @@ Feature: Suggest object cache to be enabled
       """
     And STDOUT should contain:
       """
-      <p class="result">Use Redis with the WP Redis object cache drop-in
+      <p class="result">Use Object Cache Pro to speed up your backend
       """
 
   Scenario: WP Redis is present as the enabled object-cache
@@ -41,5 +41,5 @@ Feature: Suggest object cache to be enabled
       """
     And STDOUT should contain:
       """
-      <p class="result">Redis found
+      <p class="result">WP Redis for object caching was found. We recommend using Object Cache Pro
       """
