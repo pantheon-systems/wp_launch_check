@@ -49,7 +49,7 @@ Feature: General tests of WP Launch Check
     # This check is here to remind us to update versions when new releases are available.
     Then STDOUT should contain:
       """
-      6.2
+      6.3
       """
 
     When I run `wp launchcheck general`

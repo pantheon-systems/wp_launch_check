@@ -29,11 +29,12 @@ class Objectcache extends Checkimplementation {
 		} else {
 			$this->alerts[] = array("message"=> "object-cache.php exists", "code" => 0);
 		}
-
-		if ( ! defined( 'WP_REDIS_OBJECT_CACHE' ) || ! WP_REDIS_OBJECT_CACHE ) {
-			$this->alerts[] = array("message"=> 'Use Redis with the WP Redis object cache drop-in to speed up your backend. <a href="https://pantheon.io/docs/wordpress-redis/" target="_blank">Learn More</a>', "code" => 1);
+		if ( defined( 'WP_REDIS_OBJECT_CACHE' )) {
+			$this->alerts[] = array('message'=> 'WP Redis for object caching was found. We recommend using Object Cache Pro as a replacement. <a href="https://docs.pantheon.io/guides/object-cache-pro/installing-configuring/" target="_blank">Learn More</a> about how to install Object Cache Pro.', 'code' => 1);
+		} elseif ( ! defined( 'WP_REDIS_CONFIG' ) || ! WP_REDIS_CONFIG ) {
+			$this->alerts[] = array("message"=> 'Use Object Cache Pro to speed up your backend. <a href="https://docs.pantheon.io/guides/object-cache-pro/installing-configuring/" target="_blank">Learn More</a>', "code" => 1);
 		} else {
-			$this->alerts[] = array("message"=> "Redis found", "code" => 0);
+			$this->alerts[] = array("message"=> "Object Cache Pro found", "code" => 0);
 		}
 
 		return $this;
@@ -57,7 +58,7 @@ class Objectcache extends Checkimplementation {
 				$avg = $total/count($this->alerts);
 				$this->result = View::make('checklist', array('rows'=> $rows) );
 				$this->score = $avg;
-				$this->action = "You should use object caching";
+				$this->action = "You should use Object Cache Pro";
 		}
 		$messenger->addMessage(get_object_vars($this));
 	}
