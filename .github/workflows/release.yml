@@ -104,13 +104,13 @@ jobs:
         id: changelog
         uses: metcalfc/changelog-generator@v1.0.0
         with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
+          myToken: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
@@ -123,7 +123,7 @@ jobs:
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./wp_launch_check.phar
