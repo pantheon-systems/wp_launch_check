@@ -158,14 +158,14 @@ $steps->Given('/^a misconfigured WP_CONTENT_DIR constant directory$/',
 
 $steps->Given('/^the current WP version is not the latest$/', function ($world) {
 	// Use wp-cli to get the currently installed WordPress version.
-	$currentVersion = $world->proc('wp core version');
+	$currentVersion = $world->proc('wp core version')->run;
 
 	// Use wp-cli to get the latest WordPress version available.
-	$latestVersion = $world->proc('wp core check-update --field=version');
+	$latestVersion = $world->proc('wp core check-update --field=version')->run;
 
 	// Normalize versions (remove new lines).
-	$currentVersion = trim($currentVersion['stdout']);
-	$latestVersion = trim($latestVersion['stdout']);
+	$currentVersion = trim($currentVersion->stdout);
+	$latestVersion = trim($latestVersion->stdout);
 
 	// If there's no update available or the current version is the latest, throw an exception to skip the test.
 	if (empty($latestVersion) || $currentVersion === $latestVersion) {
