@@ -61,7 +61,6 @@ Feature: General tests of WP Launch Check
   Scenario: WordPress has a new minor version but no new major version
     Given a WP install
     And I run `wp core download --version=6.5 --force`
-		And I run `latestVersion=$(wp core check-update --field=version) && currentVersion=$(wp core version) && [ "$latestVersion" == "$currentVersion" ]; then; echo "There is no new minor version available"; exit 0; fi`
     And I run `wp theme activate twentytwentytwo`
 		And the current WP version is not the latest
 
