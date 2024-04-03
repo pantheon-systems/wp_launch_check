@@ -155,3 +155,20 @@ $steps->Given('/^a misconfigured WP_CONTENT_DIR constant directory$/',
 		file_put_contents( $wp_config_path, $wp_config_code );
 	}
 );
+
+$steps->Given('/^the current WP version is not the latest$/', function ($world) {
+	// Use wp-cli to get the currently installed WordPress version.
+	$currentVersion = shell_exec('wp core version');
+
+	// Use wp-cli to get the latest WordPress version available.
+	$latestVersion = shell_exec('wp core check-update --field=version');
+
+	// Normalize versions (remove new lines).
+	$currentVersion = trim($currentVersion);
+	$latestVersion = trim($latestVersion);
+
+	// If there's no update available or the current version is the latest, throw an exception to skip the test.
+	if (empty($latestVersion) || $currentVersion === $latestVersion) {
+		throw new Exception("The current WordPress version is the latest. Test skipped.");
+	}
+});
