@@ -170,6 +170,7 @@ $steps->Given('/^the current WP version is not the latest$/', function ($world) 
 	// If there's no update available or the current version is the latest, throw an exception to skip the test.
 	if (empty($latestVersion) || $currentVersion === $latestVersion) {
 		$world->isLatestWPVersion = true;
+		return;
 	}
 
 	$world->isLatestWPVersion = false;
