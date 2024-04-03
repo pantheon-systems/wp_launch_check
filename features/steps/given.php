@@ -164,8 +164,8 @@ $steps->Given('/^the current WP version is not the latest$/', function ($world) 
 	$latestVersion = $world->proc('wp core check-update --field=version');
 
 	// Normalize versions (remove new lines).
-	$currentVersion = trim($currentVersion);
-	$latestVersion = trim($latestVersion);
+	$currentVersion = trim($currentVersion->stdout);
+	$latestVersion = trim($latestVersion->stdout);
 
 	// If there's no update available or the current version is the latest, throw an exception to skip the test.
 	if (empty($latestVersion) || $currentVersion === $latestVersion) {
