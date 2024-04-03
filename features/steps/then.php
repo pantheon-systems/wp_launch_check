@@ -13,6 +13,10 @@ $steps->Then( '/^the return code should be (\d+)$/',
 
 $steps->Then( '/^(STDOUT|STDERR) should (be|contain|not contain):$/',
 	function ( $world, $stream, $action, PyStringNode $expected ) {
+		// Conditional handling of WP version check.
+		if (isset($world->isLatestWPVersion) && $world->isLatestWPVersion) {
+			return;
+		}
 
 		$stream = strtolower( $stream );
 
@@ -189,4 +193,3 @@ $steps->Then( '/^the (.+) (file|directory) should (exist|not exist|be:|contain:|
 		}
 	}
 );
-

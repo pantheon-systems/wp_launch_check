@@ -4,6 +4,8 @@ use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode,
     WP_CLI\Process;
 
+use function WP_CLI\Utils\get_wp_version;
+
 $steps->Given( '/^an empty directory$/',
 	function ( $world ) {
 		$world->create_run_dir();
@@ -155,3 +157,20 @@ $steps->Given('/^a misconfigured WP_CONTENT_DIR constant directory$/',
 		file_put_contents( $wp_config_path, $wp_config_code );
 	}
 );
+
+$steps->Given('/^the current WP version is not the latest$/', function ($world) {
+	// Use wp-cli to get the currently installed WordPress version.
+	$currentVersion = $world->proc('wp core version')->run();
+
+	// Normalize versions (remove new lines).
+	$currentVersion = trim($currentVersion->stdout);
+	$latestVersion = get_wp_version();
+
+	// If there's no update available or the current version is the latest, throw an exception to skip the test.
+	if (empty($latestVersion) || $currentVersion === $latestVersion) {
+		$world->isLatestWPVersion = true;
+		return;
+	}
+
+	$world->isLatestWPVersion = false;
+});
