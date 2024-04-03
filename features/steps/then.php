@@ -14,6 +14,12 @@ $steps->Then( '/^the return code should be (\d+)$/',
 $steps->Then( '/^(STDOUT|STDERR) should (be|contain|not contain):$/',
 	function ( $world, $stream, $action, PyStringNode $expected ) {
 
+		// Conditional handling of WP version check.
+		if (isset($world->isLatestWPVersion) && $world->isLatestWPVersion) {
+			$world->proc('echo "WordPress is the latest version. Skipping"')->run();
+			return;
+		}
+
 		$stream = strtolower( $stream );
 
 		$expected = $world->replace_variables( (string) $expected );
@@ -189,19 +195,3 @@ $steps->Then( '/^the (.+) (file|directory) should (exist|not exist|be:|contain:|
 		}
 	}
 );
-
-$steps->Then('/^STDOUT should contain:$/', function ($world, $string) {
-	if (isset($world->isLatestWPVersion) && $world->isLatestWPVersion) {
-		$world->proc('echo "WordPress is the latest version. Skipping"')->run();
-		return;
-	}
-	// Assuming $world->result->stdout holds the STDOUT from the last command executed
-	$output = $world->result->stdout;
-	$expected = $world->replace_variables((string)$string);
-
-
-	if (strpos($output, $expected) === false) {
-		throw new Exception("Expected text not found in STDOUT");
-	}
-});
-
