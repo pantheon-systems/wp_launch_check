@@ -17,6 +17,7 @@ $steps->Then( '/^(STDOUT|STDERR) should (be|contain|not contain):$/',
 		// Conditional handling of WP version check.
 		if (isset($world->isLatestWPVersion) && $world->isLatestWPVersion) {
 			checkString( $world->result->$stream, 'WordPress is at the latest version.', $action, $world->result );
+			return;
 		}
 
 		$stream = strtolower( $stream );
