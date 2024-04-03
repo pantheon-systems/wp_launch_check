@@ -62,6 +62,7 @@ Feature: General tests of WP Launch Check
     Given a WP install
     And I run `wp core download --version=6.5 --force`
     And I run `wp theme activate twentytwentytwo`
+		And the current WP version is not the latest
 
     When I run `wp launchcheck general`
     Then STDOUT should contain:
