@@ -706,13 +706,18 @@ function get_temp_dir() {
  *
  * @access public
  * @category System
- *
+ * @throws Exception If the version check API fails to respond.
  * @return string
  */
 function get_wp_version() {
 	// Fetch the latest WordPress version info from the WordPress.org API
 	$url = 'https://api.wordpress.org/core/version-check/1.7/';
-	$json = file_get_contents($url);
+	$context = stream_context_create(['http' => ['timeout' => 5]]);
+	$json = file_get_contents($url, false, $context);
+	if ($json === false) {
+		throw new \Exception('Failed to fetch the latest WordPress version.');
+	}
+
 	$data = json_decode($json, true);
 
 	// Extract the latest version number
