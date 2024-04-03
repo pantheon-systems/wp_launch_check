@@ -1,10 +1,11 @@
-![WPLC Logo](https://pantheon.io/sites/default/files/wplc.png)
+![WPLC Logo](docs/wplc.png)
 
 # WP Launch Check
 
 WP Launch Check is an extension for WP-CLI designed for Pantheon.io WordPress customers. While designed initially for the Pantheon dashboard it is intended to be fully usable outside of Pantheon.
 
-[![Build Status](https://travis-ci.org/pantheon-systems/wp_launch_check.svg?branch=master)](https://travis-ci.org/pantheon-systems/wp_launch_check)
+[![Tests](https://github.com/pantheon-systems/wp_launch_check/actions/workflows/validate.yml/badge.svg)](https://github.com/pantheon-systems/wp_launch_check/actions/workflows/validate.yml)
+[![Build Status](https://github.com/pantheon-systems/wp_launch_check/actions/workflows/release.yml/badge.svg)](https://github.com/pantheon-systems/wp_launch_check/actions/workflows/release.yml)
 [![Actively Maintained](https://img.shields.io/badge/Pantheon-Actively_Maintained-yellow?logo=pantheon&color=FFDC28)](https://pantheon.io/docs/oss-support-levels#actively-maintained-support)
 
 
