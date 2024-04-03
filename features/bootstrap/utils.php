@@ -700,3 +700,22 @@ function get_temp_dir() {
 
 	return $trailingslashit( $temp );
 }
+
+/**
+ * Get the latest WordPress version from the version check API endpoint.
+ *
+ * @access public
+ * @category System
+ *
+ * @return string
+ */
+function get_wp_version() {
+	// Fetch the latest WordPress version info from the WordPress.org API
+	$url = 'https://api.wordpress.org/core/version-check/1.7/';
+	$json = file_get_contents($url);
+	$data = json_decode($json, true);
+
+	// Extract the latest version number
+	$latestVersion = $data['offers'][0]['current'];
+	return trim($latestVersion);
+}
