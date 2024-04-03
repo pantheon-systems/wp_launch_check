@@ -49,7 +49,7 @@ Feature: General tests of WP Launch Check
     # This check is here to remind us to update versions when new releases are available.
     Then STDOUT should contain:
       """
-      6.4.3
+      6.5.3
       """
 
     When I run `wp launchcheck general`
@@ -60,7 +60,7 @@ Feature: General tests of WP Launch Check
 
   Scenario: WordPress has a new minor version but no new major version
     Given a WP install
-    And I run `wp core download --version=6.4 --force`
+    And I run `wp core download --version=6.5 --force`
     And I run `wp theme activate twentytwentytwo`
 
     When I run `wp launchcheck general`
@@ -71,7 +71,7 @@ Feature: General tests of WP Launch Check
 
   Scenario: WordPress has a new major version but no new minor version
     Given a WP install
-    And I run `wp core download --version=6.3.3 --force`
+    And I run `wp core download --version=6.4.3 --force`
     And I run `wp theme activate twentytwentytwo`
 
     When I run `wp launchcheck general`
