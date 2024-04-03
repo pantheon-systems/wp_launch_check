@@ -193,7 +193,7 @@ $steps->Then( '/^the (.+) (file|directory) should (exist|not exist|be:|contain:|
 $steps->Then('/^STDOUT should contain:$/', function ($world, $string) {
 	if (isset($world->isLatestWPVersion) && $world->isLatestWPVersion) {
 		$world->proc('echo "WordPress is the latest version. Skipping"')->run();
-		return
+		return;
 	}
 	// Assuming $world->result->stdout holds the STDOUT from the last command executed
 	$output = $world->result->stdout;
