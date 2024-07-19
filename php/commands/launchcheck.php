@@ -36,7 +36,6 @@ class LaunchCheck {
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
 		$searcher->register( new \Pantheon\Checks\Insecure() );
-		$searcher->register( new \Pantheon\Checks\Exploited() );
 		$searcher->execute();
 		$checker->register( new \Pantheon\Checks\Plugins(TRUE));
 		$checker->register( new \Pantheon\Checks\Themes(TRUE));
@@ -175,8 +174,7 @@ class LaunchCheck {
 	 */
 	public function secure($args, $assoc_args) {
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
-		$searcher->register( new \Pantheon\Checks\Insecure() );
-		$searcher->register( new \Pantheon\Checks\Exploited() );
+		$searcher->register( new \Pantheon\Checks\Insecure() );;
 		$searcher->execute();
 		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
 		\Pantheon\Messenger::emit($format);
