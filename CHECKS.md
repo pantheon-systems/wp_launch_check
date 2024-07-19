@@ -45,8 +45,6 @@ This check does a ```preg_match``` on each file passed to the run() method for t
 **Check:** [\Pantheon\Check\Insecure](php/pantheon/checks/insecure.php)
 This check looks for insecure code by running ````preg_match("#.*(eval|base64_decode)\(.*#:", $filecontent)```. This regex can be improved but the theory here is that ```eval``` and ```base64_decode``` are insecure because the first is discouraged even by PHP because it executes arbitrary code. The second isn't necessarily insecure by itself but is often combined with eploits to obfuscate the malicious code. ```base64_decode``` can also sometimes lead to php segfaults [ **This check is not currently used in the Pantheon dashboard ** ]
 
-**Check:** [\Pantheon\Check\Exploited](php/pantheon/checks/exploited.php) This check attempts to find actual exploits by running ```'.*eval\(.*base64_decode\(.*';```. The goal here is to find instance of ```eval``` operating on decoded base64, which is almost certainly a bad idea. This regex should be refined because now it technically could alert when it finds the two functions on the same page but not necessary in the right order, leading to a false positive.
-
 ## Regular Checkers
 
 ### General
@@ -68,7 +66,7 @@ This check runs the following db checks
 
 ### Cron
 **Cron:** [\Pantheon\Checks\Cron](php/commands/checks/cron.php)
-This check simple examines whether ```DISABLE_WP_CRON``` evaluates ```true``` to see if cron has been disabled. ( We should probably also curl the ```wp-cron.php?doing_wp_cron``` and ensure we get a 200 ). Some hosts disable the default WP_Cron functionality, substituting a system cron, because the HTTP base WP_Cron can sometimes have race conditions develop causing what might be referred to as "runaway cron", in which HTTP multiple requests trigger the cron a small amount of time causing a spike in PHP/MySQL resource consumption. This check also dumps the scheduled tasks into a table using ```get_option('cron')```. 
+This check simple examines whether ```DISABLE_WP_CRON``` evaluates ```true``` to see if cron has been disabled. ( We should probably also curl the ```wp-cron.php?doing_wp_cron``` and ensure we get a 200 ). Some hosts disable the default WP_Cron functionality, substituting a system cron, because the HTTP base WP_Cron can sometimes have race conditions develop causing what might be referred to as "runaway cron", in which HTTP multiple requests trigger the cron a small amount of time causing a spike in PHP/MySQL resource consumption. This check also dumps the scheduled tasks into a table using ```get_option('cron')```.
 
 ### object-cache
 **objectcache** [\Pantheon\Checks\Cron](php/commands/checks/objectcache.php)
