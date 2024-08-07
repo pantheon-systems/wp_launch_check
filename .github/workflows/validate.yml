@@ -12,7 +12,6 @@ jobs:
 
     env:
       # GITHUB_CONTEXT: ${{ toJson(github) }}
-      PANTHEON_WPVULNDB_API_TOKEN: ${{ secrets.PANTHEON_WPVULNDB_API_TOKEN }}
       WP_CLI_BIN_DIR: /tmp/wp-cli-phar
       DB_NAME: pantheon
       DB_USER: pantheon
