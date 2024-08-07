@@ -41,10 +41,6 @@ The message method receives a [\Pantheon\Messsenger](php/pantheon/messenger.php)
 **Check:** \Pantheon\Checks\Sessions;
 This check does a ```preg_match``` on each file passed to the run() method for the regex ```.*(session_start|SESSION).*```
 
-### Secure
-**Check:** [\Pantheon\Check\Insecure](php/pantheon/checks/insecure.php)
-This check looks for insecure code by running ````preg_match("#.*(eval|base64_decode)\(.*#:", $filecontent)```. This regex can be improved but the theory here is that ```eval``` and ```base64_decode``` are insecure because the first is discouraged even by PHP because it executes arbitrary code. The second isn't necessarily insecure by itself but is often combined with eploits to obfuscate the malicious code. ```base64_decode``` can also sometimes lead to php segfaults [ **This check is not currently used in the Pantheon dashboard ** ]
-
 ## Regular Checkers
 
 ### General
@@ -74,8 +70,8 @@ Checks is the ```wp-content/object-cache.php``` exists to determine whether obje
 
 ### Plugins
 **plugins** [\Pantheon\Checks\Plugins](php/commands/checks/plugins.php)
-Checks all plugins against the wpscan.com database we license. Alerts 'error' if a vulnerability is found and links to the wpvulndb.com page for more info. Also checks for available updates and alerts 'warning' if plugins needing an update are found.
+Checks for available updates and alerts 'warning' if plugins needing an update are found.
 
 ### Themes
 **themes** [\Pantheon\Checks\Themes](php/commands/checks/themes.php)
-Checks all themes against the wpscan.com database we license. Alerts 'error' if a vulnerability is found and links to the wpvulndb.com page for more info. Also checks for available updates and alerts 'warning' if themes needing an update are found.
+Checks for available updates and alerts 'warning' if themes needing an update are found.

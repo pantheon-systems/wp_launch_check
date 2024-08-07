@@ -35,7 +35,6 @@ class LaunchCheck {
 		// WordPress is now loaded, so other checks can run
 		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
 		$searcher->register( new \Pantheon\Checks\Sessions() );
-		$searcher->register( new \Pantheon\Checks\Insecure() );
 		$searcher->execute();
 		$checker->register( new \Pantheon\Checks\Plugins(TRUE));
 		$checker->register( new \Pantheon\Checks\Themes(TRUE));
@@ -157,32 +156,7 @@ class LaunchCheck {
 	}
 
 	/**
-	 * Checks files for insecure code and checks the wpscan.com/api for known vulnerabilities
-	 *
-	 * ## OPTIONS
-	 *
-	 * [--skip=<regex>]
-	 * : a regular expression matching directories to skip
-	 *
-	 * [--format=<format>]
-	 * : output as json
-	 *
-	 * ## EXAMPLES
-	 *
-	 *   wp launchcheck secure --skip=wp-content/themes
-	 *
-	 */
-	public function secure($args, $assoc_args) {
-		$searcher = new \Pantheon\Filesearcher( WP_CONTENT_DIR );
-		$searcher->register( new \Pantheon\Checks\Insecure() );;
-		$searcher->execute();
-		$format = isset($assoc_args['format']) ? $assoc_args['format'] : 'raw';
-		\Pantheon\Messenger::emit($format);
-	}
-
-	/**
-	 * Checks plugins for vulnerabilities using the wpscan vulnerability DB
-	 * - https://wpscan.com/api
+	 * Checks plugins for available updates
 	 *
 	 * ## OPTIONS
 	 *
@@ -206,8 +180,7 @@ class LaunchCheck {
 	}
 
 	/**
-	 * Checks themes for vulnerabilities using the wpscan vulnerability DB
-	 * - https://wpscan.com/api
+	 * Checks themes for available updates
 	 *
 	 * ## OPTIONS
 	 *
