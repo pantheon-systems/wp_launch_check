@@ -12,8 +12,6 @@ class Themes extends Checkimplementation {
 	public $alerts = array();
 
 	public function __construct($check_all_themes) {
-		require_once __DIR__ . '/namespace.php';
-
 		$this->check_all_themes = $check_all_themes;
 	}
 

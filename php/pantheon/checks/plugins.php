@@ -11,8 +11,6 @@ class Plugins extends Checkimplementation {
 	public $check_all_plugins;
 
 	public function __construct($check_all_plugins) {
-		require_once __DIR__ . '/namespace.php';
-
 		$this->check_all_plugins = $check_all_plugins;
 	}
 
