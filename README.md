@@ -13,8 +13,6 @@ To use WP Launch Check simply run the ```wp launchcheck <subcommand>``` command 
 
 For more information about WP-CLI you can visit [their github page](https://github.com/wp-cli/wp-cli).
 
-WP Launch Check should be considered in "BETA". Many of the checks have still not been tested in the wild. If you experience a problem please open an issue.
-
 ## Installing
 
 Installing this package requires WP-CLI v0.23.0 or greater. Update to the latest stable release with `wp cli update`.
@@ -30,9 +28,8 @@ Below is a summary of the available commands. *Full technical description of eac
   * **wp launchcheck database**: Checks related to the databases.
   * **wp launchcheck object_cache**: Checks whether object caching is enabled and if on Pantheon whether redis is enabled.
   * **wp launchcheck sessions**: Checks for plugins referring to the php session_start() function or the superglobal ```$SESSION``` variable. In either case, if you are on a cloud/distributed platform you will need additional configuration achieve the expected functionality
-  * **wp launchcheck secure**: Does some rudimentary security checks
-  * **wp launchcheck plugins**: Checks plugins for updates and known vulnerabilities
-  * **wp launchcheck themes**: Checks themes for updates and known vulnerabilities
+  * **wp launchcheck plugins**: Checks plugins for updates
+  * **wp launchcheck themes**: Checks themes for updates
 
 
 
