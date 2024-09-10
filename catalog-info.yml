@@ -1,0 +1,12 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: wp_launch_check
+  description: Auto-generated catalog info for pantheon-systems/wp_launch_check
+  annotations:
+    backstage.io/techdocs-ref: dir:docs/
+spec:
+  type: tool
+  lifecycle: mature
+  owner: site
