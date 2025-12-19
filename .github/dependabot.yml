@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github_actions"
+    reviewers:
+      - "dependabot"
+
+  # Maintain dependencies for Composer
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "composer"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "php"
+    versioning-strategy: "increase-if-necessary"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
