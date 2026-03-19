@@ -80,7 +80,7 @@ jobs:
 
       - name: Generate Phar
         run: |
-          php -dphar.readonly=0 box.phar build -v
+          php -dphar.readonly=0 box.phar compile -v
 
       - name: Run Behat tests
         run: |
