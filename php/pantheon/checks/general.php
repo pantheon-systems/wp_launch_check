@@ -185,6 +185,9 @@ class General extends Checkimplementation {
 
 	public function checkCoreUpdates() {
 		$updates = WP_CLI::runcommand( 'core check-update --format=json', array( 'return' => true, 'parse' => 'json' ) );
+		if (!is_array($updates)) {
+			$updates = [];
+		}
 		$has_minor = $has_major = FALSE;
 		foreach ($updates as $update) {
 			switch ($update['update_type']) {
