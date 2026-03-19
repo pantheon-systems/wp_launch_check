@@ -74,9 +74,15 @@ jobs:
           curl -s https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > $WP_CLI_BIN_DIR/wp
           chmod +x $WP_CLI_BIN_DIR/wp
 
+      - name: Install Box
+        run: |
+          curl -LSs https://box-project.github.io/box2/installer.php | php
+          mv box.phar /usr/local/bin/box
+          chmod +x /usr/local/bin/box
+
       - name: Generate Phar
         run: |
-          php -dphar.readonly=0 vendor/bin/box build -v
+          php -dphar.readonly=0 box build -v
 
       - name: Run Behat tests
         run: |
