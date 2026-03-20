@@ -11,7 +11,6 @@
     ]
   },
   "require-dev": {
-    "humbug/box": "^2",
     "behat/behat": "^2"
   }
 }
