@@ -3,10 +3,12 @@ namespace Pantheon;
 
 abstract class Checkimplementation {
 	public $action;
+	public $alerts = [];
 	public $description;
-	public $score;
-	public $result;
 	public $label;
+	public $name;
+	public $result;
+	public $score;
 	public static $instance;
 
 	public function __construct() {

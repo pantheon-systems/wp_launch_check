@@ -3,6 +3,9 @@
 * Performs performance and security checks for WordPress.
 * @version 0.6.8
 */
+
+if ( ! class_exists( 'LaunchCheck' ) ) {
+
 class LaunchCheck {
 	public $fs;
 	public $output = array();
@@ -237,6 +240,8 @@ spl_autoload_register(function($class) {
 		}
 	}
 });
+
+} // end if ( ! class_exists( 'LaunchCheck' ) )
 
 if ( class_exists( 'WP_CLI' ) ) {
 	WP_CLI::add_command( 'launchcheck', 'LaunchCheck' );
