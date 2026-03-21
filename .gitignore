@@ -3,4 +3,3 @@ composer.lock
 vendor/*
 behat/*
 /.idea
-.envrc

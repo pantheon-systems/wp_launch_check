@@ -1,7 +1,7 @@
 Feature: Check the wp-config.php file
 
   Scenario: WP Launch Check warns when WP_CACHE is defined to be true
-    Given a WP installation
+    Given a WP install
     And a local-config.php file:
       """
       <?php
@@ -21,7 +21,7 @@ Feature: Check the wp-config.php file
       """
 
   Scenario: Check that $_SERVER['SERVER_NAME'] isn't being used to define WP_HOME or WP_SITEURL
-    Given a WP installation
+    Given a WP install
 
     When I run `wp launchcheck config`
     Then STDOUT should contain:
@@ -65,7 +65,7 @@ Feature: Check the wp-config.php file
       require_once(ABSPATH . 'wp-settings.php');
       """
 
-    When I try `wp launchcheck config`
+    When I run `wp launchcheck config`
     Then STDOUT should contain:
       """
       $_SERVER['SERVER_NAME'] appears to be used to define WP_HOME or WP_SITE_URL, which will be unreliable on Pantheon.
@@ -107,14 +107,14 @@ Feature: Check the wp-config.php file
       require_once(ABSPATH . 'wp-settings.php');
       """
 
-    When I try `wp launchcheck config`
+    When I run `wp launchcheck config`
     Then STDOUT should contain:
       """
       Verified that $_SERVER['SERVER_NAME'] isn't being used to define WP_HOME or WP_SITE_URL
       """
 
   Scenario: Check that $_ENV variables are used to populate database credentials
-    Given a WP installation
+    Given a WP install
     And a wp-config.php file:
       """
       <?php

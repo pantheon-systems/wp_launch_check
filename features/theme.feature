@@ -1,7 +1,7 @@
 Feature: Test WordPress for themes with known security issues
 
   Scenario: A WordPress install with a theme with a known security issue
-    Given a WP installation
+    Given a WP install
     And I run `wp theme install twentyfifteen --version=1.1 --force`
 		And I run `wp theme update twentyfifteen --dry-run`
 
@@ -16,7 +16,7 @@ Feature: Test WordPress for themes with known security issues
       """
 
   Scenario: A WordPress install with no theme security issues
-    Given a WP installation
+    Given a WP install
 		And I run `wp theme install twentyfifteen --version=1.1 --force`
     And I run `wp theme update twentyfifteen`
 
