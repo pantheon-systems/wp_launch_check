@@ -1,0 +1,26 @@
+# Tests
+/features export-ignore
+/phpunit.xml export-ignore
+
+# Documentation
+/docs export-ignore
+/README.md export-ignore
+/CHECKS.md export-ignore
+/CODEOWNERS export-ignore
+/LICENSE export-ignore
+
+# Build/dev tooling
+/utils export-ignore
+/.github export-ignore
+/.editorconfig export-ignore
+/.gitignore export-ignore
+/box.json export-ignore
+/catalog-info.yaml export-ignore
+
+# Claude
+/CLAUDE.md export-ignore
+/.claude export-ignore
+
+# Not needed for composer installs
+/.gitattributes export-ignore
+/.wp_launch_check.stub export-ignore
