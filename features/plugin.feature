@@ -1,7 +1,7 @@
 Feature: Test WordPress for plugins with known security issues
 
   Scenario: A WordPress install with no plugin security issues
-    Given a WP install
+    Given a WP installation
 
     When I run `wp launchcheck all`
     Then STDOUT should contain:

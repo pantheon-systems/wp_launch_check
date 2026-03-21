@@ -11,6 +11,22 @@
     ]
   },
   "require-dev": {
-    "behat/behat": "^2"
+    "wp-cli/db-command": "^2.0",
+    "wp-cli/entity-command": "^2.0",
+    "wp-cli/extension-command": "^2.0",
+    "wp-cli/search-replace-command": "^2.0",
+    "wp-cli/wp-cli-tests": "^4.0"
+  },
+  "config": {
+    "process-timeout": 1800,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "behat": "behat --strict",
+    "test": [
+      "@behat"
+    ]
   }
 }
