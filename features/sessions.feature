@@ -1,7 +1,7 @@
 Feature: Test for the existence of the PHP Native Sessions plugin
 
   Scenario: A WordPress install without the native sessions plugin
-    Given a WP install
+    Given a WP installation
 
     When I run `wp launchcheck sessions`
     Then STDOUT should contain:
@@ -10,7 +10,7 @@ Feature: Test for the existence of the PHP Native Sessions plugin
       """
 
   Scenario: A WordPress install with the native sessions plugin installed but not active
-    Given a WP install
+    Given a WP installation
 	And I run `wp plugin install wp-native-php-sessions`
 
 	When I run `wp launchcheck sessions`
@@ -20,7 +20,7 @@ Feature: Test for the existence of the PHP Native Sessions plugin
 	  """
 
   Scenario: A WordPress install with the native sessions plugin installed and active
-	Given a WP install
+	Given a WP installation
 	And I run `wp plugin install wp-native-php-sessions`
 	And I run `wp plugin activate wp-native-php-sessions`
 

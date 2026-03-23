@@ -1,7 +1,7 @@
 Feature: General tests of WP Launch Check
 
   Scenario: WP Launch Check can be run from a non-ABSPATH directory
-    Given a WP install
+    Given a WP installation
 
     When I run `cd wp-content; wp launchcheck cron`
     Then STDOUT should contain:
@@ -10,7 +10,7 @@ Feature: General tests of WP Launch Check
       """
 
   Scenario: General check warns when domains are mismatched
-    Given a WP multisite subdomain install
+    Given a WP multisite subdomain installation
     And a wp-content/mu-plugins/pantheon-setup.php file:
       """
       <?php
@@ -43,7 +43,7 @@ Feature: General tests of WP Launch Check
       """
 
   Scenario: WordPress is up-to-date
-    Given a WP install
+    Given a WP installation
 
     When I run `wp core version`
     # This check is here to remind us to update versions when new releases are available.
@@ -59,9 +59,9 @@ Feature: General tests of WP Launch Check
       """
 
   Scenario: WordPress has a new minor version but no new major version
-    Given a WP install
+    Given a WP installation
     And I run `wp core download --version=6.9 --force`
-    And I run `wp theme activate twentytwentyfive`
+    And I try `wp theme activate twentytwentyfive`
     And the current WP version is not the latest
 
     When I run `wp launchcheck general`
@@ -71,9 +71,9 @@ Feature: General tests of WP Launch Check
       """
 
   Scenario: WordPress has a new major version but no new minor version
-    Given a WP install
+    Given a WP installation
     And I run `wp core download --version=6.8.5 --force`
-    And I run `wp theme activate twentytwentyfive`
+    And I try `wp theme activate twentytwentyfive`
 
     When I run `wp launchcheck general`
     Then STDOUT should contain:

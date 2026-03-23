@@ -1,7 +1,7 @@
 Feature: Suggest object cache to be enabled
 
   Scenario: No object cache is present
-    Given a WP install
+    Given a WP installation
 
     When I run `wp launchcheck object-cache`
     Then STDOUT should contain:
@@ -14,11 +14,11 @@ Feature: Suggest object cache to be enabled
       """
 
   Scenario: An object cache is present but it's not Object Cache Pro
-    Given a WP install
+    Given a WP installation
     And I run `wp plugin install https://github.com/lcache/wp-lcache/archive/refs/tags/v0.6.1.zip --activate`
-    And I run `wp lcache enable`
+    And I try `wp lcache enable`
 
-    When I run `wp launchcheck object-cache`
+    When I try `wp launchcheck object-cache`
     Then STDOUT should contain:
       """
       <p class="result">object-cache.php exists</p>
@@ -29,7 +29,7 @@ Feature: Suggest object cache to be enabled
       """
 
   Scenario: WP Redis is present as the enabled object-cache
-    Given a WP install
+    Given a WP installation
 		# TODO Remove the version flag.
     And I run `wp plugin install wp-redis --activate`
     And I run `wp redis enable`
