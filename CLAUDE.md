@@ -12,8 +12,9 @@ WP Launch Check is a WP-CLI extension that performs performance and security che
 # Install dependencies
 composer install
 
-# Build the phar file (required before running tests)
-php -dphar.readonly=0 vendor/bin/box build -v
+# Build the phar file
+curl -LSs https://box-project.github.io/box2/installer.php | php
+php -dphar.readonly=0 box.phar build -v
 
 # Run all Behat tests
 vendor/bin/behat --ansi
@@ -23,6 +24,12 @@ vendor/bin/behat features/cron.feature
 ```
 
 **Note:** Tests require MySQL running locally. The CI uses database credentials `pantheon/pantheon/pantheon` on `127.0.0.1:3306`.
+
+## Release Process
+
+Releases are automated via GitHub Actions:
+1. Merge PR to `main` → `tag-release.yml` runs `action-autotag` to create a semver tag and draft release
+2. Release created → `release.yml` builds the phar and attaches it to the release
 
 ## Architecture
 
