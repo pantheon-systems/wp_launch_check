@@ -38,9 +38,13 @@ jobs:
         run: |
           composer --no-interaction --no-progress --prefer-dist install --no-dev
 
+      - name: Install Box
+        run: |
+          curl -LSs https://box-project.github.io/box2/installer.php | php
+
       - name: Generate Phar
         run: |
-          vendor/bin/box build -v
+          php box.phar build -v
 
       - name: Attach phar to release
         uses: softprops/action-gh-release@v2
