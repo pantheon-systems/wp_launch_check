@@ -15,7 +15,7 @@ Feature: Suggest object cache to be enabled
 
   Scenario: An object cache is present but it's not Object Cache Pro
     Given a WP install
-    And I run `wp plugin install wp-lcache --activate`
+    And I run `wp plugin install https://github.com/lcache/wp-lcache/archive/refs/tags/v0.6.1.zip --activate`
     And I run `wp lcache enable`
 
     When I run `wp launchcheck object-cache`
