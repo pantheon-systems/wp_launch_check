@@ -1,44 +1,25 @@
-name: Deploy and Release
+name: Build Release Assets
 on:
-  push:
-    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
+  release:
+    types: [created]
+
+permissions:
+  contents: write
 
 jobs:
-  validate:
-    name: "Run validation test suite"
+  build-phar:
+    name: "Build and attach phar to release"
     runs-on: ubuntu-latest
-    env:
-      WP_CLI_BIN_DIR: /tmp/wp-cli-phar
-      DB_NAME: pantheon
-      DB_USER: pantheon
-      DB_PASSWORD: pantheon
-
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_DATABASE: ${{ env.DB_NAME }}
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_USER: ${{ env.DB_USER }}
-          MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
-          MYSQL_ROOT_PASSWORD: rootpass
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
-          ini-values: post_max_size=256M, max_execution_time=120
+          php-version: 8.2
+          ini-values: phar.readonly=0
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -46,71 +27,22 @@ jobs:
           echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer Downloads
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Cache PHP dependencies
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
-        with:
-          path: vendor
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
-
       - name: Install composer dependencies
         run: |
-          composer --no-interaction --no-progress --prefer-dist install
-
-      - name: Install WP-CLI
-        run: |
-          mkdir -p $WP_CLI_BIN_DIR
-          curl -s https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > $WP_CLI_BIN_DIR/wp
-          chmod +x $WP_CLI_BIN_DIR/wp
+          composer --no-interaction --no-progress --prefer-dist install --no-dev
 
       - name: Generate Phar
         run: |
-          php -dphar.readonly=0 vendor/bin/box build -v
+          vendor/bin/box build -v
 
-      - name: Run Behat tests
-        run: |
-          vendor/bin/behat --ansi
-
-      - name: Archive phar
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+      - name: Attach phar to release
+        uses: softprops/action-gh-release@v2
         with:
-          name: wp-launch-check-phar
-          path: wp_launch_check.phar
-          retention-days: 5
-          if-no-files-found: error
-
-  deploy-packages:
-    name: Deploy
-    runs-on: ubuntu-latest
-    needs: [validate]
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-
-      - name: Download Phar
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-        with:
-          name: wp-launch-check-phar
-
-      - name: Generate changelog
-        id: changelog
-        uses: metcalfc/changelog-generator@3f82cef08fe5dcf57c591fe165e70e1d5032e15a # v4.6.2
-        with:
-          myToken: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Release
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          body: ${{ steps.changelog.outputs.changelog }}
           files: wp_launch_check.phar
-          draft: false
-          prerelease: false

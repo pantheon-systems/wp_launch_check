@@ -1,0 +1,19 @@
+name: Autotag and Release
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  tag-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pantheon-systems/action-autotag@v1
+        with:
+          create-release: "true"
