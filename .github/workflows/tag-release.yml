@@ -48,7 +48,7 @@ jobs:
 
       - name: Create tag and release
         id: autotag
-        uses: pantheon-systems/action-autotag@1b99f88428c5cbd6f73005e4d684c6a22350f5ab # v1
+        uses: pantheon-systems/action-autotag@dccada8cb37dd400de7620b1bc2d53f88c2e2bd6 # v1
         with:
           create-release: "true"
 
