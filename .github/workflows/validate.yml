@@ -5,6 +5,9 @@ on:
       - master
       - main
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     name: "Run validation test suite"
