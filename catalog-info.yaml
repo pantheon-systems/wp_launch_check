@@ -1,12 +1,13 @@
+# Managed by github-terraform — do not edit manually
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: wp_launch_check
-  description: Auto-generated catalog info for pantheon-systems/wp_launch_check
+  name: "wp_launch_check"
+  description: "WP-CLI Plugin to run checks against installation for Performance and Security"
   annotations:
-    backstage.io/techdocs-ref: dir:docs/
+    "backstage.io/techdocs-ref": "dir:docs/"
 spec:
-  type: tool
-  lifecycle: mature
-  owner: site
+  type: "tool"
+  lifecycle: "mature"
+  owner: "site-experience"
