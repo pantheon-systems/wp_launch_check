@@ -1,33 +1,43 @@
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 10
-    commit-message:
-      prefix: "ci"
-      include: "scope"
-    labels:
-      - "dependencies"
-      - "github_actions"
-    reviewers:
-      - "dependabot"
-
-  # Maintain dependencies for Composer
-  - package-ecosystem: "composer"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    commit-message:
-      prefix: "composer"
-      include: "scope"
-    labels:
-      - "dependencies"
-      - "php"
-    versioning-strategy: "increase-if-necessary"
-    allow:
-      - dependency-type: "direct"
-      - dependency-type: "indirect"
+- package-ecosystem: composer
+  directory: "/"
+  schedule:
+    interval: daily
+    timezone: America/Los_Angeles
+  target-branch: main
+  open-pull-requests-limit: 99
+  versioning-strategy: increase-if-necessary
+  commit-message:
+    prefix: deps(composer)
+  groups:
+    composer-security:
+      applies-to: security-updates
+      update-types:
+      - minor
+      - patch
+    composer-minor-patch:
+      applies-to: version-updates
+      update-types:
+      - minor
+      - patch
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: daily
+    timezone: America/Los_Angeles
+  target-branch: main
+  open-pull-requests-limit: 99
+  commit-message:
+    prefix: deps(actions)
+  groups:
+    github-actions-security:
+      applies-to: security-updates
+      update-types:
+      - minor
+      - patch
+    github-actions-minor-patch:
+      applies-to: version-updates
+      update-types:
+      - minor
+      - patch
