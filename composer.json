@@ -11,6 +11,6 @@
     ]
   },
   "require-dev": {
-    "behat/behat": "^3"
+    "behat/behat": "^4"
   }
 }
